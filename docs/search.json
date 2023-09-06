@@ -2,113 +2,169 @@
   {
     "objectID": "week1/week1.html#il-famoso-smoking-ra-fisher",
     "href": "week1/week1.html#il-famoso-smoking-ra-fisher",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "il famoso Smoking RA Fisher",
     "text": "il famoso Smoking RA Fisher\nWe’ll talk about a lot of the methods that Ronald A. Fisher developed. Already in the 1900s it was being observed that there was a strong association between smoking and lung cancer. However, Fisher was a smoker himself and posited that the association between lung cancer and smoking could be explained away by some genetic or biological difference between the smoking and non-smoking population (positing some genes that caused people to desire to smoke).\n\n\n\n\n\nRonald Fisher’s unsupported theory of genetics confounding the smoking-lung cancer relationship\n\n\n\n\nWe’re pretty sure that this was driven not by any substance matter expertise, but rather by Fisher’s love of smoking."
   },
   {
     "objectID": "week1/week1.html#hormone-replacement-therapy",
     "href": "week1/week1.html#hormone-replacement-therapy",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Hormone Replacement Therapy",
     "text": "Hormone Replacement Therapy\nIn the mid- to late- 20th century there were a ton of studies linking hormone replacement therapy for older women to better cardiovascular outcomes (lack of coronary heart disease).\nHowever, thankfully due to the Heart and Estrogen/Progestin Study (HERS, in the early 90s) we now know that a lot of those studies were not controlling for socioeconomic status. It turns out that socioeconomic status was highly associated with HRT usage, and associated at least in the US with a lot of better health outcomes across the board.\nIt turned out that HRT when applied at certain times for some people can actually be harmful — but the point is the picture is much muddier than was initially thought and recommendations were rolled back. Later randomized studies were performed that produced reliable bodies of evidence demonstrating either no effect or in some cases harmful effects.\nWe’ll use the baseline data from HERS (not so much interested in the HRT treatment effect), but to investigate the research question:\n\nHow is systolic blood pressure related to age, independently of other well-known cardiovascular risk factors? (Age, diabetes, smoking, etc.)"
   },
   {
     "objectID": "week1/week1.html#prediction-studies",
     "href": "week1/week1.html#prediction-studies",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Prediction Studies",
     "text": "Prediction Studies\nTypically in prediction settings, there’s no single exposure of particular interest; mechanisms and confounding is treated as less of a concern (if at all), and the main challenge is that we need to take care to not overfit the data.\nA major theme of this class will be that different tasks require different analysis strategies and diffrent statistical tools."
   },
   {
     "objectID": "week1/week1.html#quantifying-uncertainty",
     "href": "week1/week1.html#quantifying-uncertainty",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Quantifying Uncertainty",
     "text": "Quantifying Uncertainty\nTypically standard statistical models have nice theoretical properties because years-and-years ago, we didn’t have much data so people spent their time studying theory instead of data. As a result, we have a lot of nice theories about the uncertainty represented in statistical models.\nAn example of the kind of uncertainty we might be interested in is shown in this figure relating Alzheimer’s disease rates and exposure to PM2.5.\n\n\n\n\n\n\n\n\n\nThis figure is taken from the article Long-term effects of PM2·5 on neurological disorders in the American Medicare population: a longitudinal cohort study by Shi et al, Lancet Planetary Health (2020)."
   },
   {
     "objectID": "week1/week1.html#why-learn-methods-before-study-design",
     "href": "week1/week1.html#why-learn-methods-before-study-design",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Why Learn Methods Before Study Design",
     "text": "Why Learn Methods Before Study Design\nAn interesting point made is that it’s important to understand the limitations, strengths of methods, what they can and can’t do, and how to use them before designing a study."
   },
   {
     "objectID": "week1/week1.html#recommended-reading",
     "href": "week1/week1.html#recommended-reading",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Recommended Reading",
     "text": "Recommended Reading\nKutner M, Nachtsheim C, Neter J, Li W. Applied Linear Statistical Model. 5th edition. chapters 1-3\nShmueli, G. (2010). To explain or to predict? Statistical Science. https://www.stat.berkeley.edu/~aldous/157/Papers/shmueli.pdf"
   },
   {
     "objectID": "week1/week1.html",
     "href": "week1/week1.html",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "",
     "text": "Linear Regression\nWe will generally be intereseted in the relationship between an outcome \\(Y\\) and \\(p\\) covariates or predictors denoted \\((x_1, ..., x_p)\\).\nWe generally say that a statistical model has a systematic component and a random component.\nWe often hypothesize that the “real” relationship between our outcome and predictors might be “super-complex”. Like cancer and environmental exposures might have complex dependencies on genetics, etc.. So sometimes instead of having a systematic component that captures variables in their full complexity, we might prioritize interpretability and we might be satisfied with an imperfect (but more intuitive, simpler) model that might give us some intuition about reality.\nThe random component may provide both a means to explain everything uncaptured by our predictors, as well as “real” randomness. For example, we might theorize that every time cells divide, there’s some small chance due to genetic drift that cells become metastatic and cancerous which is just random (did a mutation happen that was harmful in the right way in the right spot?)."
   },
   {
     "objectID": "week1/week1.html#hers-study-sbp-in-post-menopausal-women",
     "href": "week1/week1.html#hers-study-sbp-in-post-menopausal-women",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "HERS Study: SBP in Post-Menopausal Women",
     "text": "HERS Study: SBP in Post-Menopausal Women\nIn a clinical trial of hormone therapy for preventing heart attacks and deaths among 2,763 post-menopausal women with existing coronary heart disease:\n\nthe outcome variable is systolic blood pressure\nthe data collected on covariates included age, diabetes diagnosis, smoking status, etc.\nthe research question was how is systolic blood pressure jointly related to age, statin use, and other risk factors in this cohort.\n\nReference: Vittinghoff et al., Regression methods in Biostatistics 2005 https://regression.ucsf.edu/regression-methods-biostatistics-linear-logistic-survival-and-repeated-measures-models"
   },
   {
     "objectID": "week1/week1.html#multiple-linear-regression-scalar-notation",
     "href": "week1/week1.html#multiple-linear-regression-scalar-notation",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Multiple Linear Regression: Scalar Notation",
     "text": "Multiple Linear Regression: Scalar Notation\nWe consider the model\n\\[Y_i = \\beta_0 + \\beta_1 x_{i1} + ... + \\beta_p x_{ip} + \\epsilon_i, \\quad i = 1, ..., n.\\]\n\\[\\mathbb E(\\epsilon_i) = 0, \\, \\underbrace{\\text{Var}(\\epsilon_i) = \\sigma^2}_{\\text{homoscedasticity assumption}}, \\, \\text{ and Cov}(\\epsilon_i, \\epsilon_j) = 0.\\]\nTypically we assume that the predictors \\(x_i\\) are fixed and measured without error.\nWe require that \\(p < n\\).\nTJ notes that \\(\\text{Cov}(\\epsilon_i, \\epsilon_j) = 0\\) doesn’t imply independence. This is the assumption we’re making for the time-being, but independence will be implied after we later assume that the errors are normally distributed.\nRoman asks if we need a conditional mean zero assumption — i.e., \\(\\mathbb E(\\epsilon | x) = 0\\)? Rachel notes that \\(\\epsilon\\) and \\(x\\) are assumed to be independent, so \\(\\mathbb E(\\epsilon | x) = \\epsilon\\). We will make stronger assumptions later, but we aren’t introducing those yet.\nBy taking the expected value of both sides, we can equivalently write that\n\\[\\mathbb E(Y_i) = \\beta_0 + \\beta_1 x_{i1} + ... + \\beta_p x_{ip}.\\]\nThe parameters \\(\\beta_j\\) for \\(j = 1, ..., p\\) represent the change in the expected value \\(\\mathbb E(Y_i)\\) per unit change in \\(x_j\\) holding the remaining predictors \\(x_k \\, (k \\neq j)\\) constant.\nOne can see this by observing:\n\\[ \\mathbb E(Y_i | x_{i1} = x^* + 1) = \\beta_0 + \\beta_1 (x^* + 1) + ...\\] \\[ \\mathbb E(Y_i | x_{i1} = x^*) = \\beta_0 + \\beta_1 x^* + ...\\] \\[ \\mathbb E(Y_i | x_{i1} = x^* + 1) - \\mathbb E(Y_i | x_{i1} = x^*) = \\beta_1.\\]\nWe most often interested in testing whether \\(\\beta_j = 0\\), interpreted as a test of whether there’s an association between \\(x_j\\) and \\(Y\\)."
   },
   {
     "objectID": "week1/week1.html#vector-notation",
     "href": "week1/week1.html#vector-notation",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Vector Notation",
     "text": "Vector Notation\nWe can write this model more succinctly by writing:\n\\[ Y_i = x_i' \\beta + \\epsilon_i, \\quad i = 1, ..., n,\\]\nwhere \\(x_i = (1, x_{i1}, ..., x_{ip})',\\) and \\(\\beta = (\\beta_0, \\beta_1, ..., \\beta_p)'\\), \\(\\mathbb E(\\epsilon_i) = 0\\), \\(\\text{Var}(\\epsilon_i) = \\sigma^2\\), and \\(\\text{Cov}(\\epsilon_i, \\epsilon_j) = 0\\)."
   },
   {
     "objectID": "week1/week1.html#examples",
     "href": "week1/week1.html#examples",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Examples",
     "text": "Examples\n\nlibrary(here)\n\nhere() starts at /Users/cht180/Documents/2023/MethodsBST232\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.1     \n\n\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors\n\nhers <- readr::read_csv(here(\"data/hers.csv\"))\n\nRows: 2763 Columns: 40\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (16): HT, raceth, nonwhite, smoking, drinkany, exercise, physact, globra...\ndbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\nplt1 <- ggplot(hers %>% dplyr::sample_frac(.1), aes(x = age, y = SBP)) + \n  geom_point() + \n  theme_bw() + \n  ggtitle(\"Scatterplot of a 10% sample of our data\") \nplt1 \n\n\n\nplt2 <- plt1 + \n  stat_summary_bin(bins = 10, breaks = quantile(hers$age, seq(0,1, 0.1)), geom = 'line', fun = mean, color = 'cadetblue', size = 1.5) + \n  stat_summary_bin(bins = 10, breaks = quantile(hers$age, seq(0,1, 0.1)), geom = 'point', shape = 23, fun = mean, color = 'black', size = 3.5, fill = 'white') + \n  ggtitle(\"Now with overlain means for decile groups by age\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\nplt2 \n\n\n\nplt3 <- \n  plt2 + \n  geom_smooth(method = 'lm', se = FALSE) + \n  ggtitle(\"Now with a linear model\") \nplt3 \n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\nlm.sbp.age <- lm(SBP ~ age, data = hers)\njtools::summ(lm.sbp.age)\n\n\n\n\n  \n    Observations \n    2763 \n  \n  \n    Dependent variable \n    SBP \n  \n  \n    Type \n    OLS linear regression \n  \n\n \n\n  \n    F(1,2761) \n    77.21 \n  \n  \n    R² \n    0.03 \n  \n  \n    Adj. R² \n    0.03 \n  \n\n \n \n  \n      \n    Est. \n    S.E. \n    t val. \n    p \n  \n \n\n  \n    (Intercept) \n    103.63 \n    3.60 \n    28.82 \n    0.00 \n  \n  \n    age \n    0.47 \n    0.05 \n    8.79 \n    0.00 \n  \n\n\n Standard errors: OLS\n\n\n\nSo now we would say that \\(\\hat{\\mathbb E}(SBP_i) = 103.63 + 103.63 Age_i\\). Though, the intercept is kind of useless since our model doesn’t have any observations for systolic blood pressure for age 0 infants. We might want to fit an age centered model.\n\nlm.sbp.agec <- lm(SBP ~ I(age - mean(age)), data = hers)\njtools::summ(lm.sbp.agec)\n\n\n\n\n  \n    Observations \n    2763 \n  \n  \n    Dependent variable \n    SBP \n  \n  \n    Type \n    OLS linear regression \n  \n\n \n\n  \n    F(1,2761) \n    77.21 \n  \n  \n    R² \n    0.03 \n  \n  \n    Adj. R² \n    0.03 \n  \n\n \n \n  \n      \n    Est. \n    S.E. \n    t val. \n    p \n  \n \n\n  \n    (Intercept) \n    135.07 \n    0.36 \n    378.24 \n    0.00 \n  \n  \n    I(age - mean(age)) \n    0.47 \n    0.05 \n    8.79 \n    0.00 \n  \n\n\n Standard errors: OLS\n\n\n\nIn which case we’d say that \\(\\hat{\\mathbb E}(SBP_i) = 135.07 + 135.07 Age_i\\)."
   },
   {
     "objectID": "week1/week1.html#multiple-linear-regression",
     "href": "week1/week1.html#multiple-linear-regression",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Multiple Linear Regression",
     "text": "Multiple Linear Regression\n\n# fitting a p=2 model\nlm.sbp.age.weight <- lm(SBP ~ age + weight, data = hers)\nx <- y <- seq(0, 100, length= 30)\nf <- function(x,y){ z <- x*coef(lm.sbp.age.weight)[2] + y*coef(lm.sbp.age.weight)[3] + coef(lm.sbp.age.weight)[1] }\nz <- outer(x,y,f)\npersp(x, y, z, theta = 30, phi = 30, expand = 0.5, col = \"lightblue\", xlab = \"age\", ylab = \"weight\", zlab = \"expected SBP\", ticktype = 'detailed', nticks = 4)"
   },
   {
     "objectID": "week1/week1.html#indicator-dummy-variables",
     "href": "week1/week1.html#indicator-dummy-variables",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Indicator / Dummy Variables",
     "text": "Indicator / Dummy Variables\nWe might be interested in modeling categorical variables as well. To do so, we would include dummy variables.\nIf a categorical variable has \\(K\\) levels, then we’ll need to compute \\(K-1\\) dummy variables where the omitted variable is called the “reference level”.\n\nunique(hers$physact)\n\n[1] \"much more active\"     \"much less active\"     \"about as active\"     \n[4] \"somewhat less active\" \"somewhat more active\"\n\nhers$physact <- as.factor(hers$physact) \n# the reference category will be \"much more active\" since it's the \n# first factor level — \n# if we wanted to change it, we could run: \n# hers$raceth <- relevel(hers$raceth, \"much less active\") \n# for example. \nlm.sbp.physact <- lm(SBP ~ physact, data = hers)\nhead(model.matrix(lm.sbp.physact))\n\n  (Intercept) physactmuch less active physactmuch more active\n1           1                       0                       1\n2           1                       1                       0\n3           1                       0                       0\n4           1                       1                       0\n5           1                       0                       0\n6           1                       0                       0\n  physactsomewhat less active physactsomewhat more active\n1                           0                           0\n2                           0                           0\n3                           0                           0\n4                           0                           0\n5                           1                           0\n6                           0                           0\n\njtools::summ(lm.sbp.physact)\n\n\n\n\n  \n    Observations \n    2763 \n  \n  \n    Dependent variable \n    SBP \n  \n  \n    Type \n    OLS linear regression \n  \n\n \n\n  \n    F(4,2758) \n    0.48 \n  \n  \n    R² \n    0.00 \n  \n  \n    Adj. R² \n    -0.00 \n  \n\n \n \n  \n      \n    Est. \n    S.E. \n    t val. \n    p \n  \n \n\n  \n    (Intercept) \n    135.00 \n    0.63 \n    215.01 \n    0.00 \n  \n  \n    physactmuch less active \n    0.07 \n    1.49 \n    0.05 \n    0.96 \n  \n  \n    physactmuch more active \n    -0.90 \n    1.26 \n    -0.72 \n    0.47 \n  \n  \n    physactsomewhat less active \n    0.96 \n    1.06 \n    0.91 \n    0.36 \n  \n  \n    physactsomewhat more active \n    -0.05 \n    0.91 \n    -0.05 \n    0.96 \n  \n\n\n Standard errors: OLS\n\n\n\nIn machine learning this is called “one-hot” encoding."
   },
   {
     "objectID": "week1/week1.html#polynomial-regressions",
     "href": "week1/week1.html#polynomial-regressions",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Polynomial Regressions",
     "text": "Polynomial Regressions\n\nlm.sbp.agepolynomial <- lm(SBP ~ poly(age), data = hers)\n\n# we could plug in coef(lm.sbp.agepolynomial)[1] through \n# coef(lm.sbp.agepolynomial)[4] into the following equation, \n# but it's kind of boring — instead here's a more fun \n# looking cubic polynomial we could imagine being the result of\n# a polynomial regression:\ncurve(1 - 2.8*x + 4*(x^2) - .65*(x^3), from = 0, to = 5,\n      xlab = expression(x[1]),\n      ylab = \"E(Y)\")\n\n\n\n\nIt’s worth emphasizing that usually we prefer splines or generalized additive models to polynomial regression these days since polynomial regression can act strangely."
   },
   {
     "objectID": "week1/week1.html#marginal-associations",
     "href": "week1/week1.html#marginal-associations",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Marginal Associations",
     "text": "Marginal Associations\nIf we have one binary predictor \\(x_1\\) and one continuous \\(x_2\\), we might be interested in the marginal association between \\(Y\\) and \\(x_2\\). This would look like a model fit with lm(Y ~ x2) and \\(x_1\\) is not included."
   },
   {
     "objectID": "week1/week1.html#conditional-association",
     "href": "week1/week1.html#conditional-association",
-    "title": "2  Week 1",
+    "title": "Week 1",
     "section": "Conditional Association",
-    "text": "Conditional Association\nWe might also want to fit models that include \\(x_1\\), so those could be fit with lm(Y ~ x1 + x2) and this would include an effect for \\(x_2\\) (one effect, not multiple) that is applied after considering an effect for \\(x1\\)."
+    "text": "Conditional Association\nWe might also want to fit models that include \\(x_1\\), so those could be fit with lm(Y ~ x1 + x2) and this would include an effect for \\(x_2\\) (one effect, not multiple) that is applied while also considering an effect for \\(x1\\)."
+  },
+  {
+    "objectID": "week2/week2.html#recap",
+    "href": "week2/week2.html#recap",
+    "title": "Week 2",
+    "section": "Recap",
+    "text": "Recap\nEquivalent forms of the canonical linear model:\nAssuming \\(\\mathbb E[\\epsilon_i] = 0\\), \\(\\text{Var}(\\epsilon_i) = \\sigma^2\\), \\(\\text{Cov}(\\epsilon_i, \\epsilon_i') = 0\\).\nScalar notation: \\[ Y_i = \\beta_0 + \\beta_1 x_{i1} + ... + \\beta_p x_{ip} + \\epsilon_i\\]\nVector notation\n\\[ Y_i = x_i' \\beta + \\epsilon_i\\]\nExpectation representations\n\\[\\mathbb E(Y_i) = \\beta_0 + \\beta_1 x_{i1} + ... + \\beta_p x_{ip}\\] \\[\\mathbb E(Y_i) = x_i' \\beta\\]\nParameter interpretation: the \\(\\beta\\) values represent the change in expected value per unit change in \\(x\\) holding the remaining predictors constant.\nBest practices:\n\nAlways include an intercept, even if it’s not interpretable or of substantive interest.\nFor \\(K\\)-category predictors, include \\(K-1\\) indicators in regression (leads to ANOVA-like situations).\nIf relationships are suspected to be nonlinear, can include polynomial or other nonlinear terms."
+  },
+  {
+    "objectID": "week2/week2.html#confounding",
+    "href": "week2/week2.html#confounding",
+    "title": "Week 2",
+    "section": "Confounding",
+    "text": "Confounding\nGiven an outcome \\(Y\\) and two covariates \\(x1\\) and \\(x2\\), should we include \\(x1\\) in the model?\nSuppose we didn’t see the data generation process:\n\nx2 <- rnorm(n = 100, mean = 3.25, sd = .15)\nY <- x2*1.5 + rnorm(n = 100)\nx1 <- (x2 + Y > 8)\n\nBut we could see marginal associations:\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.1     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors\n\nggplot(data.frame(), aes(x = x2, y = Y, color = x1, shape = x1)) + \n  geom_point() + \n  theme_bw() + \n  theme(legend.position = 'bottom') + \n  ggtitle(expression(paste(x[1], \" confounds the relationship between \",\n                           x[2], \" and \", Y)))\n\n\n\n\nWhich would show us that \\(x_1\\) is associated with both \\(x_2\\) and \\(Y\\).\nFitting a model with both \\(x_1\\) and \\(x_2\\), we would call the prediction of \\(Y\\) given \\(x_2\\) the conditional association between \\(x_2\\) conditional on (or within levels of) \\(x_1\\).\n\n# observe that the association flips\njtools::summ(lm(Y ~ x2))\n\n\n\n\n  \n    Observations \n    100 \n  \n  \n    Dependent variable \n    Y \n  \n  \n    Type \n    OLS linear regression \n  \n\n \n\n  \n    F(1,98) \n    9.34 \n  \n  \n    R² \n    0.09 \n  \n  \n    Adj. R² \n    0.08 \n  \n\n \n \n  \n      \n    Est. \n    S.E. \n    t val. \n    p \n  \n \n\n  \n    (Intercept) \n    -1.53 \n    2.08 \n    -0.73 \n    0.46 \n  \n  \n    x2 \n    1.94 \n    0.64 \n    3.06 \n    0.00 \n  \n\n\n Standard errors: OLS\n\n\njtools::summ(lm(Y ~ x1 + x2))\n\n\n\n\n  \n    Observations \n    100 \n  \n  \n    Dependent variable \n    Y \n  \n  \n    Type \n    OLS linear regression \n  \n\n \n\n  \n    F(2,97) \n    74.82 \n  \n  \n    R² \n    0.61 \n  \n  \n    Adj. R² \n    0.60 \n  \n\n \n \n  \n      \n    Est. \n    S.E. \n    t val. \n    p \n  \n \n\n  \n    (Intercept) \n    4.08 \n    1.46 \n    2.80 \n    0.01 \n  \n  \n    x1TRUE \n    1.45 \n    0.13 \n    11.32 \n    0.00 \n  \n  \n    x2 \n    0.01 \n    0.45 \n    0.02 \n    0.99 \n  \n\n\n Standard errors: OLS\n\n\n\nThis figure shows some types of bivariate confounding:\n\n\n\n\n\nTypes of confounding from Faraway, page 50\n\n\n\n\nExamples of confounding in the HERS data:\nHow is a woman’s LDL cholesterol level associated with her body mass index (BMI)?\nIn the HERS data, women with higher BMI tend to have higher LDL levels. However, interpreting this simple marginal association as causal might be misleading because\n\nOlder women in HERS have both lower BMI and lower LDL levels;\nEthnic background, as well as whether a woman smokes or drinks, also predict both higher BMI and higher LDL levels.\n\nThus BMI, the risk factor of interest, is associated with a number of other factors, or potential confounders, which also predict the outcome.\n\nlibrary(here)\nhers <- readr::read_csv(here(\"data/hers.csv\"))\n\n# just visualized to see how difficult it is to observe confounding\nGGally::ggpairs(hers, columns = c('LDL', 'BMI', 'age'), alpha = .5)\n\n\n\n\nOften we will just fit separate models for each of the pairwise models:\n\nsimple_summ <-\n  function(model) {\n    jtools::summ(model, model.info = F, model.fit = F)\n  }\nsimple_summ(lm(data = hers, formula = LDL ~ age))\n\n\n\n\n\n\n\n\nEst.\n\n\nS.E.\n\n\nt val.\n\n\np\n\n\n\n\n\n\n(Intercept)\n\n\n164.83\n\n\n7.25\n\n\n22.73\n\n\n0.00\n\n\n\n\nage\n\n\n-0.30\n\n\n0.11\n\n\n-2.74\n\n\n0.01\n\n\n\n\n\n\n Standard errors: OLS\n\n\n\n\n\n\nsimple_summ(lm(data = hers, formula = LDL ~ BMI))\n\n\n\n\n\n\n\n\nEst.\n\n\nS.E.\n\n\nt val.\n\n\np\n\n\n\n\n\n\n(Intercept)\n\n\n133.19\n\n\n3.79\n\n\n35.11\n\n\n0.00\n\n\n\n\nBMI\n\n\n0.42\n\n\n0.13\n\n\n3.18\n\n\n0.00\n\n\n\n\n\n\n Standard errors: OLS\n\n\n\n\n\n\nsimple_summ(lm(data = hers, formula = BMI ~ age))\n\n\n\n\n\n\n\n\nEst.\n\n\nS.E.\n\n\nt val.\n\n\np\n\n\n\n\n\n\n(Intercept)\n\n\n37.40\n\n\n1.05\n\n\n35.78\n\n\n0.00\n\n\n\n\nage\n\n\n-0.13\n\n\n0.02\n\n\n-8.48\n\n\n0.00\n\n\n\n\n\n\n Standard errors: OLS\n\n\n\n\n\n\nsimple_summ(lm(data = hers, formula = LDL ~ BMI + age))\n\n\n\n\n\n\n\n\nEst.\n\n\nS.E.\n\n\nt val.\n\n\np\n\n\n\n\n\n\n(Intercept)\n\n\n151.44\n\n\n8.77\n\n\n17.26\n\n\n0.00\n\n\n\n\nBMI\n\n\n0.37\n\n\n0.13\n\n\n2.78\n\n\n0.01\n\n\n\n\nage\n\n\n-0.25\n\n\n0.11\n\n\n-2.31\n\n\n0.02\n\n\n\n\n\n\n Standard errors: OLS\n\n\n\n\n\n\n\nIn the marginal model \\(LDL ~ BMI\\), we had an effect estimate for BMI of 0.42 vs. 0.37 in the model with both BMI and age. So we could say there was a 12% decrease in \\(\\hat \\beta_{BMI}\\).\nA commonly used rule of thumb is that a variable is a confounder if it changes the estimated associations of interest by >10%. However, this is a really arbitrary threshold, so when available substantive knowledge should be the primary consideration for selecting confounders a priori to any analyses. Moreover, these types of heuristic criteria are specific to linear regression and they change for other types of models (e.g., logistic models for binary outcomes).\nWe could condition on a few more variables that we might suspect are possible confounders:\n\nsimple_summ(lm(LDL ~ BMI + age + nonwhite + drinkany + smoking, data = hers))\n\n\n\n\n\n\n\n\nEst.\n\n\nS.E.\n\n\nt val.\n\n\np\n\n\n\n\n\n\n(Intercept)\n\n\n147.32\n\n\n9.26\n\n\n15.91\n\n\n0.00\n\n\n\n\nBMI\n\n\n0.36\n\n\n0.13\n\n\n2.68\n\n\n0.01\n\n\n\n\nage\n\n\n-0.19\n\n\n0.11\n\n\n-1.68\n\n\n0.09\n\n\n\n\nnonwhiteyes\n\n\n5.22\n\n\n2.32\n\n\n2.25\n\n\n0.02\n\n\n\n\ndrinkanyyes\n\n\n-2.72\n\n\n1.50\n\n\n-1.82\n\n\n0.07\n\n\n\n\nsmokingyes\n\n\n4.75\n\n\n2.21\n\n\n2.15\n\n\n0.03\n\n\n\n\n\n\n Standard errors: OLS\n\n\n\n\n\n\n\nThe effect for \\(\\hat \\beta_{BMI}\\) didn’t change very much, so we can presume that these additional variables are not meaningful confounders of the \\(LDL ~ BMI\\) relationship."
+  },
+  {
+    "objectID": "week2/week2.html#interaction",
+    "href": "week2/week2.html#interaction",
+    "title": "Week 2",
+    "section": "Interaction",
+    "text": "Interaction\nWe may be interested in a model with interaction effects:\n\\[ \\mathbb E(Y_i) = \\beta_0 + \\beta_1 x_{i1} + \\beta_3 x_{i1} x_{i2}\\]\nWe can alternatively view this model as\n\\[ \\mathbb E(Y_i) = (\\beta_0 + \\beta_2 x_{i2}) + (\\beta_1 + \\beta_3 x_{i2})x_{i1} + \\epsilon_i.\\]\n(or switch the roles of \\(x_{i1}\\) and \\(x_{i2}\\). Interactions are also sometimes referred to as effect-modification.\nGenerally it’s considered best practice whenever including interaction terms to include the main-effects for any interacted variables as well. Sometimes in economics literature, main effects may be referred to as “constitutive effects”.\n\nStatin-Use Example\nFor example, we might ask if the association between LDL and BMI differ between those who take statins (cholesterol lowering medications) vs. those who do not?\nWe center BMI so that the Statin coefficient is meaningful.\n\nhers$BMI_centered <- hers$BMI - mean(hers$BMI, na.rm=TRUE)\nsimple_summ(lm(\n  LDL ~ BMI_centered * statins + \n    age + smoking + drinkany + nonwhite,\n  data = hers\n))\n\n\n\n\n\n\n\n\nEst.\n\n\nS.E.\n\n\nt val.\n\n\np\n\n\n\n\n\n\n(Intercept)\n\n\n162.41\n\n\n7.58\n\n\n21.42\n\n\n0.00\n\n\n\n\nBMI_centered\n\n\n0.58\n\n\n0.16\n\n\n3.64\n\n\n0.00\n\n\n\n\nstatinsyes\n\n\n-16.25\n\n\n1.47\n\n\n-11.07\n\n\n0.00\n\n\n\n\nage\n\n\n-0.17\n\n\n0.11\n\n\n-1.56\n\n\n0.12\n\n\n\n\nsmokingyes\n\n\n3.11\n\n\n2.17\n\n\n1.44\n\n\n0.15\n\n\n\n\ndrinkanyyes\n\n\n-2.08\n\n\n1.47\n\n\n-1.42\n\n\n0.16\n\n\n\n\nnonwhiteyes\n\n\n4.07\n\n\n2.28\n\n\n1.79\n\n\n0.07\n\n\n\n\nBMI_centered:statinsyes\n\n\n-0.70\n\n\n0.27\n\n\n-2.61\n\n\n0.01\n\n\n\n\n\n\n Standard errors: OLS\n\n\n\n\n\n\n\nAnother option not-covered in class is to use the / operator to create a BMI effect within the yes/no levels of statins:\ncheck ?formula.terms for an explanation of the / operator:\n“The / operator provides a shorthand, so that a / b is equivalent to a + b %in% a.”\n\nlm.ldl.interact <- lm(\n  LDL ~ statins / BMI_centered + \n    age + smoking + drinkany + nonwhite,\n  data = hers\n)\nsimple_summ(lm.ldl.interact)\n\n\n\n\n\n\n\n\nEst.\n\n\nS.E.\n\n\nt val.\n\n\np\n\n\n\n\n\n\n(Intercept)\n\n\n162.41\n\n\n7.58\n\n\n21.42\n\n\n0.00\n\n\n\n\nstatinsyes\n\n\n-16.25\n\n\n1.47\n\n\n-11.07\n\n\n0.00\n\n\n\n\nage\n\n\n-0.17\n\n\n0.11\n\n\n-1.56\n\n\n0.12\n\n\n\n\nsmokingyes\n\n\n3.11\n\n\n2.17\n\n\n1.44\n\n\n0.15\n\n\n\n\ndrinkanyyes\n\n\n-2.08\n\n\n1.47\n\n\n-1.42\n\n\n0.16\n\n\n\n\nnonwhiteyes\n\n\n4.07\n\n\n2.28\n\n\n1.79\n\n\n0.07\n\n\n\n\nstatinsno:BMI_centered\n\n\n0.58\n\n\n0.16\n\n\n3.64\n\n\n0.00\n\n\n\n\nstatinsyes:BMI_centered\n\n\n-0.12\n\n\n0.22\n\n\n-0.54\n\n\n0.59\n\n\n\n\n\n\n Standard errors: OLS\n\n\n\n\n\n\n\nHow do we interpret them? Often the simplest way is to just visualize them.\n\n# install.packages(\"interactions\")\ninteractions::interact_plot(lm.ldl.interact,\n                            pred = BMI_centered, modx = statins,\n                            interval = TRUE)\n\n\n\n\n\nQuestion: How would we interpret the magnitude of an interaction between 2 continuous variables?\nThe coefficient estimate for an interaction with two continuous effects is the change in the \\(x_1 \\sim Y\\) slope corresponding to a 1-unit change in \\(x_2\\)."
+  },
+  {
+    "objectID": "week2/week2.html",
+    "href": "week2/week2.html",
+    "title": "Week 2",
+    "section": "",
+    "text": "Estimation"
+  },
+  {
+    "objectID": "week2/week2.html#matrix-representation-of-multiple-linear-regression",
+    "href": "week2/week2.html#matrix-representation-of-multiple-linear-regression",
+    "title": "Week 2",
+    "section": "Matrix Representation of Multiple Linear Regression",
+    "text": "Matrix Representation of Multiple Linear Regression\nI will use math bolding once and then give up on it. Do not expect more from me. It is too much of a pain to write in every line.\n\\[ \\pmb Y = \\pmb X \\pmb \\beta + \\pmb \\epsilon \\]\n\\[ \\pmb Y = \\left[ \\begin{array}{c} Y_1 \\\\ Y_2 \\\\ \\vdots \\\\ Y_n \\end{array}  \\right],\n\\quad \\pmb X = \\left[ \\begin{array}{ccccc} 1 & x_{11} & x_{12} & \\cdots & x_{1p} \\\\\n1 & x_{21} & x_{22} & \\cdots & x_{2p} \\\\\n\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\\n1 & x_{n1} & x_{n2} & \\cdots & x_{np} \\\\\n\\end{array} \\right], \\]\n\\[ \\pmb \\beta = \\left[ \\begin{array}{c} \\beta_1 \\\\ \\beta_2 \\\\ \\vdots \\\\ \\beta_n \\end{array}  \\right],\n\\quad \\pmb \\epsilon = \\left[ \\begin{array}{c} \\epsilon_1 \\\\ \\epsilon_2 \\\\ \\vdots \\\\ \\epsilon_n \\end{array}  \\right].\\]\nNow we can write (under the usual assumptions on \\(\\epsilon_i\\), we can alternatively write \\(\\mathbb E(\\pmb Y) = \\pmb X \\pmb \\beta\\).\nThis marks the spot when I shall give up on bolding vectors and matrices."
+  },
+  {
+    "objectID": "week2/week2.html#how-should-we-estimate-hat-beta",
+    "href": "week2/week2.html#how-should-we-estimate-hat-beta",
+    "title": "Week 2",
+    "section": "How should we estimate \\(\\hat \\beta\\)?",
+    "text": "How should we estimate \\(\\hat \\beta\\)?\nThus far we haven’t made any distributional assumptions.\nWithout distributional assumptions, one way forward is to simply find the estimate \\(\\hat \\beta\\) that results in \\(X \\hat \\beta\\) as close as possible to the observed \\(y\\). (Note teh change to a lowercase \\(y\\) when referring to observed values in the sample rather than a random variable).\nUsing Euclidean distance, the distance between the vectors \\(y\\) and \\(X \\beta\\) is\n\\[ d(y, X\\beta) = \\sqrt{(y-X\\beta)'(y-X\\beta)}.\\]\nWe generally prefer not to work with square roots and since squaring is a momotone transformation for values on \\(\\mathbb R^+\\), the value that minimizes \\(d(y, X\\beta)\\) will also minimize \\(d(y,X\\beta)^2\\).\n\\[S(\\beta) = SSE = d(y,X\\beta)^2 = (y-X\\beta)'(y-X\\beta)\\] \\[ = y'y - 2y'X\\beta + \\beta' X' X \\beta\\]\nThe values of \\(\\beta\\) that minimize \\(S(\\beta)\\) are called least squares estimates or ordinatry least squares (OLS) estimates.\nOLS has been around since at least the early 1800s and variously attributed to Gauss, Laplace, Legendre, etc.. A lot of the properties of estimators obtained in this way were proven by Gauss.\nSee Stephen Stigler’s Gauss and the Invention of Least Squares https://www.jstor.org/stable/2240811.\nTo find OLS estimates, we (1) compute the gradient of \\(S(\\beta)\\), (2) set the equation to zero, and (3) solve for \\(\\beta\\).\n\\[ \\frac{\\partial S(\\beta)}{\\partial \\beta } = -2X'y + 2X'X\\beta \\stackrel{set}{=} 0\\] \\[ = -2X'(y-X\\beta) = 0\\]\nThis gives us the least squares normal equations:\n\\[ X'X \\hat \\beta = X' y\\]\nNormal equations have a relationship to geometry that “we” won’t expand on further. Except I will! See https://stats.stackexchange.com/a/305748/174809\n\n\n\n\n\n\n\n\n\n\nMultiply each side by \\((X'X)^{-1}\\) to obtain: \\[\\hat \\beta (X'X)^{-1}X'y\\] provided \\((X'X)^{-1}\\) exists (it will if predictors are linearly independent.\nThis is a good equation to commit to memory.\n\n(About now is a good time to note that \\(X\\) is capitalized because it’s a matrix, not because it’s a random variable)."
+  },
+  {
+    "objectID": "week2/week2.html#simple-linear-regression-setting",
+    "href": "week2/week2.html#simple-linear-regression-setting",
+    "title": "Week 2",
+    "section": "Simple Linear Regression Setting",
+    "text": "Simple Linear Regression Setting\n\\[\\hat \\beta_1 =\n\\frac{\\sum_{i=1}^n (x_i - \\bar x)(y_i - \\bar y}{\\sum_{i=1}^n (x_i - \\bar x)^2} = \\frac{\\hat{\\text{Cov}} (x,y)}{\\left(\\hat{\\text{sd}}(x)\\right)^2} =\n\\hat \\rho_{xy} \\left( \\frac{\\hat{\\text{sd}}(y)}{\\hat{\\text{sd}}(x)} \\right)\\]\n\\[\\hat{\\beta_0} = \\bar y - \\hat \\beta_1 \\bar x.\\]\nUsing these estimates, we get a fitted value for the \\(i\\)th observation and a residual for it."
+  },
+  {
+    "objectID": "week2/week2.html#properties-of-least-squares-estimates",
+    "href": "week2/week2.html#properties-of-least-squares-estimates",
+    "title": "Week 2",
+    "section": "Properties of Least Squares Estimates",
+    "text": "Properties of Least Squares Estimates\n\\(\\hat \\beta\\) is an unbiased estimator of \\(\\beta\\).\n\\[\\mathbb E(\\hat \\beta) = \\mathbb E[\\underbrace{(X'X)^{-1} X'}_{A} y] = (X'X)^{-1} X'X \\beta = \\beta\\]\nThe variance of \\(\\hat \\beta\\) is expressed by the variance-covariance matrix.\n\\[\\text{Var}(\\hat \\beta) = (X'X)^{-1} X' \\text{Var}(Y) X (X'X)^{-1}\\] \\[ = \\sigma^2 (X'X)^{-1}\\]\nIf we let \\(D = (X'X)^{-1}\\), the variance of \\(\\hat \\beta_j = \\sigma D_{jj}\\) and the covariance between \\(\\hat \\beta_i\\) and \\(\\hat \\beta_j\\) is \\(\\sigma^2 D_{ij}\\)."
   }
 ]

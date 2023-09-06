@@ -93,6 +93,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../week2/week2.html" rel="next">
 <link href="../index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -133,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-title">Week 1</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -158,12 +159,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Methods (BST 232) Notes</span></a>
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Methods (BST 232) Notes</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../week1/week1.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1</span></a>
+  <a href="../week1/week1.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week2/week2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 2</span></a>
   </div>
 </li>
     </ul>
@@ -201,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-title">Week 1</span></h1>
 </div>
 
 
@@ -222,7 +228,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Lab time: Fridays: 2-3:30, usually Kresge LL6.</p>
 <p>Use the discussion section of Canvas for random questions so everyone has the same access to information.</p>
 <p>We’ll assume that students know random variables, hypothesis testing, basic probability, etc.</p>
-<p>Kutner’s <em>Applied Linear Statistical Models</em> book will be a helpful reference for the first half of the class, while Agresti’s <em>Categorical Data Analysis</em> will be more helpful for the second half of the class.</p>
+<p>Kutner et al’s <em>Applied Linear Statistical Models</em> book will be a helpful reference for the first half of the class, while Agresti’s <em>Categorical Data Analysis</em> will be more helpful for the second half of the class.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -687,7 +693,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
 </section>
 <section id="conditional-association" class="level2">
 <h2 class="anchored" data-anchor-id="conditional-association">Conditional Association</h2>
-<p>We might also want to fit models that include <span class="math inline">\(x_1\)</span>, so those could be fit with <code>lm(Y ~ x1 + x2)</code> and this would include an effect for <span class="math inline">\(x_2\)</span> (one effect, not multiple) that is applied after considering an effect for <span class="math inline">\(x1\)</span>.</p>
+<p>We might also want to fit models that include <span class="math inline">\(x_1\)</span>, so those could be fit with <code>lm(Y ~ x1 + x2)</code> and this would include an effect for <span class="math inline">\(x_2\)</span> (one effect, not multiple) that is applied while also considering an effect for <span class="math inline">\(x1\)</span>.</p>
 
 
 </section>
@@ -830,10 +836,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Methods (BST 232) Notes</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Methods (BST 232) Notes</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../week2/week2.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-title">Week 2</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

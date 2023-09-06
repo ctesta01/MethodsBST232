@@ -33,7 +33,7 @@ everyone has the same access to information.
 We'll assume that students know random variables, hypothesis testing,
 basic probability, etc.
 
-Kutner's *Applied Linear Statistical Models* book will be a helpful 
+Kutner et al's *Applied Linear Statistical Models* book will be a helpful 
 reference for the first half of the class, while Agresti's *Categorical 
 Data Analysis* will be more helpful for the second half of the class. 
 
@@ -332,4 +332,4 @@ and $x_1$ is not included.
 
 We might also want to fit models that include $x_1$, so those could be fit with
 `lm(Y ~ x1 + x2)` and this would include an effect for $x_2$ (one effect, not
-multiple) that is applied after considering an effect for $x1$.
+multiple) that is applied while also considering an effect for $x1$.

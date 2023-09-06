@@ -1,0 +1,339 @@
+---
+title: Week 2
+---
+
+::: {.content-hidden}
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+% 1 create conditionally independent symbol:
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\e}[0]{\epsilon}
+$$
+:::
+
+
+## Recap 
+
+Equivalent forms of the canonical linear model: 
+
+Assuming $\E[\epsilon_i] = 0$, $\Var(\epsilon_i) = \sigma^2$,
+$\Cov(\epsilon_i, \epsilon_i') = 0$. 
+
+Scalar notation: 
+$$ Y_i = \beta_0 + \beta_1 x_{i1} + ... + \beta_p x_{ip} + \epsilon_i$$
+
+Vector notation
+
+$$ Y_i = x_i' \beta + \epsilon_i$$
+
+Expectation representations
+
+$$\E(Y_i) = \beta_0 + \beta_1 x_{i1} + ... + \beta_p x_{ip}$$
+$$\E(Y_i) = x_i' \beta$$
+
+Parameter interpretation: the $\beta$ values represent the change
+in expected value per unit change in $x$ holding the remaining predictors
+constant. 
+
+Best practices: 
+
+  * Always include an intercept, even if it's not interpretable or 
+  of substantive interest. 
+  * For $K$-category predictors, include $K-1$ indicators in 
+  regression (leads to ANOVA-like situations). 
+  * If relationships are suspected to be nonlinear, can include 
+  polynomial or other nonlinear terms.
+
+## Confounding 
+
+Given an outcome $Y$ and two covariates $x1$ and $x2$, should we include
+$x1$ in the model? 
+
+Suppose we didn't see the data generation process: 
+
+```{r}
+x2 <- rnorm(n = 100, mean = 3.25, sd = .15)
+Y <- x2*1.5 + rnorm(n = 100)
+x1 <- (x2 + Y > 8)
+```
+
+But we could see marginal associations: 
+```{r}
+library(tidyverse)
+ggplot(data.frame(), aes(x = x2, y = Y, color = x1, shape = x1)) + 
+  geom_point() + 
+  theme_bw() + 
+  theme(legend.position = 'bottom') + 
+  ggtitle(expression(paste(x[1], " confounds the relationship between ",
+                           x[2], " and ", Y)))
+```
+
+Which would show us that $x_1$ is associated with both $x_2$ and 
+$Y$. 
+
+Fitting a model with both $x_1$ and $x_2$, we would call 
+the prediction of $Y$ given $x_2$ the conditional association 
+between $x_2$ conditional on (or within levels of) $x_1$. 
+
+```{r}
+# observe that the association flips
+jtools::summ(lm(Y ~ x2))
+jtools::summ(lm(Y ~ x1 + x2))
+```
+
+This figure shows some types of bivariate confounding:
+
+```{r, echo=FALSE, fig.cap = "Types of confounding from Faraway, page 50", fig.align='center'}
+knitr::include_graphics("images/faraway_page50.png")
+```
+
+Examples of confounding in the HERS data: 
+
+*How is a woman's LDL cholesterol level associated with her body mass
+index (BMI)?*
+
+In the HERS data, women with higher BMI tend to have higher LDL 
+levels. However, interpreting this simple marginal association as causal might be misleading because
+  
+  * Older women in HERS have both lower BMI and lower LDL levels;
+  * Ethnic background, as well as whether a woman smokes or drinks, also 
+  predict both higher BMI and higher LDL levels. 
+
+Thus BMI, the risk factor of interest, is associated with a number of 
+other factors, or potential confounders, which also predict the outcome. 
+
+```{r, message = FALSE, warning = FALSE}
+library(here)
+hers <- readr::read_csv(here("data/hers.csv"))
+
+# just visualized to see how difficult it is to observe confounding
+GGally::ggpairs(hers, columns = c('LDL', 'BMI', 'age'), alpha = .5)
+```
+
+Often we will just fit separate models for each of the pairwise models:
+
+```{r}
+simple_summ <-
+  function(model) {
+    jtools::summ(model, model.info = F, model.fit = F)
+  }
+simple_summ(lm(data = hers, formula = LDL ~ age))
+simple_summ(lm(data = hers, formula = LDL ~ BMI))
+simple_summ(lm(data = hers, formula = BMI ~ age))
+simple_summ(lm(data = hers, formula = LDL ~ BMI + age))
+```
+
+In the marginal model $LDL ~ BMI$, we had an effect estimate for
+BMI of 0.42 vs. 0.37 in the model with both BMI and age. So we
+could say there was a `r scales::percent_format()((.42-.37)/.42)` decrease
+in $\hat \beta_{BMI}$. 
+
+A commonly used rule of thumb is that a variable is a confounder
+if it changes the estimated associations of interest by >10%. However,
+this is a really arbitrary threshold, so when available substantive 
+knowledge should be the primary consideration for selecting confounders
+a priori to any analyses. Moreover, these types of heuristic criteria 
+are specific to linear regression and they change for other types of
+models (e.g., logistic models for binary outcomes). 
+
+We could condition on a few more variables that we might suspect
+are possible confounders:
+
+```{r}
+simple_summ(lm(LDL ~ BMI + age + nonwhite + drinkany + smoking, data = hers))
+```
+
+The effect for $\hat \beta_{BMI}$ didn't change very much, so we can 
+presume that these additional variables are not meaningful confounders
+of the $LDL ~ BMI$ relationship. 
+
+## Interaction 
+
+We may be interested in a model with *interaction effects*: 
+
+$$ \E(Y_i) = \beta_0 + \beta_1 x_{i1} + \beta_3 x_{i1} x_{i2}$$
+
+We can alternatively view this model as 
+
+$$ \E(Y_i) = (\beta_0 + \beta_2 x_{i2}) + (\beta_1 + \beta_3 x_{i2})x_{i1} + \epsilon_i.$$
+
+(or switch the roles of $x_{i1}$ and $x_{i2}$. Interactions are 
+also sometimes referred to as *effect-modification*.
+
+Generally it's considered best practice whenever including interaction
+terms to include the main-effects for any interacted variables as well. 
+Sometimes in economics literature, main effects may be referred to as
+"constitutive effects". 
+
+
+### Statin-Use Example
+
+For example, we might ask if the association between LDL and BMI 
+differ between those who take statins (cholesterol lowering medications)
+vs. those who do not? 
+
+We center BMI so that the Statin coefficient is meaningful. 
+
+```{r}
+hers$BMI_centered <- hers$BMI - mean(hers$BMI, na.rm=TRUE)
+simple_summ(lm(
+  LDL ~ BMI_centered * statins + 
+    age + smoking + drinkany + nonwhite,
+  data = hers
+))
+```
+
+Another option not-covered in class is to use the `/` operator 
+to create a BMI effect within the yes/no levels of statins:
+
+check `?formula.terms` for an explanation of the `/` operator: 
+
+"The `/` operator provides a shorthand, so that `a / b` is equivalent to 
+`a + b %in% a`."
+
+```{r}
+lm.ldl.interact <- lm(
+  LDL ~ statins / BMI_centered + 
+    age + smoking + drinkany + nonwhite,
+  data = hers
+)
+simple_summ(lm.ldl.interact)
+```
+
+How do we interpret them? Often the simplest way is to just
+visualize them. 
+
+```{r}
+# install.packages("interactions")
+interactions::interact_plot(lm.ldl.interact,
+                            pred = BMI_centered, modx = statins,
+                            interval = TRUE)
+```
+
+:::{.cooltip}
+*Question:* How would we interpret the magnitude of an interaction 
+between 2 continuous variables? 
+
+The coefficient estimate for an interaction with two continuous 
+effects is the change in the $x_1 \sim Y$ slope corresponding to 
+a 1-unit change in $x_2$. 
+:::
+
+# Estimation
+
+## Matrix Representation of Multiple Linear Regression 
+
+I will use math bolding *once* and then give up on it. Do not
+expect more from me. It is too much of a pain to write 
+in every line. 
+
+$$ \pmb Y = \pmb X \pmb \beta + \pmb \epsilon $$
+
+$$ \pmb Y = \left[ \begin{array}{c} Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{array}  \right],
+\quad \pmb X = \left[ \begin{array}{ccccc} 1 & x_{11} & x_{12} & \cdots & x_{1p} \\
+1 & x_{21} & x_{22} & \cdots & x_{2p} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & x_{n1} & x_{n2} & \cdots & x_{np} \\
+\end{array} \right], $$
+
+$$ \pmb \beta = \left[ \begin{array}{c} \beta_1 \\ \beta_2 \\ \vdots \\ \beta_n \end{array}  \right],
+\quad \pmb \epsilon = \left[ \begin{array}{c} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{array}  \right].$$
+
+Now we can write (under the usual assumptions on $\epsilon_i$, we can
+alternatively write $\E(\pmb Y) = \pmb X \pmb \beta$. 
+
+This marks the spot when I shall give up on bolding vectors and matrices. 
+
+## How should we estimate $\hat \beta$? 
+
+Thus far we haven't made any distributional assumptions. 
+
+Without distributional assumptions, one way forward is to simply find 
+the estimate $\hat \beta$ that results in $X \hat \beta$ as close
+as possible to the observed $y$. (Note teh change to a lowercase 
+$y$ when referring to observed values in the sample rather than 
+a random variable). 
+
+Using Euclidean distance, the distance between the vectors 
+$y$ and $X \beta$ is 
+
+$$ d(y, X\beta) = \sqrt{(y-X\beta)'(y-X\beta)}.$$
+
+We generally prefer not to work with square roots and since 
+squaring is a momotone transformation for values on $\mathbb R^+$, 
+the value that minimizes $d(y, X\beta)$ will also minimize 
+$d(y,X\beta)^2$. 
+
+$$S(\beta) = SSE = d(y,X\beta)^2 = (y-X\beta)'(y-X\beta)$$
+$$ = y'y - 2y'X\beta + \beta' X' X \beta$$
+
+The values of $\beta$ that minimize $S(\beta)$ are called
+least squares estimates or ordinatry least squares (OLS) estimates. 
+
+OLS has been around since at least the early 1800s and variously 
+attributed to Gauss, Laplace, Legendre, etc.. A lot of the properties
+of estimators obtained in this way were proven by Gauss. 
+
+See Stephen Stigler's *Gauss and the Invention of Least Squares*
+<https://www.jstor.org/stable/2240811>. 
+
+To find OLS estimates, we (1) compute the gradient of $S(\beta)$,
+(2) set the equation to zero, and (3) solve for $\beta$. 
+
+$$ \frac{\partial S(\beta)}{\partial \beta } = -2X'y + 2X'X\beta \stackrel{set}{=} 0$$ 
+$$ = -2X'(y-X\beta) = 0$$
+
+This gives us the least squares normal equations:
+
+$$ X'X \hat \beta = X' y$$
+
+Normal equations have a relationship to geometry that "we" won't
+expand on further.  Except I will!  See <https://stats.stackexchange.com/a/305748/174809> 
+
+```{r, echo=FALSE, out.width='5in', fig.align='center'}
+knitr::include_graphics("standalone_figures/normal_equation_projection.svg")
+```
+
+:::{.cooltip}
+Multiply each side by $(X'X)^{-1}$ to obtain: 
+$$\hat \beta (X'X)^{-1}X'y$$
+provided $(X'X)^{-1}$ exists (it will if predictors are linearly independent. 
+
+This is a good equation to commit to memory.
+:::
+
+(About now is a good time to note that $X$ is capitalized because 
+it's a matrix, not because it's a random variable). 
+
+## Simple Linear Regression Setting
+
+$$\hat \beta_1 = 
+\frac{\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y}{\sum_{i=1}^n (x_i - \bar x)^2} = \frac{\hat{\Cov} (x,y)}{\left(\hat{\text{sd}}(x)\right)^2} = 
+\hat \rho_{xy} \left( \frac{\hat{\text{sd}}(y)}{\hat{\text{sd}}(x)} \right)$$
+
+$$\hat{\beta_0} = \bar y - \hat \beta_1 \bar x.$$
+
+Using these estimates, we get a <span class='vocab'>fitted value</span>
+for the $i$th observation and a residual for it. 
+
+
+## Properties of Least Squares Estimates
+
+$\hat \beta$ is an unbiased estimator of $\beta$. 
+
+$$\E(\hat \beta) = \E[\underbrace{(X'X)^{-1} X'}_{A} y] = (X'X)^{-1} X'X \beta = \beta$$
+
+The variance of $\hat \beta$ is expressed by the **variance-covariance matrix**. 
+
+$$\Var(\hat \beta) = (X'X)^{-1} X' \Var(Y) X (X'X)^{-1}$$
+$$ = \sigma^2 (X'X)^{-1}$$
+
+If we let $D = (X'X)^{-1}$, the variance of $\hat \beta_j = \sigma D_{jj}$
+and the covariance between $\hat \beta_i$ and $\hat \beta_j$ is 
+$\sigma^2 D_{ij}$. 
+

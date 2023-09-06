@@ -8,11 +8,13 @@ book:
   chapters:
     - index.qmd
     - week1/week1.qmd
+    - week2/week2.qmd
 
 format:
   html:
     theme: style.scss
     number-depth: 0
+    number-sections: false
   pdf:
     documentclass: scrreport
   
