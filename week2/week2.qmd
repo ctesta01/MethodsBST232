@@ -244,7 +244,7 @@ $$ \pmb Y = \left[ \begin{array}{c} Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{array}  \ri
 $$ \pmb \beta = \left[ \begin{array}{c} \beta_1 \\ \beta_2 \\ \vdots \\ \beta_n \end{array}  \right],
 \quad \pmb \epsilon = \left[ \begin{array}{c} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{array}  \right].$$
 
-Now we can write (under the usual assumptions on $\epsilon_i$, we can
+Now we can write (under the usual assumptions on $\epsilon_i$), we can
 alternatively write $\E(\pmb Y) = \pmb X \pmb \beta$. 
 
 This marks the spot when I shall give up on bolding vectors and matrices. 
@@ -313,8 +313,8 @@ it's a matrix, not because it's a random variable).
 ## Simple Linear Regression Setting
 
 $$\hat \beta_1 = 
-\frac{\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y}{\sum_{i=1}^n (x_i - \bar x)^2} = \frac{\hat{\Cov} (x,y)}{\left(\hat{\text{sd}}(x)\right)^2} = 
-\hat \rho_{xy} \left( \frac{\hat{\text{sd}}(y)}{\hat{\text{sd}}(x)} \right)$$
+\frac{\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y}{\sum_{i=1}^n (x_i - \bar x)^2} = \frac{\widehat{\Cov} (x,y)}{\left(\widehat{\text{sd}}(x)\right)^2} = 
+\hat \rho_{xy} \left( \frac{\widehat{\text{sd}}(y)}{\widehat{\text{sd}}(x)} \right)$$
 
 $$\hat{\beta_0} = \bar y - \hat \beta_1 \bar x.$$
 
@@ -337,3 +337,136 @@ If we let $D = (X'X)^{-1}$, the variance of $\hat \beta_j = \sigma D_{jj}$
 and the covariance between $\hat \beta_i$ and $\hat \beta_j$ is 
 $\sigma^2 D_{ij}$. 
 
+# Lab 
+
+Properties of estimators that we want: 
+
+  * Consistency $\hat \beta \stackrel{p}{\to} \beta$
+  * Minimal bias $\hat \beta - \beta$
+  * Computability 
+  * Minimal $\text{Var}(\hat \beta)$
+  
+  
+Recommended reading: the Matrix Cookbook 
+
+### Basic Matrix Rules
+
+  * $(AB)^T = B^TA^T$
+  * If $C$ and $D$ are invertible, $(CD)^{-1} = D^{-1}C^{-1}$
+  * $(C^{-1})^T = (C^T)^{-1}$
+
+
+Note that we can do matrix calculus too 
+
+Let $z$ be a vector. 
+
+$$ \frac{\partial Az}{\partial z} = A$$
+
+$$ \frac{\partial}{\partial z} \left[ \begin{array}{cc} a_1 & a_2 \\ a_3 & a_4 \end{array} \right] \left[ \begin{array}{l} z_1 \\ z_2 \end{array} \right] = 
+\left[ \begin{array}{cc} \frac{\partial}{\partial z_1} z_1 + a_1 + z_2 + a_2 & \frac{\partial}{\partial z_2} z_1 a_1 + z_2 a_2 \\ 
+\frac{\partial}{\partial z_1} z_1 + a_3 + z_2 + a_4 & 
+\frac{\partial}{\partial z_2} z_1 + a_3 + z_2 + a_4 \end{array}
+\right] = 
+\left[ \begin{array}{cc} a_1 & a_2 \\ a_3 & a_4 \end{array} \right]$$ 
+
+$$ \frac{\partial z^T B}{\partial z} = B^T$$
+
+If $C$ is symmetric, 
+
+$$\frac{\partial z^T C z}{\partial z} = 2z^T C $$
+
+Probability results: 
+
+$$\mathbb E(AZ) = A \mathbb E(Z)$$
+$$\Var(AZ) = A \Var(Z) A^T$$
+
+
+**Derive the least squares estimate for $\beta$.**
+
+We want to minimize $Y - X\beta$, and hence we want to set 
+$$\frac{\partial}{\partial \beta} (Y - X\beta)^T(Y - X\beta) = 0$$
+
+$$ = \frac{\partial}{\partial \beta} (Y^T - X\beta^T)(Y - X\beta)$$
+
+$$ = \frac{\partial}{\partial \beta} Y^T Y - Y^T X \beta - (X\beta)^TY + (X\beta)^T(X\beta)$$
+
+$$ = -Y^TX - Y^TX  + 2\beta^TX^TX = 0$$
+
+$$ \hat \beta = (X^TX)^{-1}X^TY$$ 
+
+### How do we write the $\hat Y$ and estimated residuals?
+
+$$\hat Y = X \hat \beta = \underbrace{X(X^TX)^{-1}X^T}_{\text{called the hat matrix}}Y = HY$$
+
+$$\hat \epsilon = Y - \hat Y = (I_n - H)Y$$
+
+### Find the expectation and variance-covariance matrix of $\hat \beta$ 
+
+$$\E(\hat \beta) = \E((X^TX)^{-1}X^TY) = (X^TX)^{-1}X^T \E(Y)$$
+$$ = \cancel{(X^TX)^{-1}X^TX} \beta = \beta$$
+
+$$\Var(\hat \beta) = (X^TX)^{-1}X^T \sigma^2 I_n X(X^TX)^{-1} \sigma^2 (X^TX)^{-1}$$
+
+### How do estimates from the two methods differ? 
+
+We get the same $\hat \beta$ estimates.
+
+We get something that's proportional to $\exp{-\frac{1}{2}(Y-X\beta)^T(Y-X\beta)}$.
+
+These are basically the same. 
+
+### Simulation Code for a Confounder 
+
+Suppose we have a scenario where 
+
+- $X_1 \sim \text{Uniform}(0,5)$
+- $X_2|X_1 \sim \text{Normal}(x_1, 1)$ 
+- $Y|X_1, X_2 \sim \text{Normal}(2x_1 + 0.01x_2 + 2, 1)$
+
+Now consider two regression models:  
+
+1. $Y_i = \beta_0 + \beta_2 X_{i2} + \varepsilon_i$
+2. $Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2X_{i2} + \varepsilon_i$
+
+Compare what happens to the $\beta$ estimates from both regressions.
+
+```{r}
+simulate <- function(n) {
+  X1 <- runif(n, 0, 5)
+  X2 <- rnorm(n, X1)
+  Y <- rnorm(n, 2*X1 + .01*X2 + 2)
+  
+  model1 <- lm(Y ~ X2)
+  model2 <- lm(Y ~ X1 + X2)
+  
+  return(c(omit = model1$coefficients[['X2']], 
+           full = model2$coefficients[['X2']]))
+}
+
+output <- replicate(1000, simulate(100))
+hist(output['omit',])
+hist(output['full',])
+
+hist(output, breaks = 50)
+```
+
+
+### Comparing OLS vs. MLE estimates
+
+We want to know why this estimator derived from the maximum likelihood estimation approach in which we try to maximize the multivariate normal
+distriution 
+
+$${\displaystyle (2\pi )^{-k/2}\det({\boldsymbol {\Sigma }})^{-1/2}\,\exp \left(-{\frac {1}{2}}(\mathbf {x} -{\boldsymbol {\mu }})^{\mathsf {T}}{\boldsymbol {\Sigma }}^{-1}(\mathbf {x} -{\boldsymbol {\mu }})\right)}$$ 
+
+is the same as the OLS estimator? 
+
+Basically these elements are just constant, and the effect of the exponential function isn't important (see next line). 
+
+$${\cancel{\displaystyle (2\pi )^{-k/2}}\cancel{\det({\boldsymbol {\Sigma }})^{-1/2}}\,\cancel{\exp} \left(\cancel{-{\frac {1}{2}}}(\mathbf {x} -{\boldsymbol {\mu }})^{\mathsf {T}}{\boldsymbol {\Sigma }}^{-1}(\mathbf {x} -{\boldsymbol {\mu }})\right),}$$
+
+
+We're trying to maximize the likelihood, 
+
+$\ell (\mu|x)= \log (\exp \left(-{\frac {1}{2}}(\mathbf {x} -{\boldsymbol {\mu }})^{\mathsf {T}}{\boldsymbol {\sigma^2 I_n }}^{-1}(\mathbf {x} -{\boldsymbol {\mu }})\right),$ 
+
+which shows why we can cancel away the $\log \exp$.

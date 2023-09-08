@@ -193,6 +193,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#simple-linear-regression-setting" id="toc-simple-linear-regression-setting" class="nav-link" data-scroll-target="#simple-linear-regression-setting">Simple Linear Regression Setting</a></li>
   <li><a href="#properties-of-least-squares-estimates" id="toc-properties-of-least-squares-estimates" class="nav-link" data-scroll-target="#properties-of-least-squares-estimates">Properties of Least Squares Estimates</a></li>
   </ul></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab</a>
+  <ul class="collapse">
+  <li><a href="#basic-matrix-rules" id="toc-basic-matrix-rules" class="nav-link" data-scroll-target="#basic-matrix-rules">Basic Matrix Rules</a></li>
+  <li><a href="#how-do-we-write-the-hat-y-and-estimated-residuals" id="toc-how-do-we-write-the-hat-y-and-estimated-residuals" class="nav-link" data-scroll-target="#how-do-we-write-the-hat-y-and-estimated-residuals">How do we write the <span class="math inline">\(\hat Y\)</span> and estimated residuals?</a></li>
+  <li><a href="#find-the-expectation-and-variance-covariance-matrix-of-hat-beta" id="toc-find-the-expectation-and-variance-covariance-matrix-of-hat-beta" class="nav-link" data-scroll-target="#find-the-expectation-and-variance-covariance-matrix-of-hat-beta">Find the expectation and variance-covariance matrix of <span class="math inline">\(\hat \beta\)</span></a></li>
+  <li><a href="#how-do-estimates-from-the-two-methods-differ" id="toc-how-do-estimates-from-the-two-methods-differ" class="nav-link" data-scroll-target="#how-do-estimates-from-the-two-methods-differ">How do estimates from the two methods differ?</a></li>
+  <li><a href="#simulation-code-for-a-confounder" id="toc-simulation-code-for-a-confounder" class="nav-link" data-scroll-target="#simulation-code-for-a-confounder">Simulation Code for a Confounder</a></li>
+  <li><a href="#comparing-ols-vs.-mle-estimates" id="toc-comparing-ols-vs.-mle-estimates" class="nav-link" data-scroll-target="#comparing-ols-vs.-mle-estimates">Comparing OLS vs.&nbsp;MLE estimates</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -293,7 +302,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;font-weight: bold;"> F(1,98) </td>
-   <td style="text-align:right;"> 9.34 </td>
+   <td style="text-align:right;"> 10.10 </td>
   </tr>
   <tr>
    <td style="text-align:left;font-weight: bold;"> R² </td>
@@ -317,16 +326,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;font-weight: bold;"> (Intercept) </td>
-   <td style="text-align:right;"> -1.53 </td>
-   <td style="text-align:right;"> 2.08 </td>
-   <td style="text-align:right;"> -0.73 </td>
-   <td style="text-align:right;"> 0.46 </td>
+   <td style="text-align:right;"> -1.06 </td>
+   <td style="text-align:right;"> 1.86 </td>
+   <td style="text-align:right;"> -0.57 </td>
+   <td style="text-align:right;"> 0.57 </td>
   </tr>
   <tr>
    <td style="text-align:left;font-weight: bold;"> x2 </td>
-   <td style="text-align:right;"> 1.94 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 3.06 </td>
+   <td style="text-align:right;"> 1.81 </td>
+   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 3.18 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
 </tbody>
@@ -356,15 +365,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;font-weight: bold;"> F(2,97) </td>
-   <td style="text-align:right;"> 74.82 </td>
+   <td style="text-align:right;"> 87.02 </td>
   </tr>
   <tr>
    <td style="text-align:left;font-weight: bold;"> R² </td>
-   <td style="text-align:right;"> 0.61 </td>
+   <td style="text-align:right;"> 0.64 </td>
   </tr>
   <tr>
    <td style="text-align:left;font-weight: bold;"> Adj. R² </td>
-   <td style="text-align:right;"> 0.60 </td>
+   <td style="text-align:right;"> 0.63 </td>
   </tr>
 </tbody>
 </table> <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
@@ -380,24 +389,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
   <tr>
    <td style="text-align:left;font-weight: bold;"> (Intercept) </td>
-   <td style="text-align:right;"> 4.08 </td>
-   <td style="text-align:right;"> 1.46 </td>
-   <td style="text-align:right;"> 2.80 </td>
-   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 3.97 </td>
+   <td style="text-align:right;"> 1.25 </td>
+   <td style="text-align:right;"> 3.19 </td>
+   <td style="text-align:right;"> 0.00 </td>
   </tr>
   <tr>
    <td style="text-align:left;font-weight: bold;"> x1TRUE </td>
-   <td style="text-align:right;"> 1.45 </td>
+   <td style="text-align:right;"> 1.53 </td>
    <td style="text-align:right;"> 0.13 </td>
-   <td style="text-align:right;"> 11.32 </td>
+   <td style="text-align:right;"> 12.19 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
   <tr>
    <td style="text-align:left;font-weight: bold;"> x2 </td>
-   <td style="text-align:right;"> 0.01 </td>
-   <td style="text-align:right;"> 0.45 </td>
    <td style="text-align:right;"> 0.02 </td>
-   <td style="text-align:right;"> 0.99 </td>
+   <td style="text-align:right;"> 0.39 </td>
+   <td style="text-align:right;"> 0.06 </td>
+   <td style="text-align:right;"> 0.96 </td>
   </tr>
 </tbody>
 <tfoot><tr><td style="padding: 0; " colspan="100%">
@@ -1272,7 +1281,7 @@ statinsyes:BMI_centered
 \end{array} \right], \]</span></p>
 <p><span class="math display">\[ \pmb \beta = \left[ \begin{array}{c} \beta_1 \\ \beta_2 \\ \vdots \\ \beta_n \end{array}  \right],
 \quad \pmb \epsilon = \left[ \begin{array}{c} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{array}  \right].\]</span></p>
-<p>Now we can write (under the usual assumptions on <span class="math inline">\(\epsilon_i\)</span>, we can alternatively write <span class="math inline">\(\mathbb E(\pmb Y) = \pmb X \pmb \beta\)</span>.</p>
+<p>Now we can write (under the usual assumptions on <span class="math inline">\(\epsilon_i\)</span>), we can alternatively write <span class="math inline">\(\mathbb E(\pmb Y) = \pmb X \pmb \beta\)</span>.</p>
 <p>This marks the spot when I shall give up on bolding vectors and matrices.</p>
 </section>
 <section id="how-should-we-estimate-hat-beta" class="level2">
@@ -1309,8 +1318,8 @@ statinsyes:BMI_centered
 <section id="simple-linear-regression-setting" class="level2">
 <h2 class="anchored" data-anchor-id="simple-linear-regression-setting">Simple Linear Regression Setting</h2>
 <p><span class="math display">\[\hat \beta_1 =
-\frac{\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y}{\sum_{i=1}^n (x_i - \bar x)^2} = \frac{\hat{\text{Cov}} (x,y)}{\left(\hat{\text{sd}}(x)\right)^2} =
-\hat \rho_{xy} \left( \frac{\hat{\text{sd}}(y)}{\hat{\text{sd}}(x)} \right)\]</span></p>
+\frac{\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y}{\sum_{i=1}^n (x_i - \bar x)^2} = \frac{\widehat{\text{Cov}} (x,y)}{\left(\widehat{\text{sd}}(x)\right)^2} =
+\hat \rho_{xy} \left( \frac{\widehat{\text{sd}}(y)}{\widehat{\text{sd}}(x)} \right)\]</span></p>
 <p><span class="math display">\[\hat{\beta_0} = \bar y - \hat \beta_1 \bar x.\]</span></p>
 <p>Using these estimates, we get a <span class="vocab">fitted value</span> for the <span class="math inline">\(i\)</span>th observation and a residual for it.</p>
 </section>
@@ -1321,6 +1330,114 @@ statinsyes:BMI_centered
 <p>The variance of <span class="math inline">\(\hat \beta\)</span> is expressed by the <strong>variance-covariance matrix</strong>.</p>
 <p><span class="math display">\[\text{Var}(\hat \beta) = (X'X)^{-1} X' \text{Var}(Y) X (X'X)^{-1}\]</span> <span class="math display">\[ = \sigma^2 (X'X)^{-1}\]</span></p>
 <p>If we let <span class="math inline">\(D = (X'X)^{-1}\)</span>, the variance of <span class="math inline">\(\hat \beta_j = \sigma D_{jj}\)</span> and the covariance between <span class="math inline">\(\hat \beta_i\)</span> and <span class="math inline">\(\hat \beta_j\)</span> is <span class="math inline">\(\sigma^2 D_{ij}\)</span>.</p>
+</section>
+</section>
+<section id="lab" class="level1">
+<h1>Lab</h1>
+<p>Properties of estimators that we want:</p>
+<ul>
+<li>Consistency <span class="math inline">\(\hat \beta \stackrel{p}{\to} \beta\)</span></li>
+<li>Minimal bias <span class="math inline">\(\hat \beta - \beta\)</span></li>
+<li>Computability</li>
+<li>Minimal <span class="math inline">\(\text{Var}(\hat \beta)\)</span></li>
+</ul>
+<p>Recommended reading: the Matrix Cookbook</p>
+<section id="basic-matrix-rules" class="level3">
+<h3 class="anchored" data-anchor-id="basic-matrix-rules">Basic Matrix Rules</h3>
+<ul>
+<li><span class="math inline">\((AB)^T = B^TA^T\)</span></li>
+<li>If <span class="math inline">\(C\)</span> and <span class="math inline">\(D\)</span> are invertible, <span class="math inline">\((CD)^{-1} = D^{-1}C^{-1}\)</span></li>
+<li><span class="math inline">\((C^{-1})^T = (C^T)^{-1}\)</span></li>
+</ul>
+<p>Note that we can do matrix calculus too</p>
+<p>Let <span class="math inline">\(z\)</span> be a vector.</p>
+<p><span class="math display">\[ \frac{\partial Az}{\partial z} = A\]</span></p>
+<p><span class="math display">\[ \frac{\partial}{\partial z} \left[ \begin{array}{cc} a_1 &amp; a_2 \\ a_3 &amp; a_4 \end{array} \right] \left[ \begin{array}{l} z_1 \\ z_2 \end{array} \right] =
+\left[ \begin{array}{cc} \frac{\partial}{\partial z_1} z_1 + a_1 + z_2 + a_2 &amp; \frac{\partial}{\partial z_2} z_1 a_1 + z_2 a_2 \\
+\frac{\partial}{\partial z_1} z_1 + a_3 + z_2 + a_4 &amp;
+\frac{\partial}{\partial z_2} z_1 + a_3 + z_2 + a_4 \end{array}
+\right] =
+\left[ \begin{array}{cc} a_1 &amp; a_2 \\ a_3 &amp; a_4 \end{array} \right]\]</span></p>
+<p><span class="math display">\[ \frac{\partial z^T B}{\partial z} = B^T\]</span></p>
+<p>If <span class="math inline">\(C\)</span> is symmetric,</p>
+<p><span class="math display">\[\frac{\partial z^T C z}{\partial z} = 2z^T C \]</span></p>
+<p>Probability results:</p>
+<p><span class="math display">\[\mathbb E(AZ) = A \mathbb E(Z)\]</span> <span class="math display">\[\text{Var}(AZ) = A \text{Var}(Z) A^T\]</span></p>
+<p><strong>Derive the least squares estimate for <span class="math inline">\(\beta\)</span>.</strong></p>
+<p>We want to minimize <span class="math inline">\(Y - X\beta\)</span>, and hence we want to set <span class="math display">\[\frac{\partial}{\partial \beta} (Y - X\beta)^T(Y - X\beta) = 0\]</span></p>
+<p><span class="math display">\[ = \frac{\partial}{\partial \beta} (Y^T - X\beta^T)(Y - X\beta)\]</span></p>
+<p><span class="math display">\[ = \frac{\partial}{\partial \beta} Y^T Y - Y^T X \beta - (X\beta)^TY + (X\beta)^T(X\beta)\]</span></p>
+<p><span class="math display">\[ = -Y^TX - Y^TX  + 2\beta^TX^TX = 0\]</span></p>
+<p><span class="math display">\[ \hat \beta = (X^TX)^{-1}X^TY\]</span></p>
+</section>
+<section id="how-do-we-write-the-hat-y-and-estimated-residuals" class="level3">
+<h3 class="anchored" data-anchor-id="how-do-we-write-the-hat-y-and-estimated-residuals">How do we write the <span class="math inline">\(\hat Y\)</span> and estimated residuals?</h3>
+<p><span class="math display">\[\hat Y = X \hat \beta = \underbrace{X(X^TX)^{-1}X^T}_{\text{called the hat matrix}}Y = HY\]</span></p>
+<p><span class="math display">\[\hat \epsilon = Y - \hat Y = (I_n - H)Y\]</span></p>
+</section>
+<section id="find-the-expectation-and-variance-covariance-matrix-of-hat-beta" class="level3">
+<h3 class="anchored" data-anchor-id="find-the-expectation-and-variance-covariance-matrix-of-hat-beta">Find the expectation and variance-covariance matrix of <span class="math inline">\(\hat \beta\)</span></h3>
+<p><span class="math display">\[\mathbb E(\hat \beta) = \mathbb E((X^TX)^{-1}X^TY) = (X^TX)^{-1}X^T \mathbb E(Y)\]</span> <span class="math display">\[ = \cancel{(X^TX)^{-1}X^TX} \beta = \beta\]</span></p>
+<p><span class="math display">\[\text{Var}(\hat \beta) = (X^TX)^{-1}X^T \sigma^2 I_n X(X^TX)^{-1} \sigma^2 (X^TX)^{-1}\]</span></p>
+</section>
+<section id="how-do-estimates-from-the-two-methods-differ" class="level3">
+<h3 class="anchored" data-anchor-id="how-do-estimates-from-the-two-methods-differ">How do estimates from the two methods differ?</h3>
+<p>We get the same <span class="math inline">\(\hat \beta\)</span> estimates.</p>
+<p>We get something that’s proportional to <span class="math inline">\(\exp{-\frac{1}{2}(Y-X\beta)^T(Y-X\beta)}\)</span>.</p>
+<p>These are basically the same.</p>
+</section>
+<section id="simulation-code-for-a-confounder" class="level3">
+<h3 class="anchored" data-anchor-id="simulation-code-for-a-confounder">Simulation Code for a Confounder</h3>
+<p>Suppose we have a scenario where</p>
+<ul>
+<li><span class="math inline">\(X_1 \sim \text{Uniform}(0,5)\)</span></li>
+<li><span class="math inline">\(X_2|X_1 \sim \text{Normal}(x_1, 1)\)</span></li>
+<li><span class="math inline">\(Y|X_1, X_2 \sim \text{Normal}(2x_1 + 0.01x_2 + 2, 1)\)</span></li>
+</ul>
+<p>Now consider two regression models:</p>
+<ol type="1">
+<li><span class="math inline">\(Y_i = \beta_0 + \beta_2 X_{i2} + \varepsilon_i\)</span></li>
+<li><span class="math inline">\(Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2X_{i2} + \varepsilon_i\)</span></li>
+</ol>
+<p>Compare what happens to the <span class="math inline">\(\beta\)</span> estimates from both regressions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>simulate <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  X1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">5</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  X2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, X1)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">2</span><span class="sc">*</span>X1 <span class="sc">+</span> .<span class="dv">01</span><span class="sc">*</span>X2 <span class="sc">+</span> <span class="dv">2</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X2)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X1 <span class="sc">+</span> X2)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(<span class="at">omit =</span> model1<span class="sc">$</span>coefficients[[<span class="st">'X2'</span>]], </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">full =</span> model2<span class="sc">$</span>coefficients[[<span class="st">'X2'</span>]]))</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">simulate</span>(<span class="dv">100</span>))</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(output[<span class="st">'omit'</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="week2_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(output[<span class="st">'full'</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="week2_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(output, <span class="at">breaks =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="week2_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="comparing-ols-vs.-mle-estimates" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-ols-vs.-mle-estimates">Comparing OLS vs.&nbsp;MLE estimates</h3>
+<p>We want to know why this estimator derived from the maximum likelihood estimation approach in which we try to maximize the multivariate normal distriution</p>
+<p><span class="math display">\[{\displaystyle (2\pi )^{-k/2}\det({\boldsymbol {\Sigma }})^{-1/2}\,\exp \left(-{\frac {1}{2}}(\mathbf {x} -{\boldsymbol {\mu }})^{\mathsf {T}}{\boldsymbol {\Sigma }}^{-1}(\mathbf {x} -{\boldsymbol {\mu }})\right)}\]</span></p>
+<p>is the same as the OLS estimator?</p>
+<p>Basically these elements are just constant, and the effect of the exponential function isn’t important (see next line).</p>
+<p><span class="math display">\[{\cancel{\displaystyle (2\pi )^{-k/2}}\cancel{\det({\boldsymbol {\Sigma }})^{-1/2}}\,\cancel{\exp} \left(\cancel{-{\frac {1}{2}}}(\mathbf {x} -{\boldsymbol {\mu }})^{\mathsf {T}}{\boldsymbol {\Sigma }}^{-1}(\mathbf {x} -{\boldsymbol {\mu }})\right),}\]</span></p>
+<p>We’re trying to maximize the likelihood,</p>
+<p><span class="math inline">\(\ell (\mu|x)= \log (\exp \left(-{\frac {1}{2}}(\mathbf {x} -{\boldsymbol {\mu }})^{\mathsf {T}}{\boldsymbol {\sigma^2 I_n }}^{-1}(\mathbf {x} -{\boldsymbol {\mu }})\right),\)</span></p>
+<p>which shows why we can cancel away the <span class="math inline">\(\log \exp\)</span>.</p>
 
 
 </section>

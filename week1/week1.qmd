@@ -333,3 +333,4 @@ and $x_1$ is not included.
 We might also want to fit models that include $x_1$, so those could be fit with
 `lm(Y ~ x1 + x2)` and this would include an effect for $x_2$ (one effect, not
 multiple) that is applied while also considering an effect for $x1$.
+
