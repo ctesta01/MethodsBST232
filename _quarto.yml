@@ -9,6 +9,7 @@ book:
     - index.qmd
     - week1/week1.qmd
     - week2/week2.qmd
+    - week3/week3.qmd
 
 format:
   html:

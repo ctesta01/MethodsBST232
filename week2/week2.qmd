@@ -296,12 +296,12 @@ Normal equations have a relationship to geometry that "we" won't
 expand on further.  Except I will!  See <https://stats.stackexchange.com/a/305748/174809> 
 
 ```{r, echo=FALSE, out.width='5in', fig.align='center'}
-knitr::include_graphics("standalone_figures/normal_equation_projection.svg")
+knitr::include_graphics("standalone_figures/normal_equation_projection/normal_equation_projection.svg")
 ```
 
 :::{.cooltip}
 Multiply each side by $(X'X)^{-1}$ to obtain: 
-$$\hat \beta (X'X)^{-1}X'y$$
+$$\hat \beta = (X'X)^{-1}X'y$$
 provided $(X'X)^{-1}$ exists (it will if predictors are linearly independent. 
 
 This is a good equation to commit to memory.
@@ -470,3 +470,4 @@ We're trying to maximize the likelihood,
 $\ell (\mu|x)= \log (\exp \left(-{\frac {1}{2}}(\mathbf {x} -{\boldsymbol {\mu }})^{\mathsf {T}}{\boldsymbol {\sigma^2 I_n }}^{-1}(\mathbf {x} -{\boldsymbol {\mu }})\right),$ 
 
 which shows why we can cancel away the $\log \exp$.
+

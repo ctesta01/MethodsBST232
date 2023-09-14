@@ -1,0 +1,651 @@
+---
+title: Week 3
+theme: "../style.scss"
+---
+
+::: {.content-hidden}
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+% 1 create conditionally independent symbol:
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\e}[0]{\epsilon}
+$$
+:::
+
+Recap: 
+
+Recall that we can write in matrix notation: 
+
+$$Y = X\beta + \epsilon$$
+
+$$\E(Y) = X\beta$$
+
+Assuming that $E(\epsilon) = 0$ and $\Var(\epsilon) = \sigma^2I$. 
+
+Remember how we derived the formula for $\hat \beta_{OLS}$? We set 
+$\frac{\partial}{\partial \beta} SSE(\beta) \stackrel{set}{=} 0$? 
+
+Calculating that out, we find that 
+$$ \frac{\partial}{\partial \beta} SSE(\beta) = -2X'y + 2X'X\beta, $$
+$$ \Longrightarrow X'X \hat \beta = X' y$$
+$$ \Longrightarrow \hat \beta_{OLS} = (X'X)^{-1}X'y$$
+
+For standard linear regression (SLR), OLS slope estimates are a
+scaled correlation coefficient. 
+
+Recall that the vector of random values is a variance-covariance 
+matrix. 
+
+Last time we showed that $\hat \beta$ is an unbiased estimator for $\beta$
+when we saw that 
+
+$$\E(\hat \beta) = \E[\underbrace{(X'X)^{-1} X'}_{A} y] = (X'X)^{-1} X'X \beta = \beta$$
+
+## Variance of $\hat \beta$
+
+The variance of $\hat \beta$ is expressed as the variance-covariance matrix 
+
+$$\Var(\hat \beta) = (X'X)^{-1} X' \Var(Y) X (X'X)^{-1}$$
+$$ = \sigma^2 (X'X)^{-1}$$
+
+If we let $D = (X'X)^{-1}$, the variance of $\hat \beta_j = \sigma D_{jj}$
+and the covariance between $\hat \beta_i$ and $\hat \beta_j$ is 
+$\sigma^2 D_{ij}$. 
+
+How would we get to this result? 
+
+We are using a shorthand where we denote $(X'X)^TX' = A$, and 
+now we're just looking at the $\Var(AY)$. When we are working
+with the matrix-variance formula, we can rewrite $\Var(AY) = A\Var(Y)A'$. 
+
+Plugging in the formula for $A$, we get to the above. 
+
+Remember we said that $\Var(\epsilon) = \sigma^2$ and $Y = X\beta + \epsilon$ where
+the only randomness comes from $\epsilon$.  In other words
+
+$$\Var(\hat \beta) = (X'X)^{-1} X' \Var(Y) X (X'X)^{-1}$$
+$$ = (X'X)^{-1} X' \Var(X\beta + \epsilon) X (X'X)^{-1}$$
+$$ = (X'X)^{-1} X' \Var(\epsilon) X (X'X)^{-1}$$
+$$ = (X'X)^{-1} X' \sigma^2 I X (X'X)^{-1}$$
+$$ = \sigma^2 (X'X)^{-1} X' I X (X'X)^{-1}$$
+$$ = \sigma^2 \cancel{(X'X)^{-1} X' X }\underbrace{(X'X)^{-1}}_{\stackrel{set}{=}D}.$$
+
+### Gauss-Markov Theorem 
+
+:::{.cooltip}
+Under the standard linear assumptions, $\hat \beta_{OLS}$ is the best linear
+unbiased estimator (BLUE) for $\beta$.
+
+Linear unbiased estimator: $\hat \beta_{OLS}$ is a linear combination of the
+observed $y$ values (given that $\hat \beta = (X'X)^{-1}X'y$ is a matrix of constants times
+a vector $y$) and is an unbiased estimator.
+
+It's "best" in the sense that it is the lowest variance (most precise).
+:::
+
+So the Gauss Markov Theorem tells us that among all linear, unbiased estimators of $\beta$, $\hat \beta_{OLS}$ has the lowest variance.
+
+### Simple Linear Regression as a Special Case
+
+The least squares estimators $\hat \beta_0$ and $\hat \beta_1$ can 
+be expressed as 
+
+$$\hat \beta_0 = \sum_{i=1}^n l_i y_i, \quad \hat \beta_1 = \sum_{i=1}^n k_i y_i,$$
+
+where $l_i = \frac{1}{n} - \frac{\bar x(x_i - \bar x)}{\sum_{i=1}^n (x_i - \hat x)^2},$
+and $k_i = \frac{(x_i - \bar x)}{\sum_{i=1}^n (x_i - \bar x)^2}$.
+
+#### Variance of LS Estimators
+
+$$\Var(\hat \beta_0) = \sigma \left\{ \frac{1}{n} + \frac{\bar x^2}{\sum_{i=1}^n (x_i-\bar x)^2}\right\},$$
+$$\Var(\hat \beta_1) = \sigma \left\{\frac{1}{\sum_{i=1}^n (x_i-\bar x)^2}\right\},$$
+$$\Cov(\hat \beta_0, \hat \beta_1) = \sigma \left\{ - \frac{\bar x}{\sum_{i=1}^n (x_i-\bar x)^2}\right\}.$$
+
+The variance-covariance matrix is 
+
+$$\Var(\hat \beta) = \sigma(X'X)^{-1} = \left[ \begin{array}{cc} \Var(\hat \beta_0) & \Cov(\hat \beta_0, \hat \beta_1) \\ \Cov(\hat \beta_0, \hat \beta_1) & \Var(\hat \beta_1) \end{array} \right].$$
+
+#### Estimation of $\sigma^2$
+
+In order to estimate $\Var(\hat \beta)$, we need an estimator of $\sigma^2$: 
+
+We base this on the sum of squared errors (SSE):
+
+$$SSE = (y - X\hat\beta)'(y-X\hat \beta)$$
+$$ = \sum_{i=1}^n(y_i-x'_i\hat\beta)^2$$
+$$ = \sum_{i=1}^(\hat \epsilon_i)^2$$
+
+$$\hat \sigma^2 = MSE = \frac{SSE}{n - p - 1}.$$
+
+This estimator $\hat \sigma^2$ is an unbiased estimator. 
+
+The $n-p-1$ in the denominator is because we estimate $p+1$ 
+parameters and we divide by the degrees of freedom, which is 
+$n - \text{\# things we had to estimate}$. The Kutner book has a 
+more rigorous presentation of why this is the right amount to divide by.
+
+### Normality assumption
+
+If we are willing to make the stronger assumption that 
+$\epsilon_i \stackrel{iid}{\sim} \mathcal N(0, \sigma^2)$, then we
+can perform inference on $\beta$. 
+
+First note that $\epsilon_i \stackrel{iid}{\sim} \mathcal N(0, \sigma^2) 
+\Longrightarrow Y_i \stackrel{ind}{\sim} \mathcal N(x_i'\beta, \sigma^2)$,
+such that 
+
+$$f_Y(y_i|\beta, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left[ -\frac{1}{2\sigma^2} (y_i - x_i'\beta)^2\right]$$
+
+Notice that the $Y_i$ values are independent but not identically distributed. 
+
+Before we were just assuming that the $\epsilon$ values were uncorrelated, which
+in the special case of the normal distribution implies independence, but this 
+isn't necessarily so for other distributions.
+
+We can then use maximum likelihood techniques to obtain 
+$$\hat \beta_{MLE} \sim MVN_{p+1} \left[ \beta, \sigma^2 (X'X)^{-1} \right].$$
+
+### Joint Density 
+
+Recap of maximum likelihood estimation. 
+
+In general, suppose we have data $Y_1, ..., Y_n$, which are 
+independent random variables with $Y_i$ having probability density function 
+$$f_Y(y_i|\theta)$$
+where $\theta$ is a vector of unknown parameters. 
+
+Then the joint density function of all the $y_i$ given $\theta$ is the 
+product of the individual densities 
+
+$$f(y_1, ..., y_n|\theta) = \prod_{i=1}^n f_Y(y_i|\theta).$$
+
+#### Likelihood Functions
+
+The <span class='vocab'>likelihood function</span> of $\theta$ given the data
+has the same form as the joint pdf:
+
+$$\mathcal L(\theta|y_1,...,y_n) = f(y_1, ..., y_n|\theta) = \prod_{i=1}^n f_Y(y_i|\theta).$$
+
+Of course this looks exactly the same as the joint density of the $Y_i$ values, but 
+instead this is a function of $\theta$ instead of a function of the $y_i$ values. 
+
+Once you take a random sample of size $n$, the $y_i$ values are known, and the 
+likelihood is considered as a function of unknown parameter $\theta$. 
+
+The likelihood function should still integrate to 1. 
+
+The <span class='vocab'>MLE</span> of $\theta$ is the value $\hat \theta$ that 
+maximizes the likelihood 
+
+$$\mathcal L(\theta | y_1, ..., y_n)$$
+
+as a function of $\theta$. 
+
+The value  $\hat \theta$ that maximizes $\mathcal L(\theta)$ also 
+maximizes 
+
+$$\ell(\theta | y_1, ..., y_n) = \log \mathcal L(\theta | y_1, ..., y_n).$$
+
+#### Solving for MLE 
+
+$$ \frac{\partial \ell}{\partial \theta} \stackrel{set}{=} 0,$$
+
+and technically we're going to need to check that this is a maximum 
+as opposed to a minimum, and we'll do so by checking that 
+
+$$\left[ \frac{\partial^2 \ell}{\partial \theta^2} \right]_{\theta = \hat \theta} < 0.$$
+
+If we were in a matrix setting instead of a vector setting, we'd need to check that 
+the matrix is negative definite for a maximum, or positive definite for a minimum.
+
+The negative of the second derivative, 
+
+$$\frac{-\partial^2 \ell(\theta | y_1, ..., y_n)}{\partial \theta^2},$$
+
+is called the <span class="vocab">information</span>.
+
+#### Returning to MLE for Regression 
+
+Thus in the linear regression setting if we assume $\epsilon_i \stackrel{iid}{\sim} \mathcal N(0, \sigma^2),$ then $Y_i \stackrel{ind}{\sim} \mathcal N(x'_i\beta, \sigma^2)$ and
+$$f_Y(y_i|\beta, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left[ -\frac{1}{2\sigma^2} (y_i - x_i'\beta)^2\right]$$
+
+$$\mathcal L(\beta, \sigma^2 | y_1, ..., y_n) = \prod_{i=1}^n f_Y(y_i|\beta, \sigma^2),$$
+
+and 
+
+$$\mathcal L(\beta, \sigma^2|y_1, ..., y_n) = \left( \frac{1}{\sqrt{2\pi\sigma^2}}\right)^n
+\exp \left[ - \frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - x_i'\beta)^2 \right]$$
+$$= \left( \frac{1}{\sqrt{2\pi\sigma^2}}\right)^n
+\exp \left[ - \frac{1}{2\sigma^2} (y - X\beta)'(y-X\beta) \right].$$
+
+Turning to the log-likelihood function:
+
+$$\ell(\beta, \sigma^2 | y_1, ..., y_n) \propto \cancel{-n/2\log(\sigma^2)} \underbrace{- \frac{1}{2\sigma^2} (y-X\beta)'(y-X\beta)}_{= \frac{-1}{2\sigma^2} S(\beta)}.$$
+
+The values that maximize this log-likelihood with respect to $\beta$, call them 
+$\hat \beta_{MLE}$ are the same as those that minimize $S(\hat \beta)$, i.e.,
+
+$$\hat \beta_{MLE} = (X'X)^{-1}X'y$$
+
+and it's straightforward to show that 
+
+$$\hat \beta_{MLE} \sim MVN_{p+1}\left[ \beta, \sigma^2(X'X)^{-1} \right].$$
+
+#### $\sigma^2_{MLE}$
+
+While the estimates for $\hat \beta$ are the same for OLS vs. MLE, we have that 
+$$\hat \sigma^2_{MLE} = \frac{1}{n}(y-X\hat\beta)'(y-X\hat\beta) = \frac{(n-p-1)}{n}MSE$$
+
+So of note, the MLE for $\beta$ are the same as the least squares estimator. However 
+the MLE for $\sigma^2$ is not. 
+
+Recall that the least squares estimator of $\sigma^2$ is unbiased. The MLE 
+of $\sigma^2$ is biased, although it is consistent: 
+$$\lim_{n\to\infty} P(|\hat\sigma^2 - \sigma^2| \leq \epsilon) \to 1, \, \forall \epsilon > 0.$$
+
+
+## Inference in Linear Regression 
+
+Often it's of interest to determine if, collectively, a group of predictors
+significantly contribute to the variability in $y$ given another
+group of predictors are in the model. 
+
+Common examples are: 
+
+  * Is a categorical variable, represented by dummy variables, significant 
+  (analagous to the overall ANOVA F-test)?
+  * Can the effect of a predictor be represented as a linear effect or is a 
+  higher-level polynomial (i.e., using $x^2$, $x^3$, etc.) necessary? 
+  * Is a model that contains only main effects adequate or do we 
+  need to incorporate a set of interactions between variables in the 
+  models?
+  
+### Sum of squares decomposition 
+
+$$(y_i - \bar y)^2 = ((y_i - \hat y_i) + (\hat y_i - \bar y))^2$$
+
+Then, when computing the sums of squares, we get 
+
+$$\sum(y_i - \bar y)^2 = \sum_{i=1}^n (\hat y_i - \bar y)^2 + \sum_{i=1}^n (y_i - \hat y_i)^2,$$
+
+which happily features a "freshman's dream".
+
+We thus have that 
+$$SST = \underbrace{SSR}_{\text{explained by regression}} + \underbrace{SSE}_{\text{left over}},$$
+
+where $SST = \text{Sums of Squares Total}$, $SSR = \text{Sums of Squares Regression}$, 
+nad $SSE = \text{Sums of Squares Error}$. 
+
+
+#### The ANOVA-like table 
+
+We often will write something like this type of table: 
+
+
+|Source|$SS$|$\text{df}$|$\text{MS}$|$\E[\text{MS}]$|
+|---|---|---|---|---|
+|Regression|$SSR = \hat \beta'X'y-n\bar y^2$|$p$|$\frac{SSR}{p}$|$\sigma^2 + \frac{\beta'_Rx'_Cx_C\beta_R}{p}$|
+|Error|$SSE = y'y - \hat \beta' X'y$|$n-(p+1)$|$\frac{SSE}{n-(p+1)}$|$\sigma^2$|
+|Total|$SST=y'y - n \bar y^2$ | $n-1$ | | | 
+
+where $MS = \text{Mean Square Error}$, 
+and 
+$$X_c = \left( \begin{array}{cccc} 
+x_{11}-\bar{x_1} & x_{12}- \bar{x_2} & \cdots & x_{1p}-\bar{x_p} \\ 
+x_{21}-\bar{x_1} & x_{22}- \bar{x_2} & \cdots & x_{2p}-\bar{x_p} \\ 
+\vdots & \vdots & \ddots & \vdots \\
+x_{n1}-\bar{x_1} & x_{n2}- \bar{x_2} & \cdots & x_{np}-\bar{x_p} 
+\end{array}\right)$$
+
+#### Testing for Groups of Predictors 
+
+How do we use this decomposition to test for a group of coefficients? 
+
+The hypothesis can be formulated as 
+
+$$H_0: \beta_1 = \beta_2 = ... = \beta_q = 0, q \leq p$$
+$$H_1: \text{ at least one of } \beta_1, ..., \beta_q \neq 0.$$
+
+As an aside, tests of the overall regression and tests for a single variable fall within this framework as well: 
+
+The overall test: 
+
+$$H_0: \beta_1 = \beta_2 = ... = \beta_p = 0$$
+$$H_1: \beta_j \neq 0 \text{ for at least one } j, j = 1,...,p$$
+
+For a single predictor: 
+
+$$H_0: \beta_j = 0$$
+$$H_1: \beta_j \neq 0$$
+
+We like the property that testing for significance among a "group of
+coefficients" reduces in two special cases to either the overall test or a test
+for an individual coefficient.
+
+If we consider the model in matrix form:
+
+$$Y = X\beta + \epsilon,$$
+
+to construct a test based on sums of squares, partition $\beta$ accordingly:
+
+$$\beta = (\beta_1^, \beta_2')',$$
+
+where $\beta_1$ is a $q \times 1$ and $\beta_2$ is $(p+1-q) \times 1$. 
+We want to test the null hypothesis 
+$$H_0: \beta_1 = 0$$
+$$H_1: \beta_1 \neq 1$$
+and $\beta_2$ is left unspecified. 
+
+Defining $X = \left[ X_1, X_2 \right]$, rewrite the model as 
+
+$$Y = X_1 \beta_1 + X_2 + \beta_2 + \epsilon.$$
+
+Now our model is partitioned so we're ready to test for significance among the
+predictors and $\beta$ coefficients of interest.
+
+The full model has SSR expressed as 
+
+$$SSR(X) = \hat \beta' X' y - n \bar y^2$$
+
+and Mean Square Error 
+
+$$MSE(X) = \frac{y'y - \hat \beta' X' y}{n-p-1}.$$
+
+To find the contribution of $X_1$, fit the model assuming 
+$H_0$ is true. The <span class='vocab'>reduced model</span>
+is 
+$$Y = X_2 \beta_2 + \e,$$
+which yields 
+$$\hat \beta_2 = (X_2'X_2)^{-1}X_2'y \quad \text{ and } \quad SSR(X_2) = \hat \beta_2' X_2' y - n' \bar y^2.$$
+
+The regression sums of squares due to $X_1$ given $X_2$ is in the model is 
+
+$$SSR(X_1|X_2) = SSR(X) - SSR(X_2)$$
+
+with $q$ degrees of freedom. This is known as the <span class='vocab'>extra sum of squares due to $X_1$ given $X_2$</span>.
+
+Under the null hypothesis, 
+
+$SSR(X_1|X_2)/\sigma^2 \sim \chi_q^2$ and $SSE/\sigma^2 \sim \chi_{(n-p-1)}^2$, and these quantities are independent. 
+
+In general, if one $\chi^2$ distribution has degrees of freedom $d_1$ and another has $d_2$, then 
+$(\chi_{d_1}^2/d_2)/(\chi_{d_2}^2/d_2) \sim F_{d_1,d_2}$ 
+if the two are independent. 
+
+So we can test $H_0: \beta_1 = 0$ with the statistic 
+$$F = \frac{SSR(X_1|X_2)/q}{MSE(X)} \stackrel{H_0}{\sim} F_{q,n-p-1}$$
+
+This $F$ distributional result requires either 
+
+  * normality of errors $\e_i \sim \mathcal N(0,\sigma^2)$
+  * large sample theory
+  
+There's a handful of things above that we just have to take for granted assumed from a probability & inference class and don't have time to re-prove here. 
+
+The $F$ written above is an $F$-statistic (or $F$-distributed) because it is the quotient of two $\chi^2$-distributed variables divided by their degrees of freedom.
+
+With reasonably large sample size, $\E[F_{q,n-p-1}] \approx 1$.
+
+For example, one can see that if one runs the regressions: 
+
+```{r, echo=TRUE, eval=FALSE}
+lm(data = mtcars, hp ~ rnorm(n = nrow(mtcars)))
+summary(.Last.value)
+#> ... 
+#> F-statistic: 0.06081 on 1 and 30 DF
+
+lm(data = mtcars, hp ~ mpg)
+#> ... 
+#> F-statistic: 45.46 on 1 and 30 DF
+```
+
+We can think of this procedure as asking: Is the increase in the
+regression sums of squares associated with adding $q$ additional
+predictors, given the presence of the remaining variables in the
+model, sufficient to warrant removing $q$ additional degrees of
+freedom from the denominator of MSE?
+
+Adding an unimportant predictor may increase the MSE, which will
+increase the uncertainty in the regression coefficient estimates and
+the variance of $\hat y$ - so we should include only predictors that explain
+the response.
+
+Note however that for the purpose of explanation confounders may
+not reach significance at given level (e.g. $\alpha = 0.05$) but still have a clinically relevant effect on both outcome and exposure and
+therefore affect the regression coefficients of interest. 
+
+#### Example: Test for 2 BMI Terms, HERS Data 
+
+```{r}
+library(gt)
+library(tidyverse)
+hers <- readr::read_csv(here::here("data/hers.csv"))
+
+hers$BMIc <- hers$BMI - mean(hers$BMI, na.rm=TRUE)
+
+lm.ldl.interact <- 
+  lm(data = hers %>% filter(! is.na(BMIc)), LDL ~ BMIc*statins + age + nonwhite + drinkany + smoking)
+
+lm.ldl.noBMI <- 
+  lm(data = hers %>% filter(! is.na(BMIc)), LDL ~ statins + age + nonwhite + drinkany + smoking)
+
+# perform f-test using anova(reducedModel, fullModel)
+bmi.test <- broom::tidy(anova(lm.ldl.noBMI, lm.ldl.interact))
+
+## format and print results table 
+gt(bmi.test) %>% 
+  tab_header(title = md("**Test of significance of BMI**"),
+             subtitle = md("From LDL model with BMI * statin interaction")) %>% 
+  cols_width(term ~ px(375)) %>% sub_missing(missing_text = '') %>% 
+  fmt_number(columns=c('statistic','p.value'),decimals=3) %>% 
+  tab_options(table.align='left')
+```
+
+### Overall Test
+
+Under the null hypothesis, $SSR/\sigma^2 \sim \chi^2_p$ and 
+$SSE/\sigma^2 \sim \chi^2_{n-(p+1)}$ are independent. 
+
+Therefore we have 
+$$F = \frac{SSR/p}{SSE/[n-(p+1)]} = \frac{MSR}{MSE} \stackrel{H_0}{\sim} F_{p,n-p-1}$$
+
+We note that this is reported automatically in a `lm()`.
+
+
+```{r}
+overall.test <- broom::tidy(anova(lm(data = hers, LDL ~ BMI + age)))
+
+gt(overall.test) %>% 
+  tab_header(title = md("**Overall test**"),
+             subtitle = md("Model of LDL with BMI and age")) %>% 
+  sub_missing(missing_text = '') %>% 
+  fmt_number(columns = c('statistic', 'p.value'), decimals = 3) %>% 
+  tab_options(table.align='left')
+```
+
+
+We can interpret the entries above in the `sumsq` column as $SSR(BMI)$ 
+and then $SSR(age|BMI)$. These are called the "extra sums of squares" 
+contributed by each variable, and sometimes called the "type 1 sums of squares" 
+(no relation to Type 1 error, but more of a historical idiosyncrasy as a result of 
+how old software [either SAS or S or S-plus] printed these out). 
+
+$$F = \frac{(14446 + 7567)/2}{3903361/2744} = 7.74$$
+
+Under $H_0$, $F \sim F_{2, 2744}$, yielding $p = 0.0004458$. 
+
+We reject the null hypothesis at $\alpha = 0.05$ and conclude that 
+at least one of $\beta_1$ or $\beta_2$ is not equal to zero. 
+
+One should note that the above table is one of the places in which 
+order matters because each $SSR$ is conditional on the inclusion of 
+the previously listed variables. 
+
+## Wald Tests
+
+For testing individual coefficients $(H_0: \beta_j = 0$ vs $H_1: \beta_j \neq 0$)
+we can also use the conventional Wald test. To construct the test statistic, consider that 
+
+$$\hat \beta_j \sim \mathcal N(\beta_j, \sigma^2) D_{jj} \quad \text{ and } \quad 
+\frac{\hat{\Var} (\hat \beta_j)}{\sigma^2 D_{jj}} \sim \frac{\chi^2_{n-p-1}}{(n-p-1)}.$$
+
+Note that if $Z \sim \mathcal N(0,1)$ and $S \sim \chi^2_d$ and $Z \independent S$ then $\frac{Z}{\sqrt{S/d}} \sim t_d$.
+
+$$\left( \frac{\hat \beta_j - \beta_j}{\sqrt{\sigma^2 D_{jj}}} \right) \biggr / 
+\left( \sqrt{\frac{\widehat{\Var}(\hat \beta_j)}{\sigma^2D_{jj}}} \right) = \underbrace{\boxed{\frac{\hat \beta_j - \beta_j}{\sqrt{\widehat{\Var}(\hat \beta_j)}}}}_{\text{this should look like a t-statistic}} \stackrel{H_0}{\sim} t_{n-p-1}$$
+
+It should be noted that a $t^2$ value where $t$ is a $t$-statistic follows an $F$-distribution. 
+This implies that in the case of testing a single coefficient, the $t$-test and the $F$-test 
+give the exact same results. 
+
+In the `summary()` function, the $p$-values shown will be from $t$-tests for each $\beta_j$, while the $F$-statistic shown is for
+the overall model. 
+
+$$E(LDL_i) = \beta_0 + \beta_1 BMI_i + \beta_2 Age_i$$
+
+```{r}
+wald.test <- broom::tidy(lm(data = hers, LDL ~ BMI + age))
+gt(wald.test) |> 
+  tab_header(title = 
+               md("**Individual coefficient Wald test**"),
+             subtitle = "Test of BMI in model of LDL with age already included") |> 
+  fmt_number(decimals = 3) |> 
+  tab_options(table.align='left')
+```
+
+$T = 0.366/0.132 = 2.78 \quad p = 0.0006$
+
+This Wald testing strategy extends to testing groups of cofficients
+
+$$Y = X_1 \beta_1 + X_2 \beta_2 + \epsilon$$
+
+where $\beta_1$ is $q \times 1$ and $\beta_2$ is $(p + 1 - q) \times 1$. 
+
+$$H_0: \beta_1 = 0$$
+$$H_1: \beta_1 \neq 0$$
+
+The multivariate Wald test statistic is 
+$$W = \hat \beta_1' \left[ \widehat{\Var}(\hat \beta_1 ) \right]  \hat \beta_1$$
+
+Under the null,
+
+  * $(1/q)W \sim F_{q,n-p-1}$
+  * Asymptotically, $W \sim \chi_q^2$
+
+```{r}
+wald.test.group <- broom::tidy(lm.ldl.interact)
+
+gt(wald.test.group) |> 
+  tab_header(title = 
+               md("**LDL model with BMI * statin interaction**")) |> 
+  fmt_number(decimals = 3) |> 
+  tab_options(table.align='left')
+```
+
+In this scenario, $H_0: \beta_2 - \beta_8 = 0$.
+
+```{r}
+## Generic function for a Wald test from the output of lm()
+
+waldTest <- function(fit, vec, digits=c(2,4)) {
+  
+  beta     <- coef(fit)[vec]
+  varMat   <- summary(fit)$cov.unscaled[vec,vec] * (summary(fit)$sigma^2)
+  testStat <- t(beta) %*% solve(varMat) %*% beta 
+  pVal     <- 1 - pchisq(testStat, length(vec))
+  value    <- c(Fstat = round(testStat, digits=digits[1]),
+             p = round(pVal, digits=digits[2]))
+  return(value)
+}
+
+waldTest(lm.ldl.interact, vec = c(2,8))
+```
+
+## Testing general linear hypotheses
+
+Suppose we are interested in testing linear combinations of the 
+regression coefficients. For example, we may be interested in testing
+
+$$H_0: \beta_i = \beta_j$$
+
+equivalently $H_0: \beta_i - \beta_j = 0$. 
+
+Such hypotheses can be expressed as $H_0: C \beta = 0$.
+
+Where $C$ is an $r \times (p+1)$ matrix of linearly independent 
+contrasts with $r$ the number of restrictions imposed by the null. 
+
+For example, consider the model 
+$$Y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3} + \e_i,$$
+
+and testing the hypothesis 
+$$H_i : \beta_1 = 0, \beta_2 = \beta_3$$
+
+This could also be written as 
+$$\left( \begin{array}{c} \beta_1 \\ \beta_2 - \beta_3 \end{array} \right) = 
+\left( \begin{array}{c} 0 \\ 0 \end{array} \right)$$
+
+This null hypothesis is equivalent to 
+$$H_0: \left( \begin{array}{cccc} 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & -1 \end{array} \right)\beta = 0$$
+were $\beta = (\beta_0, \beta_1, \beta_2, \beta_3)'$. 
+
+
+We can obtain the <span class='vocab'>reduced model</span> by solving $C\beta$ 
+for $r$ of the regression coefficients in terms of the remaining $p+1-r$ 
+regression coefficients. Substituting these values into the full model will 
+yield a reduced model under the null hypothesis, 
+
+$$Y = Z \gamma + \e,$$
+
+where $\dim(Z) = n \times (p+1 -r)$ matrix and $\dim(\gamma) = (p + 1 - r) \times 1$
+vector of regression coefficients. 
+
+The residual SS for this reduced model is 
+$$SSE(RM) = y'y - \hat\gamma' Z'y \quad \quad (n - p - 1 + r \, \text{ degrees of freedom})$$
+
+$SSR(\text{Full Model}) - SSR(\text{Reduced Model})$ is called the *sum of squares due to the hypothesis* $C\beta=0$. 
+
+We can test this hypothesis using 
+$$F = \frac{(SSR(FM)-SSR(RM))/r}{MSE} \stackrel{H_0}{\sim} F_{r,n-p-1}.$$
+
+#### Example with HERS data 
+
+Consider using the physical activity score (1-5): 
+
+|Physact|Activity|
+|---|---|
+|1| Much less active|
+|2| Somewhat less active|
+|3| About as active|
+|4| Somewhat more active|
+|5| Much more active |
+
+An ANOVA model for glucose level regressed on physical activity is 
+
+$$E(glucose_i) = \beta_0 + \beta_1D_{i1} + \beta_2D_{i2} + \beta_3D_{i3} + \beta_4 D_{i4}$$
+
+Question: For the purposes of predicting glucose level, is the cruder 
+physical activity categorization below adequate? 
+
+|Collapsed Physact| Activity |
+|1| Less active |
+|2| About as active |
+|3| More active | 
+
+Recall the full model is 
+
+$$E(glucose_i) = \beta_0 + \beta_1D_{i1} + \beta_2D_{i2} + \beta_3D_{i3} + \beta_4 D_{i4}$$
+
+and this corresponds to the null hypothesis 
+
+$$H_0: \beta_1 = \beta_2, \beta_4 = 0$$
+
+and the reduced model 
+$$E(glucose_i) = \beta_0 + \beta_1(D_{i1} + D_{i2}) + \beta_3D_{i3}$$
+
+... 
