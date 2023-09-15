@@ -199,6 +199,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#wald-tests" id="toc-wald-tests" class="nav-link" data-scroll-target="#wald-tests">Wald Tests</a></li>
   <li><a href="#testing-general-linear-hypotheses" id="toc-testing-general-linear-hypotheses" class="nav-link" data-scroll-target="#testing-general-linear-hypotheses">Testing general linear hypotheses</a></li>
+  <li><a href="#confidence-intervals" id="toc-confidence-intervals" class="nav-link" data-scroll-target="#confidence-intervals">Confidence Intervals</a></li>
+  <li><a href="#model-estimated-expected-value" id="toc-model-estimated-expected-value" class="nav-link" data-scroll-target="#model-estimated-expected-value">Model Estimated Expected Value</a>
+  <ul class="collapse">
+  <li><a href="#prediction-intervals" id="toc-prediction-intervals" class="nav-link" data-scroll-target="#prediction-intervals">Prediction Intervals</a></li>
+  </ul></li>
+  <li><a href="#r2-and-adjusted-r2" id="toc-r2-and-adjusted-r2" class="nav-link" data-scroll-target="#r2-and-adjusted-r2"><span class="math inline">\(R^2\)</span> and Adjusted <span class="math inline">\(R^2\)</span></a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab</a>
+  <ul class="collapse">
+  <li><a href="#variance-estimates-to-confidence-intervals" id="toc-variance-estimates-to-confidence-intervals" class="nav-link" data-scroll-target="#variance-estimates-to-confidence-intervals">Variance estimates to confidence intervals</a></li>
+  <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing">Hypothesis Testing</a>
+  <ul class="collapse">
+  <li><a href="#f-tests-comparison-of-variances" id="toc-f-tests-comparison-of-variances" class="nav-link" data-scroll-target="#f-tests-comparison-of-variances">F-tests (comparison of variances)</a></li>
+  </ul></li>
+  <li><a href="#wald-test-comparison-of-means" id="toc-wald-test-comparison-of-means" class="nav-link" data-scroll-target="#wald-test-comparison-of-means">Wald test (comparison of means)</a></li>
+  <li><a href="#additional-remarks" id="toc-additional-remarks" class="nav-link" data-scroll-target="#additional-remarks">Additional Remarks</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -504,23 +520,23 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.align=</span><span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
-<div id="ylfclcbagf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ylfclcbagf table {
+<div id="harjkhknww" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#harjkhknww table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ylfclcbagf thead, #ylfclcbagf tbody, #ylfclcbagf tfoot, #ylfclcbagf tr, #ylfclcbagf td, #ylfclcbagf th {
+#harjkhknww thead, #harjkhknww tbody, #harjkhknww tfoot, #harjkhknww tr, #harjkhknww td, #harjkhknww th {
   border-style: none;
 }
 
-#ylfclcbagf p {
+#harjkhknww p {
   margin: 0;
   padding: 0;
 }
 
-#ylfclcbagf .gt_table {
+#harjkhknww .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -546,12 +562,12 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-left-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_caption {
+#harjkhknww .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ylfclcbagf .gt_title {
+#harjkhknww .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -563,7 +579,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-width: 0;
 }
 
-#ylfclcbagf .gt_subtitle {
+#harjkhknww .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -575,7 +591,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-width: 0;
 }
 
-#ylfclcbagf .gt_heading {
+#harjkhknww .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -587,13 +603,13 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_bottom_border {
+#harjkhknww .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_col_headings {
+#harjkhknww .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -608,7 +624,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_col_heading {
+#harjkhknww .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -628,7 +644,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#ylfclcbagf .gt_column_spanner_outer {
+#harjkhknww .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -640,15 +656,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 4px;
 }
 
-#ylfclcbagf .gt_column_spanner_outer:first-child {
+#harjkhknww .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ylfclcbagf .gt_column_spanner_outer:last-child {
+#harjkhknww .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ylfclcbagf .gt_column_spanner {
+#harjkhknww .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -660,11 +676,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   width: 100%;
 }
 
-#ylfclcbagf .gt_spanner_row {
+#harjkhknww .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ylfclcbagf .gt_group_heading {
+#harjkhknww .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -690,7 +706,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   text-align: left;
 }
 
-#ylfclcbagf .gt_empty_group_heading {
+#harjkhknww .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -705,15 +721,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: middle;
 }
 
-#ylfclcbagf .gt_from_md > :first-child {
+#harjkhknww .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ylfclcbagf .gt_from_md > :last-child {
+#harjkhknww .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ylfclcbagf .gt_row {
+#harjkhknww .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -732,7 +748,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#ylfclcbagf .gt_stub {
+#harjkhknww .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -745,7 +761,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#ylfclcbagf .gt_stub_row_group {
+#harjkhknww .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -759,15 +775,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: top;
 }
 
-#ylfclcbagf .gt_row_group_first td {
+#harjkhknww .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ylfclcbagf .gt_row_group_first th {
+#harjkhknww .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ylfclcbagf .gt_summary_row {
+#harjkhknww .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -777,16 +793,16 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#ylfclcbagf .gt_first_summary_row {
+#harjkhknww .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_first_summary_row.thick {
+#harjkhknww .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ylfclcbagf .gt_last_summary_row {
+#harjkhknww .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -796,7 +812,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_grand_summary_row {
+#harjkhknww .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -806,7 +822,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#ylfclcbagf .gt_first_grand_summary_row {
+#harjkhknww .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -816,7 +832,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_last_grand_summary_row_top {
+#harjkhknww .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -826,11 +842,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_striped {
+#harjkhknww .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ylfclcbagf .gt_table_body {
+#harjkhknww .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -839,7 +855,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_footnotes {
+#harjkhknww .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -853,7 +869,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_footnote {
+#harjkhknww .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -862,7 +878,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#ylfclcbagf .gt_sourcenotes {
+#harjkhknww .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -876,7 +892,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#ylfclcbagf .gt_sourcenote {
+#harjkhknww .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -884,63 +900,63 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#ylfclcbagf .gt_left {
+#harjkhknww .gt_left {
   text-align: left;
 }
 
-#ylfclcbagf .gt_center {
+#harjkhknww .gt_center {
   text-align: center;
 }
 
-#ylfclcbagf .gt_right {
+#harjkhknww .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ylfclcbagf .gt_font_normal {
+#harjkhknww .gt_font_normal {
   font-weight: normal;
 }
 
-#ylfclcbagf .gt_font_bold {
+#harjkhknww .gt_font_bold {
   font-weight: bold;
 }
 
-#ylfclcbagf .gt_font_italic {
+#harjkhknww .gt_font_italic {
   font-style: italic;
 }
 
-#ylfclcbagf .gt_super {
+#harjkhknww .gt_super {
   font-size: 65%;
 }
 
-#ylfclcbagf .gt_footnote_marks {
+#harjkhknww .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ylfclcbagf .gt_asterisk {
+#harjkhknww .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ylfclcbagf .gt_indent_1 {
+#harjkhknww .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ylfclcbagf .gt_indent_2 {
+#harjkhknww .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ylfclcbagf .gt_indent_3 {
+#harjkhknww .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ylfclcbagf .gt_indent_4 {
+#harjkhknww .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ylfclcbagf .gt_indent_5 {
+#harjkhknww .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1011,23 +1027,23 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.align=</span><span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
-<div id="yzfysduulh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#yzfysduulh table {
+<div id="ftlwsymsaf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ftlwsymsaf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#yzfysduulh thead, #yzfysduulh tbody, #yzfysduulh tfoot, #yzfysduulh tr, #yzfysduulh td, #yzfysduulh th {
+#ftlwsymsaf thead, #ftlwsymsaf tbody, #ftlwsymsaf tfoot, #ftlwsymsaf tr, #ftlwsymsaf td, #ftlwsymsaf th {
   border-style: none;
 }
 
-#yzfysduulh p {
+#ftlwsymsaf p {
   margin: 0;
   padding: 0;
 }
 
-#yzfysduulh .gt_table {
+#ftlwsymsaf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1053,12 +1069,12 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-left-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_caption {
+#ftlwsymsaf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#yzfysduulh .gt_title {
+#ftlwsymsaf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1070,7 +1086,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-width: 0;
 }
 
-#yzfysduulh .gt_subtitle {
+#ftlwsymsaf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1082,7 +1098,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-width: 0;
 }
 
-#yzfysduulh .gt_heading {
+#ftlwsymsaf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1094,13 +1110,13 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_bottom_border {
+#ftlwsymsaf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_col_headings {
+#ftlwsymsaf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1115,7 +1131,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_col_heading {
+#ftlwsymsaf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1135,7 +1151,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#yzfysduulh .gt_column_spanner_outer {
+#ftlwsymsaf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1147,15 +1163,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 4px;
 }
 
-#yzfysduulh .gt_column_spanner_outer:first-child {
+#ftlwsymsaf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#yzfysduulh .gt_column_spanner_outer:last-child {
+#ftlwsymsaf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#yzfysduulh .gt_column_spanner {
+#ftlwsymsaf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1167,11 +1183,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   width: 100%;
 }
 
-#yzfysduulh .gt_spanner_row {
+#ftlwsymsaf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#yzfysduulh .gt_group_heading {
+#ftlwsymsaf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1197,7 +1213,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   text-align: left;
 }
 
-#yzfysduulh .gt_empty_group_heading {
+#ftlwsymsaf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1212,15 +1228,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: middle;
 }
 
-#yzfysduulh .gt_from_md > :first-child {
+#ftlwsymsaf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#yzfysduulh .gt_from_md > :last-child {
+#ftlwsymsaf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#yzfysduulh .gt_row {
+#ftlwsymsaf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1239,7 +1255,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#yzfysduulh .gt_stub {
+#ftlwsymsaf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1252,7 +1268,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#yzfysduulh .gt_stub_row_group {
+#ftlwsymsaf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1266,15 +1282,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: top;
 }
 
-#yzfysduulh .gt_row_group_first td {
+#ftlwsymsaf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#yzfysduulh .gt_row_group_first th {
+#ftlwsymsaf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#yzfysduulh .gt_summary_row {
+#ftlwsymsaf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1284,16 +1300,16 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#yzfysduulh .gt_first_summary_row {
+#ftlwsymsaf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_first_summary_row.thick {
+#ftlwsymsaf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#yzfysduulh .gt_last_summary_row {
+#ftlwsymsaf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1303,7 +1319,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_grand_summary_row {
+#ftlwsymsaf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1313,7 +1329,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#yzfysduulh .gt_first_grand_summary_row {
+#ftlwsymsaf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1323,7 +1339,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_last_grand_summary_row_top {
+#ftlwsymsaf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1333,11 +1349,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_striped {
+#ftlwsymsaf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#yzfysduulh .gt_table_body {
+#ftlwsymsaf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1346,7 +1362,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_footnotes {
+#ftlwsymsaf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1360,7 +1376,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_footnote {
+#ftlwsymsaf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1369,7 +1385,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#yzfysduulh .gt_sourcenotes {
+#ftlwsymsaf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1383,7 +1399,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#yzfysduulh .gt_sourcenote {
+#ftlwsymsaf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1391,63 +1407,63 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#yzfysduulh .gt_left {
+#ftlwsymsaf .gt_left {
   text-align: left;
 }
 
-#yzfysduulh .gt_center {
+#ftlwsymsaf .gt_center {
   text-align: center;
 }
 
-#yzfysduulh .gt_right {
+#ftlwsymsaf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#yzfysduulh .gt_font_normal {
+#ftlwsymsaf .gt_font_normal {
   font-weight: normal;
 }
 
-#yzfysduulh .gt_font_bold {
+#ftlwsymsaf .gt_font_bold {
   font-weight: bold;
 }
 
-#yzfysduulh .gt_font_italic {
+#ftlwsymsaf .gt_font_italic {
   font-style: italic;
 }
 
-#yzfysduulh .gt_super {
+#ftlwsymsaf .gt_super {
   font-size: 65%;
 }
 
-#yzfysduulh .gt_footnote_marks {
+#ftlwsymsaf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#yzfysduulh .gt_asterisk {
+#ftlwsymsaf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#yzfysduulh .gt_indent_1 {
+#ftlwsymsaf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#yzfysduulh .gt_indent_2 {
+#ftlwsymsaf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#yzfysduulh .gt_indent_3 {
+#ftlwsymsaf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#yzfysduulh .gt_indent_4 {
+#ftlwsymsaf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#yzfysduulh .gt_indent_5 {
+#ftlwsymsaf .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1522,23 +1538,23 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.align=</span><span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
-<div id="pcyptrvrzv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#pcyptrvrzv table {
+<div id="ihwrzimans" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ihwrzimans table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#pcyptrvrzv thead, #pcyptrvrzv tbody, #pcyptrvrzv tfoot, #pcyptrvrzv tr, #pcyptrvrzv td, #pcyptrvrzv th {
+#ihwrzimans thead, #ihwrzimans tbody, #ihwrzimans tfoot, #ihwrzimans tr, #ihwrzimans td, #ihwrzimans th {
   border-style: none;
 }
 
-#pcyptrvrzv p {
+#ihwrzimans p {
   margin: 0;
   padding: 0;
 }
 
-#pcyptrvrzv .gt_table {
+#ihwrzimans .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1564,12 +1580,12 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-left-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_caption {
+#ihwrzimans .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#pcyptrvrzv .gt_title {
+#ihwrzimans .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1581,7 +1597,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-width: 0;
 }
 
-#pcyptrvrzv .gt_subtitle {
+#ihwrzimans .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1593,7 +1609,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-width: 0;
 }
 
-#pcyptrvrzv .gt_heading {
+#ihwrzimans .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1605,13 +1621,13 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_bottom_border {
+#ihwrzimans .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_col_headings {
+#ihwrzimans .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1626,7 +1642,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_col_heading {
+#ihwrzimans .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1646,7 +1662,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#pcyptrvrzv .gt_column_spanner_outer {
+#ihwrzimans .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1658,15 +1674,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 4px;
 }
 
-#pcyptrvrzv .gt_column_spanner_outer:first-child {
+#ihwrzimans .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#pcyptrvrzv .gt_column_spanner_outer:last-child {
+#ihwrzimans .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#pcyptrvrzv .gt_column_spanner {
+#ihwrzimans .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1678,11 +1694,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   width: 100%;
 }
 
-#pcyptrvrzv .gt_spanner_row {
+#ihwrzimans .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#pcyptrvrzv .gt_group_heading {
+#ihwrzimans .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1708,7 +1724,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   text-align: left;
 }
 
-#pcyptrvrzv .gt_empty_group_heading {
+#ihwrzimans .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1723,15 +1739,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: middle;
 }
 
-#pcyptrvrzv .gt_from_md > :first-child {
+#ihwrzimans .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#pcyptrvrzv .gt_from_md > :last-child {
+#ihwrzimans .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#pcyptrvrzv .gt_row {
+#ihwrzimans .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1750,7 +1766,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#pcyptrvrzv .gt_stub {
+#ihwrzimans .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1763,7 +1779,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#pcyptrvrzv .gt_stub_row_group {
+#ihwrzimans .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1777,15 +1793,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: top;
 }
 
-#pcyptrvrzv .gt_row_group_first td {
+#ihwrzimans .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#pcyptrvrzv .gt_row_group_first th {
+#ihwrzimans .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#pcyptrvrzv .gt_summary_row {
+#ihwrzimans .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1795,16 +1811,16 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#pcyptrvrzv .gt_first_summary_row {
+#ihwrzimans .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_first_summary_row.thick {
+#ihwrzimans .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#pcyptrvrzv .gt_last_summary_row {
+#ihwrzimans .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1814,7 +1830,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_grand_summary_row {
+#ihwrzimans .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1824,7 +1840,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#pcyptrvrzv .gt_first_grand_summary_row {
+#ihwrzimans .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1834,7 +1850,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_last_grand_summary_row_top {
+#ihwrzimans .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1844,11 +1860,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_striped {
+#ihwrzimans .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#pcyptrvrzv .gt_table_body {
+#ihwrzimans .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1857,7 +1873,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_footnotes {
+#ihwrzimans .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1871,7 +1887,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_footnote {
+#ihwrzimans .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1880,7 +1896,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#pcyptrvrzv .gt_sourcenotes {
+#ihwrzimans .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1894,7 +1910,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#pcyptrvrzv .gt_sourcenote {
+#ihwrzimans .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1902,63 +1918,63 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#pcyptrvrzv .gt_left {
+#ihwrzimans .gt_left {
   text-align: left;
 }
 
-#pcyptrvrzv .gt_center {
+#ihwrzimans .gt_center {
   text-align: center;
 }
 
-#pcyptrvrzv .gt_right {
+#ihwrzimans .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#pcyptrvrzv .gt_font_normal {
+#ihwrzimans .gt_font_normal {
   font-weight: normal;
 }
 
-#pcyptrvrzv .gt_font_bold {
+#ihwrzimans .gt_font_bold {
   font-weight: bold;
 }
 
-#pcyptrvrzv .gt_font_italic {
+#ihwrzimans .gt_font_italic {
   font-style: italic;
 }
 
-#pcyptrvrzv .gt_super {
+#ihwrzimans .gt_super {
   font-size: 65%;
 }
 
-#pcyptrvrzv .gt_footnote_marks {
+#ihwrzimans .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#pcyptrvrzv .gt_asterisk {
+#ihwrzimans .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#pcyptrvrzv .gt_indent_1 {
+#ihwrzimans .gt_indent_1 {
   text-indent: 5px;
 }
 
-#pcyptrvrzv .gt_indent_2 {
+#ihwrzimans .gt_indent_2 {
   text-indent: 10px;
 }
 
-#pcyptrvrzv .gt_indent_3 {
+#ihwrzimans .gt_indent_3 {
   text-indent: 15px;
 }
 
-#pcyptrvrzv .gt_indent_4 {
+#ihwrzimans .gt_indent_4 {
   text-indent: 20px;
 }
 
-#pcyptrvrzv .gt_indent_5 {
+#ihwrzimans .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -2022,23 +2038,23 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.align=</span><span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
-<div id="bsrsillltz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bsrsillltz table {
+<div id="ofagcluycm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ofagcluycm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bsrsillltz thead, #bsrsillltz tbody, #bsrsillltz tfoot, #bsrsillltz tr, #bsrsillltz td, #bsrsillltz th {
+#ofagcluycm thead, #ofagcluycm tbody, #ofagcluycm tfoot, #ofagcluycm tr, #ofagcluycm td, #ofagcluycm th {
   border-style: none;
 }
 
-#bsrsillltz p {
+#ofagcluycm p {
   margin: 0;
   padding: 0;
 }
 
-#bsrsillltz .gt_table {
+#ofagcluycm .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2064,12 +2080,12 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-left-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_caption {
+#ofagcluycm .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bsrsillltz .gt_title {
+#ofagcluycm .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2081,7 +2097,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-width: 0;
 }
 
-#bsrsillltz .gt_subtitle {
+#ofagcluycm .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2093,7 +2109,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-width: 0;
 }
 
-#bsrsillltz .gt_heading {
+#ofagcluycm .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2105,13 +2121,13 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_bottom_border {
+#ofagcluycm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_col_headings {
+#ofagcluycm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2126,7 +2142,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_col_heading {
+#ofagcluycm .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2146,7 +2162,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#bsrsillltz .gt_column_spanner_outer {
+#ofagcluycm .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2158,15 +2174,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 4px;
 }
 
-#bsrsillltz .gt_column_spanner_outer:first-child {
+#ofagcluycm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bsrsillltz .gt_column_spanner_outer:last-child {
+#ofagcluycm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bsrsillltz .gt_column_spanner {
+#ofagcluycm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2178,11 +2194,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   width: 100%;
 }
 
-#bsrsillltz .gt_spanner_row {
+#ofagcluycm .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bsrsillltz .gt_group_heading {
+#ofagcluycm .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2208,7 +2224,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   text-align: left;
 }
 
-#bsrsillltz .gt_empty_group_heading {
+#ofagcluycm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2223,15 +2239,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: middle;
 }
 
-#bsrsillltz .gt_from_md > :first-child {
+#ofagcluycm .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bsrsillltz .gt_from_md > :last-child {
+#ofagcluycm .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bsrsillltz .gt_row {
+#ofagcluycm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2250,7 +2266,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   overflow-x: hidden;
 }
 
-#bsrsillltz .gt_stub {
+#ofagcluycm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2263,7 +2279,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#bsrsillltz .gt_stub_row_group {
+#ofagcluycm .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2277,15 +2293,15 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   vertical-align: top;
 }
 
-#bsrsillltz .gt_row_group_first td {
+#ofagcluycm .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bsrsillltz .gt_row_group_first th {
+#ofagcluycm .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bsrsillltz .gt_summary_row {
+#ofagcluycm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2295,16 +2311,16 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#bsrsillltz .gt_first_summary_row {
+#ofagcluycm .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_first_summary_row.thick {
+#ofagcluycm .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bsrsillltz .gt_last_summary_row {
+#ofagcluycm .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2314,7 +2330,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_grand_summary_row {
+#ofagcluycm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2324,7 +2340,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#bsrsillltz .gt_first_grand_summary_row {
+#ofagcluycm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2334,7 +2350,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-top-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_last_grand_summary_row_top {
+#ofagcluycm .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2344,11 +2360,11 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_striped {
+#ofagcluycm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bsrsillltz .gt_table_body {
+#ofagcluycm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2357,7 +2373,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-bottom-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_footnotes {
+#ofagcluycm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2371,7 +2387,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_footnote {
+#ofagcluycm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2380,7 +2396,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#bsrsillltz .gt_sourcenotes {
+#ofagcluycm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2394,7 +2410,7 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   border-right-color: #D3D3D3;
 }
 
-#bsrsillltz .gt_sourcenote {
+#ofagcluycm .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2402,63 +2418,63 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
   padding-right: 5px;
 }
 
-#bsrsillltz .gt_left {
+#ofagcluycm .gt_left {
   text-align: left;
 }
 
-#bsrsillltz .gt_center {
+#ofagcluycm .gt_center {
   text-align: center;
 }
 
-#bsrsillltz .gt_right {
+#ofagcluycm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bsrsillltz .gt_font_normal {
+#ofagcluycm .gt_font_normal {
   font-weight: normal;
 }
 
-#bsrsillltz .gt_font_bold {
+#ofagcluycm .gt_font_bold {
   font-weight: bold;
 }
 
-#bsrsillltz .gt_font_italic {
+#ofagcluycm .gt_font_italic {
   font-style: italic;
 }
 
-#bsrsillltz .gt_super {
+#ofagcluycm .gt_super {
   font-size: 65%;
 }
 
-#bsrsillltz .gt_footnote_marks {
+#ofagcluycm .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bsrsillltz .gt_asterisk {
+#ofagcluycm .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bsrsillltz .gt_indent_1 {
+#ofagcluycm .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bsrsillltz .gt_indent_2 {
+#ofagcluycm .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bsrsillltz .gt_indent_3 {
+#ofagcluycm .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bsrsillltz .gt_indent_4 {
+#ofagcluycm .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bsrsillltz .gt_indent_5 {
+#ofagcluycm .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -2600,13 +2616,1721 @@ dbl (24): age, medcond, weight, BMI, waist, WHR, glucose, weight1, BMI1, wai...
 <p>An ANOVA model for glucose level regressed on physical activity is</p>
 <p><span class="math display">\[E(glucose_i) = \beta_0 + \beta_1D_{i1} + \beta_2D_{i2} + \beta_3D_{i3} + \beta_4 D_{i4}\]</span></p>
 <p>Question: For the purposes of predicting glucose level, is the cruder physical activity categorization below adequate?</p>
-<p>|Collapsed Physact| Activity | |1| Less active | |2| About as active | |3| More active |</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Collapsed Physact</th>
+<th>Activity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Less active</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>About as active</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>More active</td>
+</tr>
+</tbody>
+</table>
 <p>Recall the full model is</p>
 <p><span class="math display">\[E(glucose_i) = \beta_0 + \beta_1D_{i1} + \beta_2D_{i2} + \beta_3D_{i3} + \beta_4 D_{i4}\]</span></p>
-<p>and this corresponds to the null hypothesis</p>
+<p>and this question corresponds to the null hypothesis .</p>
+<p>Remember that we can also write <span class="math inline">\(H_0\)</span> as <span class="math inline">\(\beta_1 - \beta_2 = 0, \beta_4 = 0\)</span>. We can think about this as having solved for <span class="math inline">\(\beta_1\)</span> in terms of <span class="math inline">\(\beta_2\)</span> or vice-versa.</p>
 <p><span class="math display">\[H_0: \beta_1 = \beta_2, \beta_4 = 0\]</span></p>
 <p>and the reduced model <span class="math display">\[E(glucose_i) = \beta_0 + \beta_1(D_{i1} + D_{i2}) + \beta_3D_{i3}\]</span></p>
-<p>…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lm.glucose.pa <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose <span class="sc">~</span> <span class="fu">factor</span>(physact), <span class="at">data =</span> hers)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pa.test.fine <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="fu">anova</span>(lm.glucose.pa))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(pa.test.fine) <span class="sc">|&gt;</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">tab_header</span>(<span class="at">title =</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>               <span class="fu">md</span>(<span class="st">"**Overall test of 5-level physical activity**"</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">subtitle =</span> <span class="st">"Model of glucose with 5 PA categories"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.align=</span><span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="qatnaqvrwl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qatnaqvrwl table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qatnaqvrwl thead, #qatnaqvrwl tbody, #qatnaqvrwl tfoot, #qatnaqvrwl tr, #qatnaqvrwl td, #qatnaqvrwl th {
+  border-style: none;
+}
+
+#qatnaqvrwl p {
+  margin: 0;
+  padding: 0;
+}
+
+#qatnaqvrwl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: 0;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qatnaqvrwl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qatnaqvrwl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qatnaqvrwl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qatnaqvrwl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qatnaqvrwl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qatnaqvrwl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qatnaqvrwl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qatnaqvrwl .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qatnaqvrwl .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qatnaqvrwl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qatnaqvrwl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qatnaqvrwl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qatnaqvrwl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qatnaqvrwl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qatnaqvrwl .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qatnaqvrwl .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qatnaqvrwl .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qatnaqvrwl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qatnaqvrwl .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qatnaqvrwl .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qatnaqvrwl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qatnaqvrwl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qatnaqvrwl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qatnaqvrwl .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qatnaqvrwl .gt_left {
+  text-align: left;
+}
+
+#qatnaqvrwl .gt_center {
+  text-align: center;
+}
+
+#qatnaqvrwl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qatnaqvrwl .gt_font_normal {
+  font-weight: normal;
+}
+
+#qatnaqvrwl .gt_font_bold {
+  font-weight: bold;
+}
+
+#qatnaqvrwl .gt_font_italic {
+  font-style: italic;
+}
+
+#qatnaqvrwl .gt_super {
+  font-size: 65%;
+}
+
+#qatnaqvrwl .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qatnaqvrwl .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qatnaqvrwl .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qatnaqvrwl .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qatnaqvrwl .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qatnaqvrwl .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qatnaqvrwl .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_title gt_font_normal" style=""><strong>Overall test of 5-level physical activity</strong></td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">Model of glucose with 5 PA categories</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="term">term</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="df">df</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="sumsq">sumsq</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="meansq">meansq</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="statistic">statistic</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="p.value">p.value</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="term" class="gt_row gt_left">factor(physact)</td>
+<td headers="df" class="gt_row gt_right">4.0</td>
+<td headers="sumsq" class="gt_row gt_right">87,696.5</td>
+<td headers="meansq" class="gt_row gt_right">21,924.1</td>
+<td headers="statistic" class="gt_row gt_right">16.5</td>
+<td headers="p.value" class="gt_row gt_right">0.0</td></tr>
+    <tr><td headers="term" class="gt_row gt_left">Residuals</td>
+<td headers="df" class="gt_row gt_right">2,758.0</td>
+<td headers="sumsq" class="gt_row gt_right">3,662,765.0</td>
+<td headers="meansq" class="gt_row gt_right">1,328.1</td>
+<td headers="statistic" class="gt_row gt_right">NA</td>
+<td headers="p.value" class="gt_row gt_right">NA</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hers<span class="sc">$</span>collapsed_physact <span class="ot">&lt;-</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">case_when</span>(hers<span class="sc">$</span>physact <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"much less active"</span>, <span class="st">'somewhat less active'</span>) <span class="sc">~</span> <span class="st">'less'</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>            hers<span class="sc">$</span>physact <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"much more active"</span>, <span class="st">'somewhat more active'</span>) <span class="sc">~</span> <span class="st">'more'</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>            <span class="cn">TRUE</span> <span class="sc">~</span> hers<span class="sc">$</span>physact)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>lm.glucose.pacoarse <span class="ot">&lt;-</span> <span class="fu">lm</span>(glucose <span class="sc">~</span> <span class="fu">factor</span>(collapsed_physact), <span class="at">data =</span> hers)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>pa.test.coarse <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="fu">anova</span>(lm.glucose.pacoarse))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(pa.test.coarse) <span class="sc">|&gt;</span> </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"**Overall test of 3-level physical activity**"</span>),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Model of glucose with 3 PA categories"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> df<span class="sc">:</span>meansq,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">decimals=</span><span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> statistic<span class="sc">:</span>p.value,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">decimals=</span><span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.align =</span> <span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="suladydorj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#suladydorj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#suladydorj thead, #suladydorj tbody, #suladydorj tfoot, #suladydorj tr, #suladydorj td, #suladydorj th {
+  border-style: none;
+}
+
+#suladydorj p {
+  margin: 0;
+  padding: 0;
+}
+
+#suladydorj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: 0;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#suladydorj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#suladydorj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#suladydorj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#suladydorj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#suladydorj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#suladydorj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#suladydorj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#suladydorj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#suladydorj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#suladydorj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#suladydorj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#suladydorj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#suladydorj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#suladydorj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#suladydorj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#suladydorj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#suladydorj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#suladydorj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#suladydorj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#suladydorj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#suladydorj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#suladydorj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#suladydorj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#suladydorj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#suladydorj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#suladydorj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#suladydorj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#suladydorj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#suladydorj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#suladydorj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#suladydorj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#suladydorj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#suladydorj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#suladydorj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#suladydorj .gt_left {
+  text-align: left;
+}
+
+#suladydorj .gt_center {
+  text-align: center;
+}
+
+#suladydorj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#suladydorj .gt_font_normal {
+  font-weight: normal;
+}
+
+#suladydorj .gt_font_bold {
+  font-weight: bold;
+}
+
+#suladydorj .gt_font_italic {
+  font-style: italic;
+}
+
+#suladydorj .gt_super {
+  font-size: 65%;
+}
+
+#suladydorj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#suladydorj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#suladydorj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#suladydorj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#suladydorj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#suladydorj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#suladydorj .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_title gt_font_normal" style=""><strong>Overall test of 3-level physical activity</strong></td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="6" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">Model of glucose with 3 PA categories</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="term">term</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="df">df</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="sumsq">sumsq</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="meansq">meansq</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="statistic">statistic</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="p.value">p.value</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="term" class="gt_row gt_left">factor(collapsed_physact)</td>
+<td headers="df" class="gt_row gt_right">2</td>
+<td headers="sumsq" class="gt_row gt_right">76,501</td>
+<td headers="meansq" class="gt_row gt_right">38,250</td>
+<td headers="statistic" class="gt_row gt_right">28.73</td>
+<td headers="p.value" class="gt_row gt_right">0.00</td></tr>
+    <tr><td headers="term" class="gt_row gt_left">Residuals</td>
+<td headers="df" class="gt_row gt_right">2,760</td>
+<td headers="sumsq" class="gt_row gt_right">3,673,961</td>
+<td headers="meansq" class="gt_row gt_right">1,331</td>
+<td headers="statistic" class="gt_row gt_right">NA</td>
+<td headers="p.value" class="gt_row gt_right">NA</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>Our <span class="math inline">\(F\)</span>-test then becomes:</p>
+<p><span class="math display">\[ \frac{(87,697 - 76,501)/2}{1330} = 4.21 \stackrel{H_0}{=} F_{2,2760} \, \, (p = 0.0149)\]</span></p>
+<p>How would we get that p-value?</p>
+<p>In our case we can run:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>F_stat <span class="ot">&lt;-</span> ((pa.test.fine<span class="sc">$</span>sumsq[[<span class="dv">1</span>]]<span class="sc">-</span>pa.test.coarse<span class="sc">$</span>sumsq[[<span class="dv">1</span>]])<span class="sc">/</span><span class="dv">2</span>) <span class="sc">/</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  pa.test.fine<span class="sc">$</span>meansq[[<span class="dv">2</span>]]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(F_stat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.215159</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>( <span class="co"># the distribution function (cdf) of the F distribution </span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">q =</span> F_stat,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">df1 =</span> <span class="dv">2</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">df2 =</span> pa.test.fine<span class="sc">$</span>df[[<span class="dv">2</span>]],</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01486524</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare to the anova table p-value</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm.glucose.pacoarse, lm.glucose.pa) <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"**ANOVA table comparing the 5-level to 3-level model**"</span>),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Glucose regressed on physical activity"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> df.residual<span class="sc">:</span>df,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> statistic<span class="sc">:</span><span class="st">`</span><span class="at">p.value</span><span class="st">`</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">3</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="lzguyuauur" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lzguyuauur table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#lzguyuauur thead, #lzguyuauur tbody, #lzguyuauur tfoot, #lzguyuauur tr, #lzguyuauur td, #lzguyuauur th {
+  border-style: none;
+}
+
+#lzguyuauur p {
+  margin: 0;
+  padding: 0;
+}
+
+#lzguyuauur .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#lzguyuauur .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#lzguyuauur .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#lzguyuauur .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#lzguyuauur .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#lzguyuauur .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#lzguyuauur .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#lzguyuauur .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#lzguyuauur .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#lzguyuauur .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#lzguyuauur .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#lzguyuauur .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#lzguyuauur .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#lzguyuauur .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#lzguyuauur .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lzguyuauur .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#lzguyuauur .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#lzguyuauur .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#lzguyuauur .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lzguyuauur .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#lzguyuauur .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lzguyuauur .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#lzguyuauur .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lzguyuauur .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lzguyuauur .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lzguyuauur .gt_left {
+  text-align: left;
+}
+
+#lzguyuauur .gt_center {
+  text-align: center;
+}
+
+#lzguyuauur .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#lzguyuauur .gt_font_normal {
+  font-weight: normal;
+}
+
+#lzguyuauur .gt_font_bold {
+  font-weight: bold;
+}
+
+#lzguyuauur .gt_font_italic {
+  font-style: italic;
+}
+
+#lzguyuauur .gt_super {
+  font-size: 65%;
+}
+
+#lzguyuauur .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#lzguyuauur .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#lzguyuauur .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#lzguyuauur .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#lzguyuauur .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#lzguyuauur .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#lzguyuauur .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="7" class="gt_heading gt_title gt_font_normal" style=""><strong>ANOVA table comparing the 5-level to 3-level model</strong></td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="7" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">Glucose regressed on physical activity</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="term">term</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="df.residual">df.residual</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="rss">rss</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="df">df</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="sumsq">sumsq</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="statistic">statistic</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="p.value">p.value</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="term" class="gt_row gt_left">glucose ~ factor(collapsed_physact)</td>
+<td headers="df.residual" class="gt_row gt_right">2,760</td>
+<td headers="rss" class="gt_row gt_right">3,673,961</td>
+<td headers="df" class="gt_row gt_right">NA</td>
+<td headers="sumsq" class="gt_row gt_right">NA</td>
+<td headers="statistic" class="gt_row gt_right">NA</td>
+<td headers="p.value" class="gt_row gt_right">NA</td></tr>
+    <tr><td headers="term" class="gt_row gt_left">glucose ~ factor(physact)</td>
+<td headers="df.residual" class="gt_row gt_right">2,758</td>
+<td headers="rss" class="gt_row gt_right">3,662,765</td>
+<td headers="df" class="gt_row gt_right">2</td>
+<td headers="sumsq" class="gt_row gt_right">11195.89</td>
+<td headers="statistic" class="gt_row gt_right">4.215</td>
+<td headers="p.value" class="gt_row gt_right">0.015</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-intervals">Confidence Intervals</h2>
+<p>Recall that often we obtain CIs by inverting test statistics.</p>
+<p>Thus we can construct a confidence interval for <span class="math inline">\(\beta_j\)</span> by inverting the univariate <span class="math inline">\(t\)</span>-test.</p>
+<p>First, letting <span class="math inline">\(c\)</span> denote <span class="math inline">\(t_{n-p-1,1-\alpha/2}\)</span>, note that <span class="math display">\[P(-c &lt; \frac{\hat \beta_j - \beta_j}{\sigma(\hat \beta_j)} &lt; c) = 0.95\]</span></p>
+<p><span class="math display">\[ \Longrightarrow (\hat \beta_j - c \times \sigma(\hat \beta_j) &lt; \beta_j &lt; \hat \beta_j + c \times \sigma(\hat \beta_j)) = 0.95\]</span></p>
+<p><span class="math display">\[\hat \beta_j \pm t_{n - p -1, 1 - \alpha/2} \sqrt{\hat \sigma^2 D_{jj}}\]</span></p>
+</section>
+<section id="model-estimated-expected-value" class="level2">
+<h2 class="anchored" data-anchor-id="model-estimated-expected-value">Model Estimated Expected Value</h2>
+<p>A 100(1-<span class="math inline">\(\alpha)\)</span>% CI for <span class="math inline">\(\mu(x) = x'\beta\)</span> is <span class="math display">\[\hat \mu(x) \pm t_{n-p-1, 1-\alpha/2} \sqrt{\hat \sigma^2 x' (X' X)^{-1} x}\]</span></p>
+<section id="prediction-intervals" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-intervals">Prediction Intervals</h3>
+<p>A 100(1-<span class="math inline">\(\alpha\)</span>)% prediction interval for a single new observation with covariate values <span class="math inline">\(x_{new}\)</span> is constructed by noting that</p>
+<p><span class="math display">\[y_{new} = x_{new}' \beta  + \varepsilon_{new}\]</span></p>
+<p>and <span class="math inline">\(\text{Var}(\hat y_{new}) = \sigma^2 x_{new}' (X'X)^{-1}x_{new} + \sigma^2\)</span>. Then</p>
+<p><span class="math display">\[\hat y_{new} \pm t_{n-p-1, 1 -\alpha} \sqrt{ \hat \sigma^2 \left(1 + x_{new}' (X'X)^{-1} x_{new}\right)}\]</span></p>
+<p>where <span class="math inline">\(\hat y_{new} = x_{new}' \hat \beta\)</span>.</p>
+<p>Thus the predictions for <span class="math inline">\(y_{new}\)</span> have have uncertainty both from the estimate of <span class="math inline">\(\hat \beta\)</span> and the estimated error variance <span class="math inline">\(\hat \sigma^2\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>lm.sbp.age <span class="ot">&lt;-</span> <span class="fu">lm</span>(SBP <span class="sc">~</span> age, <span class="at">data =</span> hers)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>pred_with_ci <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm.sbp.age, <span class="at">interval =</span> <span class="st">'confidence'</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>pred_with_pi <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm.sbp.age, <span class="at">interval =</span> <span class="st">'prediction'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(lm.sbp.age, interval = "prediction"): predictions on current data refer to _future_ responses</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>intervals <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(hers<span class="sc">$</span>age, pred_with_ci, pred_with_pi[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(intervals) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'age'</span>, <span class="st">'yhat'</span>, <span class="st">'lwr_ci'</span>, <span class="st">'upr_ci'</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'lwr_pi'</span>, <span class="st">'upr_pi'</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>intervals <span class="ot">&lt;-</span> intervals <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(age)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(intervals, <span class="fu">aes</span>(age)) <span class="sc">+</span> </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> lwr_pi, <span class="at">ymax =</span> upr_pi, <span class="at">fill =</span> <span class="st">'prediction interval'</span>), <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> lwr_ci, <span class="at">ymax =</span> upr_ci, <span class="at">fill =</span> <span class="st">'confidence interval'</span>), <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> yhat)) <span class="sc">+</span> </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> hers, <span class="fu">aes</span>(age, SBP), <span class="at">size =</span> .<span class="dv">75</span>, <span class="at">width =</span> .<span class="dv">5</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.15</span>) <span class="sc">+</span> </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'prediction interval'</span> <span class="ot">=</span> <span class="st">'orange'</span>, <span class="st">'confidence interval'</span> <span class="ot">=</span> <span class="st">'cornflowerblue'</span>)) <span class="sc">+</span> </span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'SBP'</span>, <span class="at">fill =</span> <span class="st">'interval type'</span>) <span class="sc">+</span> </span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Regression Prediction and Confidence Intervals"</span>) <span class="sc">+</span> </span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'bottom'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="week3_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note that we have assumed <span class="math inline">\(\varepsilon \sim \mathcal N(0, \sigma^2)\)</span> to construct the prediction interval. If the error terms are not close to normal, then the prediction interval could be misleading. This is not the case for the interval for the expected value, which only requires approximate normality for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span>.</p>
+</section>
+</section>
+<section id="r2-and-adjusted-r2" class="level2">
+<h2 class="anchored" data-anchor-id="r2-and-adjusted-r2"><span class="math inline">\(R^2\)</span> and Adjusted <span class="math inline">\(R^2\)</span></h2>
+<p><span class="math display">\[R^2 = 1 - \frac{SSE}{SST} = \frac{SSR}{SST}\]</span></p>
+<p>The proportion of the total variation in <span class="math inline">\(Y_i\)</span> explained by <span class="math inline">\(X_i\)</span>.</p>
+<p>Because <span class="math inline">\(0 \leq SSE \leq SST\)</span>, <span class="math inline">\(0 \leq R^2 \leq 1\)</span>.</p>
+<p><span class="math inline">\(R^2\)</span> increases whenever new terms are added to the model.</p>
+<p>Therefore for model comparison, most people often use a version of the <span class="math inline">\(R^2\)</span> that is adjusted for the number of predictors in the model. This is the <span class="vocab">adjusted</span> <span class="math inline">\(R^2\)</span>, defined as <span class="math display">\[R^2 = 1 - \left( \frac{n-1}{\text{Error df}} \right) \frac{SSE}{SST}  = 1 - \frac{MSE}{SST/(n-1)}\]</span></p>
+<p>Using the MSE is essentially a penalization on wasting unused parameters since <span class="math display">\[MSE = \frac{\sum_{i=1}^n (x_i - \bar x_i)^2}{n - p - 1}.\]</span></p>
+</section>
+<section id="lab" class="level1">
+<h1>Lab</h1>
+<blockquote class="blockquote">
+<p>“The only useful function of a statistician is to make predictions, and thus to provide the basis for action” <br> —William Edwards Demings, U.S. War Department, 1942</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>“Data analysis is detective work—almost an ideal example of seeking what might be relevant.” <br> —John W. Tukey, 1969</p>
+</blockquote>
+<p>One perspective is that statistics is really only good for two things:</p>
+<ul>
+<li>To make predictions</li>
+<li>To explain — to generate understanding, to see associations, to describe.</li>
+</ul>
+<section id="variance-estimates-to-confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="variance-estimates-to-confidence-intervals">Variance estimates to confidence intervals</h2>
+<p>We know that if <span class="math inline">\(Z\)</span> is a random vector and <span class="math inline">\(A\)</span> is a matrix of constants, then</p>
+<p><span class="math display">\[\text{Var}(AZ) = A \text{Var}(Z) A^T.\]</span></p>
+<p>This implies that</p>
+<p><span class="math display">\[\text{Var}(\hat \beta) = \text{Var}[(X^TX)^{-1} X^TY] = \sigma^2 (X^TX)^{-1}\]</span></p>
+<p>This is a quadratic form. If we were in a scalar world with a variable <span class="math inline">\(a \in \mathbb R\)</span> and <span class="math inline">\(z\)</span> a random variable. Then <span class="math inline">\(\text{Var}(az) = a^2 \text{Var}(z)\)</span>. When we work with matrices, the square of a matrix is analogous to writing <span class="math inline">\(AA^T\)</span></p>
+<p>Remember that <span class="math inline">\(\hat \beta = \underbrace{(X^TX)^{-1} X^T}y\)</span>.</p>
+<p><span class="math display">\[\text{Var}(\beta) = \left( \begin{array}{cccc}
+\text{Var}(\beta_1) &amp; \text{Cov}(\beta_1,\beta_2) &amp; ... &amp; ... \\
+\text{Cov}(\beta_2, \beta_1) &amp; \text{Var}(\beta_2) &amp; ... &amp; ... \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots
+\end{array}\right).\]</span></p>
+<p><span class="math display">\[95\%CI(\hat \beta_j) = \hat \beta_j \pm t_{n-p-1, 1-\alpha/2} \hat \sigma \sqrt{[(X^TX)^{-1}]_{j,j}}.\]</span></p>
+<p>But we can use the same idea to obtain variance and CI estimates for the prediction of a new/future observation <span class="math inline">\(x_{new}\)</span>. Given <span class="math inline">\(x_{new}\)</span> we can predict their mean response <span class="math inline">\(\mathbb E(\hat y|x_{new}) = x^T_{new}\hat \beta\)</span>.</p>
+<p>Note that we cannot predict the response itself since we don’t know what <span class="math inline">\(\varepsilon_{new}\)</span> is.</p>
+<p>When it comes to confidence intervals, we can indeed get two different types of intervals.</p>
+<p><span class="math display">\[\text{Predicted mean response: } \quad \text{Var}(\hat{\mathbb E}(\hat y|x_{new})) =
+\text{Var}(x_{new}^T \hat \beta) = \sigma^2 x^T_{new} (X^TX)^{-1} x_{new},\]</span></p>
+<p>which gives the 95% confidence interval:</p>
+<p><span class="math display">\[x_{new}^T \hat \beta \pm t_{n-p-1,1-\alpha/2} \hat \sigma \sqrt{x_{new}^T (X^TX)^{-1} x_{new}}.\]</span></p>
+<p><span class="math display">\[\text{The predicted response: }
+\quad \text{Var}(\hat y|x_{new}) = \text{Var}(x_{new}^T \hat \beta + \varepsilon_{new}) = \sigma^2 x_{new}^T (X^TX)^{-1}x_{new} + \sigma^2,\]</span></p>
+<p>which gives the 95% <span class="vocab">prediction</span> interval:</p>
+<p><span class="math display">\[x_{new}^T \hat \beta \pm t_{n-p-1, 1-\alpha/2} \hat \sigma \sqrt{1 + x_{new}^T(X^TX)^{-1}x_{new}}.\]</span></p>
+<p>In general, we can’t predict <span class="math inline">\(y_new = \hat \beta_0 + \hat \beta_1 x_1 + ... + \varepsilon_{new}\)</span> because we don’t know <span class="math inline">\(\varepsilon_{new}\)</span>. However, we can predict <span class="math display">\[\text{Var}(\hat y_{new}|x_{new}) = \text{Var}(\hat \beta_0 + \hat \beta_1 x_1 + ...) + \underbrace{\text{Var}(\varepsilon_{new})}_{=0,\, \text{ by assumption}}.\]</span></p>
+<p>Why should these values be <span class="math inline">\(t\)</span>-distributed? Because finite samples of the <span class="math inline">\(\beta\)</span> distributed <!-- notes to self: 
+$F$-distributions are asymptotically $t$-distributed. 
+
+$t$-distributions are asymptotically normally distributed. 
+
+The Wald test uses \chi^2 distributions
+--></p>
+<p>Often we just write <span class="math inline">\(\mathbb E(y) = X\beta\)</span>, but this isn’t really the full model. It’s missing an assumption: <span class="math inline">\(\text{Var}(y) = \sigma^2I_n\)</span> where <span class="math inline">\(I_n\)</span> is the <span class="math inline">\(n \times n\)</span> identity matrix.</p>
+<p>We get <span class="math inline">\(\hat \beta\)</span> often from either <span class="math inline">\(OLS\)</span> or <span class="math inline">\(MLE\)</span>, and we get the <span class="math inline">\(\hat \sigma^2\)</span> from the MSE.</p>
+<p>Why do we care about these values? One way is to just say “center and spread” — but a more sophisticated way is to realize that these two statistics completely characterize a normal distribution.</p>
+<p>The moment generating function says that <span class="math display">\[D(Y) = 1 + \mathbb Ey + \text{Var}(y) + \text{Skew}(y) + \text{Kurtosis}(y) + ...\]</span></p>
+<p>Confidence intervals tell us what are the plausible range of model parameters.</p>
+</section>
+<section id="hypothesis-testing" class="level2">
+<h2 class="anchored" data-anchor-id="hypothesis-testing">Hypothesis Testing</h2>
+<p>Hypothesis testing is about having a hunch and seeing if we’re right.</p>
+<p>For multiple linear regression, there are many options for testing the significance of predictor variables. These tests fall under two main categories: F tests and Wald tests. Both are asymptotically equivalent, so yield comparable results in hypothesis testing.</p>
+<p>The F-test is looking at the variances. The Wald test is looking at the behavior of the means.</p>
+<section id="f-tests-comparison-of-variances" class="level3">
+<h3 class="anchored" data-anchor-id="f-tests-comparison-of-variances">F-tests (comparison of variances)</h3>
+<p>Recall that</p>
+<ul>
+<li>SST (Total Sum of Squares) is a measure of the total variance in the outcome from the given sample.</li>
+<li>SSR (Regression Sum of Squares) represents the total variance in the outcome explained by the regression model.</li>
+<li>SSE (Sum of Squared Errors) represents the remaining total variance in the outcome that is not captured by the regression model. We use the SSE to estimate the true (unobserved) variance <span class="math inline">\(\sigma^2\)</span> of the residuals. Let <span class="math inline">\(\hat \sigma^2 = MSE = SSE/(n-p-1)\)</span> for a model with <span class="math inline">\(p\)</span> predictors and an intercept.</li>
+</ul>
+<p><span class="math display">\[SST \stackrel{def}{=} \sum_{i=1}^n (Y_i - \bar Y)^2 = \sum_{i=1}^n (\hat Y_i - \bar Y)^2 + \sum_{i=1}^n (Y_i - \hat Y_i)^2 \stackrel{def}{=} SSR + SST\]</span></p>
+<p>The <span class="math inline">\(F\)</span>-tests are:</p>
+<ol type="1">
+<li>Test for no covariate effect <span class="math inline">\(H_0: \beta_1 = ... = \beta_p = 0\)</span></li>
+</ol>
+<p><span class="math display">\[F = \frac{SSR/p}{SSE/(n-p-1)} = \frac{SSR/p}{MSE} \sim F_{p,n-p-1}.\]</span> 2. Test for a single variable <span class="math inline">\(x_j\)</span>. <span class="math inline">\(H_0 : \beta_j = 0\)</span>.</p>
+<p><span class="math display">\[F = \frac{[SSR - SSR(\text{model without } x_j)]/1}{SSE/(n-p-1)}\]</span> <span class="math display">\[ =
+  \frac{SSR - SSR(\text{model without } x_j)}{MSE} \sim F_{1, n-p-1}.\]</span></p>
+<ol start="3" type="1">
+<li>Test for a group of <span class="math inline">\(r\)</span> variables. <span class="math inline">\(H_0: \beta_{j_1} = ... = \beta_{j_r} = 0\)</span>.</li>
+</ol>
+<p><span class="math display">\[F = \frac{[SSR - SSR(\text{model without } r \text{ variables})]/r}{SSE/(n-p-1)}\]</span> <span class="math display">\[ = \frac{[SSR - SSR(\text{model without } r \text{ variables})]/r}{MSE} \sim F_{1,n-p-1}.\]</span></p>
+<ol start="4" type="1">
+<li>Test of a general linear hypothesis, <span class="math inline">\(H_0: C\beta= 0\)</span> where <span class="math inline">\(C\)</span> is an <span class="math inline">\(r \times (p+1)\)</span> matrix of linearly independent contrasts. The test requires calculation of the sum of squares for the reduced model, where we parameterize according to the null hypothesis.</li>
+</ol>
+<p><span class="math display">\[F = \frac{(SSR - SSR(\text{reduced model}))/r}{MSE} \sim F_{r,n-p-1}\]</span></p>
+<p>The MSE is from the full model.</p>
+<p><strong>Note:</strong> the reduced model must be nested within the full model for us to use the <span class="math inline">\(F\)</span>-test.</p>
+<div class="hottip">
+<p>A great question is to look at this formula and say that the numerator is a marginal quantity, so why shouldn’t the denominator also be marginal?</p>
+<p>One reason might be that if it were, the denominator would no longer have the same degrees of freedom as the numerator.</p>
+<p>Another reason, arguably more important, is that this quantity would no longer be <span class="math inline">\(F\)</span>-distributed, and we really want to have a quantity with nice asymptotic distributional properties.</p>
+</div>
+<p>Let’s look at an example of situation 4:</p>
+<p>The full model might be <span class="math display">\[\mathbb E(y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3\]</span></p>
+<p>And model 2 is given as <span class="math display">\[\mathbb E(y) = \gamma_0 + \gamma_1 x_1\]</span></p>
+<p>Then</p>
+<p><span class="math display">\[\left( \begin{array}{cccc} 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{array} \right) \left( \begin{array}{c} \beta_1 \\ \beta_2 \\ \beta_3 \\ \beta_4 \end{array} \right) = \left( \begin{array}{c} 0 \\ 0 \end{array} \right)\]</span></p>
+<p>In general, when we say that the reduced model must be nested within the full model, what we’re saying is that the reduced model can be expressed as a linear constraint imposed on the full model.</p>
+<p>For example, we might have a scenario where <span class="math inline">\(Age \in \{ 57, 58, 59 \}\)</span> and our reduced model is <span class="math display">\[y = \beta_0 + \beta_1 Age\]</span></p>
+<p>And our full model is <span class="math display">\[y = \gamma_0 + \gamma_1 \mathbb 1(Age = 57) + \gamma_2 \mathbb 1(Age = 58) + \gamma_3 \mathbb 1 (Age = 59)\]</span></p>
+<p>If we make a new variable that is <span class="math display">\[57 \mathbb 1(Age = 57) + 58 \mathbb 1(Age = 58) + 59 \mathbb 1 (Age = 59)\]</span>, and this recovers the original age variable.</p>
+<div class="cooltip">
+<p>The <span class="math inline">\(F\)</span>-test can be thought of as a cost-benefit ratio.</p>
+</div>
+</section>
+</section>
+<section id="wald-test-comparison-of-means" class="level2">
+<h2 class="anchored" data-anchor-id="wald-test-comparison-of-means">Wald test (comparison of means)</h2>
+<p>As we touched on in lecture, we can also consider an alternative hypothesis test formulation for linear regression—this will also help motivate the form of our confidence intervals below. Recall the following properties: For an <span class="math inline">\(r \times (p+1)\)</span> matrix <span class="math inline">\(C\)</span> and a random vector <span class="math inline">\(y\)</span>, then</p>
+<p><span class="math display">\[\mathbb E(Cy) = C\mathbb E(y) \quad \text{and} \quad \text{Var}(Cy) = C\text{Var}(y)C^T\]</span></p>
+<p>As we have shown previously, <span class="math display">\[\hat \beta \sim MVN_{p+1} (\beta, \sigma^2 C(X^TX)^{-1}C^T)\]</span></p>
+<p>So, to test the general linear hypothesis <span class="math inline">\(H_0: C\beta = 0\)</span>, we have the following statistic (which generalizes the familiar univariate Wald statistic <span class="math inline">\(W = \hat \beta^2 / \widehat{\text{Var}}(\hat \beta) \sim \chi^2_1\)</span>, asypmptotically):</p>
+<p><span class="math display">\[W = (C\hat \beta)^T\underbrace{[\hat \sigma^2 C(X^TX)^{-1}C^T]^{-1}}_{\text{variance of } C\beta}(C\hat \beta)\]</span></p>
+<p>If we think of what we’d do in a standard intro stats class, we’d do one of two things.</p>
+<ol type="1">
+<li>We’d look at <span class="math inline">\(\hat \beta_1 / \hat \sigma(\hat \beta_1)\)</span>, which is <span class="math inline">\(t\)</span>-distributed.</li>
+<li>Or we’d look in <span class="math inline">\(\hat \beta_1^2/\widehat{Var}(\hat \beta_1)\)</span> which is <span class="math inline">\(F\)</span>-distributed and asymptotically <span class="math inline">\(\chi^2\)</span> distributed.</li>
+</ol>
+<p>Then by properties of the <span class="math inline">\(F\)</span>-statistic, <span class="math inline">\(W/r \sim F_{r,n-p-1}\)</span>, and also asymptotically <span class="math inline">\(W \sim \chi_r^2\)</span>.</p>
+</section>
+<section id="additional-remarks" class="level2">
+<h2 class="anchored" data-anchor-id="additional-remarks">Additional Remarks</h2>
+<p>Note that the univariate Wald Statistic <span class="math inline">\(W = \hat \beta^2 / \widehat{\text{Var}}(\hat \beta) \sim \chi_1^2\)</span> is equivalent to the <span class="math inline">\(t\)</span>-test statistic</p>
+<p><span class="math display">\[t_{obs} = \frac{\hat \beta_1}{s.e.(\hat\beta_1)} \sim t_{n-2,(1-\alpha/2)}.\]</span></p>
+<p>While we will not go into this in detail, the theoretical motivation for all of these tests is that they are ratios of <span class="math inline">\(\chi^2\)</span>-distributed random variables that are scaled by their degrees of freedom, which in turn defines the <span class="math inline">\(F\)</span>-distribution.</p>
+<p>The <span class="math inline">\(F\)</span>-test is valid if and only if the <span class="math inline">\(\chi^2\)</span> assumption for the numerator and denominator holds true. Yet, <span class="math inline">\(\chi^2\)</span> random variables are obtained from the sums of squared normal random variables. This is why it is necessary for the residuals <span class="math inline">\(\varepsilon_i\)</span> to follow a normal distribution and/or 2) large sample theory to hold (so that the <span class="math inline">\(\varepsilon_i\)</span> may be approximately normal).</p>
+<p>These <span class="math inline">\(F\)</span>-tests are sometimes given in the context of an analysis of variance (ANOVA) model and table, which presents the sum of squares explained by each variable, conditional on all previous variables in the model, and then the sum of squares for the error terms. Each test compares two models, one nested within the other. Nested models will come up again when we discuss likeli- hood ratio tests, of which the F -test is a special case under the assumption of normally-distributed outcomes.</p>
+<p>A lack of significance of the effect of a covariate or group of covariates does not necessarily indicate the absence of an effect. Whether to remove these covariates from the model will depend on the scientific goal of the study.</p>
 
 
 </section>

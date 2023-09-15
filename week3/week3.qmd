@@ -633,6 +633,7 @@ Question: For the purposes of predicting glucose level, is the cruder
 physical activity categorization below adequate? 
 
 |Collapsed Physact| Activity |
+|---|---|
 |1| Less active |
 |2| About as active |
 |3| More active | 
@@ -641,11 +642,378 @@ Recall the full model is
 
 $$E(glucose_i) = \beta_0 + \beta_1D_{i1} + \beta_2D_{i2} + \beta_3D_{i3} + \beta_4 D_{i4}$$
 
-and this corresponds to the null hypothesis 
+and this question corresponds to the null hypothesis .
+
+Remember that we can also write $H_0$ as $\beta_1 - \beta_2 = 0, \beta_4 = 0$. We can think about this as having solved for $\beta_1$ in terms of $\beta_2$ or vice-versa. 
 
 $$H_0: \beta_1 = \beta_2, \beta_4 = 0$$
 
 and the reduced model 
 $$E(glucose_i) = \beta_0 + \beta_1(D_{i1} + D_{i2}) + \beta_3D_{i3}$$
 
-... 
+```{r}
+
+lm.glucose.pa <- lm(glucose ~ factor(physact), data = hers)
+pa.test.fine <- broom::tidy(anova(lm.glucose.pa))
+
+gt(pa.test.fine) |> 
+   tab_header(title = 
+               md("**Overall test of 5-level physical activity**"),
+                  subtitle = "Model of glucose with 5 PA categories") |> 
+  fmt_number(decimals = 1) |> 
+  tab_options(table.align='left')
+
+hers$collapsed_physact <- 
+  case_when(hers$physact %in% c("much less active", 'somewhat less active') ~ 'less',
+            hers$physact %in% c("much more active", 'somewhat more active') ~ 'more',
+            TRUE ~ hers$physact)
+
+lm.glucose.pacoarse <- lm(glucose ~ factor(collapsed_physact), data = hers)
+
+pa.test.coarse <- broom::tidy(anova(lm.glucose.pacoarse))
+
+gt(pa.test.coarse) |> 
+  tab_header(
+    title = md("**Overall test of 3-level physical activity**"),
+    subtitle = "Model of glucose with 3 PA categories") |> 
+  fmt_number(columns = df:meansq,
+             decimals=0) |> 
+  fmt_number(columns = statistic:p.value,
+             decimals=2) |> 
+  tab_options(table.align = 'left')
+```
+
+Our $F$-test then becomes: 
+
+$$ \frac{(87,697 - 76,501)/2}{1330} = 4.21 \stackrel{H_0}{=} F_{2,2760} \, \, (p = 0.0149)$$
+
+How would we get that p-value? 
+
+In our case we can run: 
+
+```{r}
+F_stat <- ((pa.test.fine$sumsq[[1]]-pa.test.coarse$sumsq[[1]])/2) / 
+  pa.test.fine$meansq[[2]]
+
+print(F_stat)
+
+pf( # the distribution function (cdf) of the F distribution 
+  q = F_stat,
+  df1 = 2,
+  df2 = pa.test.fine$df[[2]],
+  lower.tail = FALSE)
+
+# compare to the anova table p-value
+anova(lm.glucose.pacoarse, lm.glucose.pa) |> 
+  broom::tidy() |> 
+  gt() |> 
+  tab_header(
+    title = md("**ANOVA table comparing the 5-level to 3-level model**"),
+    subtitle = "Glucose regressed on physical activity") |> 
+  fmt_number(
+    columns = df.residual:df,
+    decimals = 0) |> 
+  fmt_number(
+    columns = statistic:`p.value`,
+    decimals = 3
+    )
+```
+
+## Confidence Intervals
+
+Recall that often we obtain CIs by inverting test statistics.
+
+Thus we can construct a confidence interval for $\beta_j$ by 
+inverting the univariate $t$-test. 
+
+First, letting $c$ denote $t_{n-p-1,1-\alpha/2}$, note that 
+$$P(-c < \frac{\hat \beta_j - \beta_j}{\sigma(\hat \beta_j)} < c) = 0.95$$
+
+$$ \Longrightarrow (\hat \beta_j - c \times \sigma(\hat \beta_j) < \beta_j < \hat \beta_j + c \times \sigma(\hat \beta_j)) = 0.95$$
+
+$$\hat \beta_j \pm t_{n - p -1, 1 - \alpha/2} \sqrt{\hat \sigma^2 D_{jj}}$$
+
+## Model Estimated Expected Value 
+
+
+A 100(1-$\alpha)$% CI for $\mu(x) = x'\beta$ is 
+$$\hat \mu(x) \pm t_{n-p-1, 1-\alpha/2} \sqrt{\hat \sigma^2 x' (X' X)^{-1} x}$$
+
+
+### Prediction Intervals 
+
+A 100(1-$\alpha$)% prediction interval for a single new 
+observation with covariate values $x_{new}$ is constructed 
+by noting that 
+
+$$y_{new} = x_{new}' \beta  + \varepsilon_{new}$$
+
+and $\Var(\hat y_{new}) = \sigma^2 x_{new}' (X'X)^{-1}x_{new} + \sigma^2$. Then
+
+$$\hat y_{new} \pm t_{n-p-1, 1 -\alpha} \sqrt{ \hat \sigma^2 \left(1 + x_{new}' (X'X)^{-1} x_{new}\right)}$$
+
+where $\hat y_{new} = x_{new}' \hat \beta$.
+
+Thus the predictions for $y_{new}$ have have uncertainty both from the estimate of $\hat \beta$ and the estimated error variance $\hat \sigma^2$.
+
+```{r}
+lm.sbp.age <- lm(SBP ~ age, data = hers)
+
+pred_with_ci <- predict(lm.sbp.age, interval = 'confidence')
+pred_with_pi <- predict(lm.sbp.age, interval = 'prediction')
+
+intervals <- data.frame(hers$age, pred_with_ci, pred_with_pi[,2:3])
+
+names(intervals) <- c('age', 'yhat', 'lwr_ci', 'upr_ci',
+                      'lwr_pi', 'upr_pi')
+
+intervals <- intervals %>% arrange(age)
+
+ggplot(intervals, aes(age)) + 
+  geom_ribbon(aes(ymin= lwr_pi, ymax = upr_pi, fill = 'prediction interval'), alpha = 0.5) + 
+  geom_ribbon(aes(ymin= lwr_ci, ymax = upr_ci, fill = 'confidence interval'), alpha = 0.8) + 
+  geom_line(aes(y = yhat)) + 
+  geom_jitter(data = hers, aes(age, SBP), size = .75, width = .5, height = 0, alpha = 0.15) + 
+  scale_fill_manual(values = c('prediction interval' = 'orange', 'confidence interval' = 'cornflowerblue')) + 
+  theme_bw() +
+  labs(y = 'SBP', fill = 'interval type') + 
+  ggtitle("Regression Prediction and Confidence Intervals") + 
+  theme(legend.position = 'bottom')
+```
+
+Note that we have assumed $\varepsilon \sim \mathcal N(0, \sigma^2)$ to construct the prediction interval. 
+If the error terms are not close to normal, then the 
+prediction interval could be misleading. This is not 
+the case for the interval for the expected value, 
+which only requires approximate normality for $\hat \beta_0$ and $\hat \beta_1$. 
+
+## $R^2$ and Adjusted $R^2$
+
+$$R^2 = 1 - \frac{SSE}{SST} = \frac{SSR}{SST}$$
+
+The proportion of the total variation in $Y_i$ explained by $X_i$. 
+
+Because $0 \leq SSE \leq SST$, $0 \leq R^2 \leq 1$. 
+
+$R^2$ increases whenever new terms are added to the model. 
+
+Therefore for model comparison, most people often use a 
+version of the $R^2$ that is adjusted for the number of predictors in the model. This is the <span class='vocab'>adjusted</span> $R^2$, defined as 
+$$R^2 = 1 - \left( \frac{n-1}{\text{Error df}} \right) \frac{SSE}{SST}  = 1 - \frac{MSE}{SST/(n-1)}$$
+
+Using the MSE is essentially a penalization on wasting unused 
+parameters since 
+$$MSE = \frac{\sum_{i=1}^n (x_i - \bar x_i)^2}{n - p - 1}.$$
+
+# Lab
+
+> "The only useful function of a statistician is to make 
+predictions, and thus to provide the basis for action" <br>
+—William Edwards Demings, U.S. War Department, 1942
+
+> "Data analysis is detective work—almost an ideal example of seeking what might be relevant." <br>
+—John W. Tukey, 1969
+
+One perspective is that 
+statistics is really only good 
+for two things: 
+
+  * To make predictions 
+  * To explain — to generate understanding, to see associations, to describe.
+  
+## Variance estimates to confidence intervals 
+
+We know that if $Z$ is a random 
+vector and $A$ is a matrix of constants, then 
+
+$$\Var(AZ) = A \Var(Z) A^T.$$
+
+This implies that 
+
+$$\Var(\hat \beta) = \Var[(X^TX)^{-1} X^TY] = \sigma^2 (X^TX)^{-1}$$
+
+This is a quadratic form. If we were in a scalar world with a variable $a \in \mathbb R$ and $z$ a random variable. Then $\Var(az) = a^2 \Var(z)$. When we work with matrices, the square of a matrix is analogous to writing $AA^T$
+
+Remember that $\hat \beta = \underbrace{(X^TX)^{-1} X^T}y$.
+
+$$\Var(\beta) = \left( \begin{array}{cccc}
+\Var(\beta_1) & \Cov(\beta_1,\beta_2) & ... & ... \\
+\Cov(\beta_2, \beta_1) & \Var(\beta_2) & ... & ... \\
+\vdots & \vdots & \ddots & \vdots 
+\end{array}\right).$$
+
+
+
+$$95\%CI(\hat \beta_j) = \hat \beta_j \pm t_{n-p-1, 1-\alpha/2} \hat \sigma \sqrt{[(X^TX)^{-1}]_{j,j}}.$$
+
+But we can use the same idea to obtain variance and CI estimates for the prediction of a new/future observation $x_{new}$. Given $x_{new}$ we can predict their mean response $\E(\hat y|x_{new}) = x^T_{new}\hat \beta$. 
+
+Note that we cannot predict the response itself since we don't know what $\varepsilon_{new}$ is. 
+
+When it comes to confidence intervals, we can indeed get two different types of intervals. 
+
+$$\text{Predicted mean response: } \quad \Var (\hat{\E}(\hat y|x_{new})) = 
+\Var (x_{new}^T \hat \beta) = \sigma^2 x^T_{new} (X^TX)^{-1} x_{new},$$
+
+which gives the 95% confidence interval: 
+
+$$x_{new}^T \hat \beta \pm t_{n-p-1,1-\alpha/2} \hat \sigma \sqrt{x_{new}^T (X^TX)^{-1} x_{new}}.$$
+
+$$\text{The predicted response: }
+\quad \Var(\hat y|x_{new}) = \Var(x_{new}^T \hat \beta + \varepsilon_{new}) = \sigma^2 x_{new}^T (X^TX)^{-1}x_{new} + \sigma^2,$$
+
+which gives the 95% <span class='vocab'>prediction</span> interval: 
+
+$$x_{new}^T \hat \beta \pm t_{n-p-1, 1-\alpha/2} \hat \sigma \sqrt{1 + x_{new}^T(X^TX)^{-1}x_{new}}.$$
+
+In general, we can't predict 
+$y_new = \hat \beta_0 + \hat \beta_1 x_1 + ... + \varepsilon_{new}$ because we don't know 
+$\varepsilon_{new}$. However, we can predict $$\Var(\hat y_{new}|x_{new}) = \Var(\hat \beta_0 + \hat \beta_1 x_1 + ...) + \underbrace{\Var(\varepsilon_{new})}_{=0,\, \text{ by assumption}}.$$
+
+Why should these values be $t$-distributed? Because finite samples of the $\beta$ distributed 
+<!-- notes to self: 
+$F$-distributions are asymptotically $t$-distributed. 
+
+$t$-distributions are asymptotically normally distributed. 
+
+The Wald test uses \chi^2 distributions
+--> 
+
+Often we just write $\E(y) = X\beta$, but this isn't really the full model. It's missing an assumption: $\Var(y) = \sigma^2I_n$ where $I_n$ is the $n \times n$ identity matrix. 
+
+We get $\hat \beta$ often from 
+either $OLS$ or $MLE$, and 
+we get the $\hat \sigma^2$ from 
+the MSE. 
+
+Why do we care about these values? One way is to just say "center and spread" — but a more sophisticated way is to realize that these two 
+statistics completely characterize a normal distribution. 
+
+The moment generating function 
+says that 
+$$D(Y) = 1 + \E y + \Var(y) + \text{Skew}(y) + \text{Kurtosis}(y) + ...$$
+
+Confidence intervals tell us what are the plausible range of model parameters.
+
+## Hypothesis Testing 
+
+Hypothesis testing is about having a hunch and seeing if we're right.
+
+For multiple linear regression, there are many options for testing the significance of predictor variables. These tests fall under two main categories: F tests and Wald tests. Both are asymptotically equivalent, so yield comparable results in hypothesis testing.
+
+The F-test is looking at the variances. The Wald test is looking at the behavior of the means. 
+
+### F-tests (comparison of variances)
+
+Recall that 
+
+  * SST (Total Sum of Squares) is a measure of the total variance in the outcome from the given sample. 
+  * SSR (Regression Sum of Squares) represents the total variance in the outcome explained by the regression model. 
+  * SSE (Sum of Squared Errors) represents the remaining total variance in the outcome that is not captured by the regression model. We use the SSE to estimate the true (unobserved) variance $\sigma^2$ of the residuals. Let $\hat \sigma^2 = MSE = SSE/(n-p-1)$ for a model with $p$ predictors and an intercept. 
+
+$$SST \stackrel{def}{=} \sum_{i=1}^n (Y_i - \bar Y)^2 = \sum_{i=1}^n (\hat Y_i - \bar Y)^2 + \sum_{i=1}^n (Y_i - \hat Y_i)^2 \stackrel{def}{=} SSR + SST$$
+  
+The $F$-tests are: 
+
+  1. Test for no covariate effect $H_0: \beta_1 = ... = \beta_p = 0$
+  
+  $$F = \frac{SSR/p}{SSE/(n-p-1)} = \frac{SSR/p}{MSE} \sim F_{p,n-p-1}.$$
+  2. Test for a single variable $x_j$. $H_0 : \beta_j = 0$.
+  
+  $$F = \frac{[SSR - SSR(\text{model without } x_j)]/1}{SSE/(n-p-1)}$$
+  $$ = 
+  \frac{SSR - SSR(\text{model without } x_j)}{MSE} \sim F_{1, n-p-1}.$$
+  
+  3. Test for a group of $r$ variables. $H_0: \beta_{j_1} = ... = \beta_{j_r} = 0$.
+  
+  $$F = \frac{[SSR - SSR(\text{model without } r \text{ variables})]/r}{SSE/(n-p-1)}$$
+  $$ = \frac{[SSR - SSR(\text{model without } r \text{ variables})]/r}{MSE} \sim F_{1,n-p-1}.$$
+  
+  4. Test of a general linear hypothesis, $H_0: C\beta= 0$ where 
+  $C$ is an $r \times (p+1)$ matrix of linearly independent contrasts. The test requires calculation of the sum of squares for the reduced model, where we parameterize according to the null hypothesis. 
+  
+  $$F = \frac{(SSR - SSR(\text{reduced model}))/r}{MSE} \sim F_{r,n-p-1}$$
+  
+The MSE is from the full model. 
+  
+  **Note:** the reduced model must be nested within the full model for us to use the $F$-test.
+  
+
+:::{.hottip}
+A great question is to look at this formula and say that the numerator is a marginal quantity, so why shouldn't the denominator also be marginal?
+
+One reason might be that if it were, the denominator would no longer have the same degrees of freedom as the numerator. 
+
+Another reason, arguably more important, is that this quantity would no longer be $F$-distributed, and we really want to have a quantity with nice asymptotic distributional properties. 
+:::
+
+Let's look at an example of 
+situation 4: 
+
+The full model might be 
+$$\E (y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3$$
+
+And model 2 is given as 
+$$\E (y) = \gamma_0 + \gamma_1 x_1$$
+
+
+Then 
+
+$$\left( \begin{array}{cccc} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{array} \right) \left( \begin{array}{c} \beta_1 \\ \beta_2 \\ \beta_3 \\ \beta_4 \end{array} \right) = \left( \begin{array}{c} 0 \\ 0 \end{array} \right)$$
+
+In general, when we say that the reduced model must be nested within the full model, what we're saying is that the reduced model 
+can be expressed as a linear constraint imposed on the full model.
+
+For example, we might have a
+scenario where $Age \in \{ 57, 58, 59 \}$ and our reduced model is 
+$$y = \beta_0 + \beta_1 Age$$
+
+And our full model is 
+$$y = \gamma_0 + \gamma_1 \mathbb 1(Age = 57) + \gamma_2 \mathbb 1(Age = 58) + \gamma_3 \mathbb 1 (Age = 59)$$
+
+If we make a new variable that is 
+$$57 \mathbb 1(Age = 57) + 58 \mathbb 1(Age = 58) + 59 \mathbb 1 (Age = 59)$$, and this recovers the original age variable.
+
+:::{.cooltip}
+The $F$-test can be thought of as a cost-benefit ratio.
+:::
+
+## Wald test (comparison of means)
+
+As we touched on in lecture, we can also consider an alternative hypothesis test formulation for linear regression—this will also help motivate the form of our confidence intervals below. Recall the following properties: For an $r \times (p+1)$ matrix $C$ and a random vector $y$, then 
+
+$$\E (Cy) = C\E(y) \quad \text{and} \quad \Var(Cy) = C\Var(y)C^T$$
+
+As we have shown previously, $$\hat \beta \sim MVN_{p+1} (\beta, \sigma^2 C(X^TX)^{-1}C^T)$$
+
+So, to test the general linear hypothesis $H_0: C\beta = 0$, we have the following statistic (which generalizes the familiar univariate Wald statistic $W = \hat \beta^2 / \widehat{\Var}(\hat \beta) \sim \chi^2_1$, asypmptotically):
+
+$$W = (C\hat \beta)^T\underbrace{[\hat \sigma^2 C(X^TX)^{-1}C^T]^{-1}}_{\text{variance of } C\beta}(C\hat \beta)$$
+
+If we think of what we'd do in a standard intro stats class, we'd do one of two things. 
+
+  1. We'd look at $\hat \beta_1 / \hat \sigma(\hat \beta_1)$, which is $t$-distributed.
+  2. Or we'd look in $\hat \beta_1^2/\widehat{Var}(\hat \beta_1)$ which is $F$-distributed and asymptotically $\chi^2$ distributed. 
+
+Then by properties of the $F$-statistic, $W/r \sim F_{r,n-p-1}$, and also asymptotically $W \sim \chi_r^2$. 
+
+## Additional Remarks 
+
+Note that the univariate Wald Statistic $W = \hat \beta^2 / \widehat{\Var}(\hat \beta) \sim \chi_1^2$ is equivalent to the $t$-test statistic
+
+$$t_{obs} = \frac{\hat \beta_1}{s.e.(\hat\beta_1)} \sim t_{n-2,(1-\alpha/2)}.$$
+
+While we will not go into this in detail, the theoretical motivation for all of these tests is that they are ratios of $\chi^2$-distributed random variables that are scaled by their degrees of freedom, which in turn defines the $F$-distribution. 
+
+The $F$-test is valid if and only if the $\chi^2$ assumption for the numerator and denominator holds true. Yet, $\chi^2$ random variables are obtained from the sums of squared normal random variables. This is why it is necessary for the residuals $\varepsilon_i$ to follow a normal distribution and/or 2) large sample theory to hold (so that the $\varepsilon_i$ may be approximately normal). 
+
+These $F$-tests are sometimes given in the context of an analysis of variance (ANOVA) model and table, which presents the sum of squares explained by each variable, conditional on all previous
+variables in the model, and then the sum of squares for the error terms. Each test compares two
+models, one nested within the other. Nested models will come up again when we discuss likeli-
+hood ratio tests, of which the F -test is a special case under the assumption of normally-distributed
+outcomes.
+
+A lack of significance of the effect of a covariate or group of covariates does not necessarily indicate
+the absence of an effect. Whether to remove these covariates from the model will depend on the
+scientific goal of the study.
+
