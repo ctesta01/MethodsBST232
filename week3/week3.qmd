@@ -719,6 +719,19 @@ anova(lm.glucose.pacoarse, lm.glucose.pa) |>
     )
 ```
 
+:::{.cooltip}
+What is the multivariate Wald test for a general linear hypothesis?
+
+$$H_0 : C\beta = 0$$
+
+And thus $$W = (C\hat \beta)'(\widehat{\Var}(C\hat\beta))^{-1}(C\beta)$$
+$$ = (C\hat\beta)'[C \widehat{\Var}(\hat\beta) C']^{-1}(C\hat\beta)$$
+$$ = (C\hat\beta)'[C \hat \sigma^2 (X'X)^{-1} C']^{-1} (C\hat\beta)$$
+
+and $W/r \sim F_{r,n-p-1}$ or asymptotically $W \sim \chi^2_r$.
+:::
+
+
 ## Confidence Intervals
 
 Recall that often we obtain CIs by inverting test statistics.
