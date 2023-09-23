@@ -118,7 +118,7 @@ We base this on the sum of squared errors (SSE):
 
 $$SSE = (y - X\hat\beta)'(y-X\hat \beta)$$
 $$ = \sum_{i=1}^n(y_i-x'_i\hat\beta)^2$$
-$$ = \sum_{i=1}^(\hat \epsilon_i)^2$$
+$$ = \sum_{i=1}^n (\hat \epsilon_i)^2$$
 
 $$\hat \sigma^2 = MSE = \frac{SSE}{n - p - 1}.$$
 
@@ -279,8 +279,11 @@ We thus have that
 $$SST = \underbrace{SSR}_{\text{explained by regression}} + \underbrace{SSE}_{\text{left over}},$$
 
 where $SST = \text{Sums of Squares Total}$, $SSR = \text{Sums of Squares Regression}$, 
-nad $SSE = \text{Sums of Squares Error}$. 
+and $SSE = \text{Sums of Squares Error}$. 
 
+```{r, echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics("standalone_figures/residual_decompositions/residual_decomposition.svg")
+```
 
 #### The ANOVA-like table 
 
@@ -530,7 +533,7 @@ $$H_0: \beta_1 = 0$$
 $$H_1: \beta_1 \neq 0$$
 
 The multivariate Wald test statistic is 
-$$W = \hat \beta_1' \left[ \widehat{\Var}(\hat \beta_1 ) \right]  \hat \beta_1$$
+$$W = \hat \beta_1' \left[ \widehat{\Var}(\hat \beta_1 ) \right]^{-1}  \hat \beta_1$$
 
 Under the null,
 
@@ -1029,4 +1032,49 @@ outcomes.
 A lack of significance of the effect of a covariate or group of covariates does not necessarily indicate
 the absence of an effect. Whether to remove these covariates from the model will depend on the
 scientific goal of the study.
+
+
+## Hypothesis Testing for Nested Models with Ordinal/Integer Variables
+
+Suppose we want to model the relationship between year in a PhD program and 
+some outcome where $X \in \{ 1, 2, 3, 4, 5 \}$ and $Y$ is some continuous outcome,
+and we have reason to believe the association might be linear. 
+
+We might model that as $Y \sim \gamma_0 + \gamma_1 X$ (model 1). Another way we could model it that is 
+more flexible (not linear) is: 
+
+$$Y = \beta_0 + \beta_1 \mathbb 1(X = 1) + \beta_2 \mathbb 1(X=2)  + \beta_3 \mathbb 1(X=3)  + \beta_4 \mathbb 1(X=4)  + \beta_5 \mathbb 1(X=5) \quad \text{(model 2)}$$
+
+What may not be so obvious is that model 1 is nested inside model 2. 
+The crucial insight is that 
+
+$$X = \mathbb 1(X = 1) + 2 \mathbb 1(X=2) + 3 \mathbb 1(X=3) +2 \mathbb 3(X=3) +5 \mathbb 1(X=5).$$
+
+If we were to substitute this into model 1, we have that 
+$$\begin{aligned} Y & = \gamma_0 + \gamma_1 (\mathbb 1(X = 1) + 2 \mathbb 1(X=2) + 3 \mathbb 1(X=3) +2 \mathbb 3(X=3) +5 \mathbb 1(X=5)) \\ 
+& = \gamma_0 + \gamma_1 \mathbb 1(X = 1) + 2 \gamma_1 \mathbb 1(X=2) + 3 \gamma_1 \mathbb 1(X=3) + 4 \gamma_1 \mathbb 1(X=4) +5 \gamma_1 \mathbb 1(X=5) 
+\end{aligned}$$
+
+Comparing this to model 2, we see that we need to construct a constraint matrix where 
+$$\beta_2 = 2 \beta_1$$
+$$\beta_3 = 3 \beta_1$$ 
+$$\beta_4 = 4 \beta_1$$
+$$\beta_5 = 5 \beta_1$$
+
+Writing out our constraint matrix, we would have that 
+
+$$\begin{pmatrix}
+0 & 2 & -1 & 0 & 0 & 0 \\ 
+0 & 3 & 0 & -1 & 0 & 0 \\ 
+0 & 4 & 0 & 0 & -1 & 0 \\ 
+0 & 5 & 0 & 0 & 0 & -1
+\end{pmatrix}
+\begin{pmatrix}
+\beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \\ \beta_4 \\ \beta_5
+\end{pmatrix} = 
+\begin{pmatrix}
+0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 
+\end{pmatrix}.$$
+
+Applying this constraint to model 2 would reduce it to model 1, showing that model 1 is nested within model 2. 
 

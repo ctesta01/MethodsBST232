@@ -212,6 +212,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#cooks-distance" id="toc-cooks-distance" class="nav-link" data-scroll-target="#cooks-distance">Cook’s Distance</a></li>
   </ul></li>
   <li><a href="#what-should-be-done-about-outliers" id="toc-what-should-be-done-about-outliers" class="nav-link" data-scroll-target="#what-should-be-done-about-outliers">What should be done about outliers?</a></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab</a>
+  <ul class="collapse">
+  <li><a href="#multiple-linear-regression-diagnostics" id="toc-multiple-linear-regression-diagnostics" class="nav-link" data-scroll-target="#multiple-linear-regression-diagnostics">Multiple Linear Regression Diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#residual-plots" id="toc-residual-plots" class="nav-link" data-scroll-target="#residual-plots">Residual Plots</a></li>
+  </ul></li>
+  <li><a href="#outliers-leverage-influence" id="toc-outliers-leverage-influence" class="nav-link" data-scroll-target="#outliers-leverage-influence">Outliers, Leverage, Influence</a></li>
+  <li><a href="#leverage" id="toc-leverage" class="nav-link" data-scroll-target="#leverage">Leverage</a></li>
+  <li><a href="#cooks-distance-1" id="toc-cooks-distance-1" class="nav-link" data-scroll-target="#cooks-distance-1">Cook’s Distance</a></li>
+  <li><a href="#dffits" id="toc-dffits" class="nav-link" data-scroll-target="#dffits">DFFITS</a>
+  <ul class="collapse">
+  <li><a href="#dealing-with-outliers" id="toc-dealing-with-outliers" class="nav-link" data-scroll-target="#dealing-with-outliers">Dealing with Outliers</a></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a>
+  <ul class="collapse">
+  <li><a href="#trace" id="toc-trace" class="nav-link" data-scroll-target="#trace">Trace</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -498,7 +516,7 @@ weight
 <section id="studentized-residuals" class="level3">
 <h3 class="anchored" data-anchor-id="studentized-residuals">Studentized Residuals</h3>
 <p>The quantity</p>
-<p><span class="math display">\[r_i = \frac{e_i}{\sqrt{MSE(1-h_i)}} = \frac{e_i}{\sqrt{\hat\sigma^2(I-H)\]</span></p>
+<p><span class="math display">\[r_i = \frac{e_i}{\sqrt{MSE(1-h_i)}} = \frac{e_i}{\sqrt{\hat\sigma^2(I-H)}}\]</span></p>
 <p>is a <span class="vocab">studentized residual</span> and approximately follows a <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(n - p - 1\)</span> degrees of freedom, assuming the model assumptions are satisfied.</p>
 <p>If <span class="math inline">\(n\)</span> is sufficiently large, these are approximately <span class="math inline">\(\mathcal N(0,1)\)</span>.</p>
 <p>Residuals are correlated, but this correlation is minimal as long as <span class="math inline">\(n\)</span> is sufficiently large.</p>
@@ -890,7 +908,7 @@ weight
 <p><span class="math display">\[r_{(-i)} = \frac{e_i}{\sqrt{MSE_{(-i)}(1-h_i)}}\]</span></p>
 <p>Back in the day, it was a bit unthinkable that one would fit a model <span class="math inline">\(n\)</span> times as computational power was lacking, so analytic methods were derived to calculate these leave-one-out and jackknife approaches quickly.</p>
 <p>Because <span class="math inline">\((n-p-1)MSE = (n-p-2)MSE(-i) + e_i^2/(1-h_i)\)</span> (see KNNL Ch. 10), we can show <span class="math display">\[r_{(-i)} = r_i \sqrt{\frac{MSE}{MSE_{(-i)}}} = e_i \left[
-\frac{n-p-2}{SSE_{(-i)}(1-h_i)
+\frac{n-p-2}{SSE_{(-i)}(1-h_i)}
 \right]^{1/2}\]</span> <span class="math display">\[ = e_i \left[ \frac{n-p-2}{SSE(1-h_i) - e_i^2\right]^{1/2}\]</span></p>
 <p>Thus we do not need to refit the model <span class="math inline">\(n\)</span> times to come up with the leave-one-out statistics.</p>
 <p>Jackknife residuals have a mean near 0 and a variance of</p>
@@ -983,8 +1001,118 @@ weight
 <li>DFFITS</li>
 <li>DFBETAS</li>
 </ul>
+</section>
+<section id="lab" class="level1">
+<h1>Lab</h1>
+<section id="multiple-linear-regression-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-linear-regression-diagnostics">Multiple Linear Regression Diagnostics</h2>
+<p>Continuing with the matrix notation for MLR used in lecture and last week’s lab. The residuals <span class="math inline">\(e = (e_1, ..., e_n)'\)</span> can be computed using the hat matrix <span class="math inline">\(H = X(X'X)^{-1}X'\)</span>:</p>
+<p><span class="math display">\[e = (I-H)y, \, \text{ with variance } \text{Var}(e) = \sigma^2 (I-H).\]</span></p>
+<p>Define <span class="math inline">\(h_i\)</span> to be the <span class="math inline">\((i,i)\)</span> value of <span class="math inline">\(H\)</span>. Then the residual for the <span class="math inline">\(i\)</span>th observation has <span class="math inline">\(\text{Var}(e_i) = \sigma^2 (1-h_i)\)</span>. This leads to the studentized residual:</p>
+<p><span class="math display">\[ r_i = \frac{e_i}{\sqrt{\hat \sigma^2 (1-h_i)}} = \frac{e_i}{\sqrt{MSE(1-h_i)}}\]</span></p>
+<p>These are asymptotically distributed according to a <span class="math inline">\(t_{n-p-1}\)</span> distribution under the model assumptions, which can be approximated as <span class="math inline">\(\mathcal N(0,1)\)</span> for large <span class="math inline">\(n\)</span>.</p>
+<p>The <span class="math inline">\(h_i\)</span> values represent how far away from the centroid of the <span class="math inline">\(X\)</span> values the <span class="math inline">\(i\)</span>th observation is.</p>
+<section id="residual-plots" class="level3">
+<h3 class="anchored" data-anchor-id="residual-plots">Residual Plots</h3>
+<p>Residuals are extremely useful to assessing model assumptions graphically.</p>
+<ul>
+<li>Histograms (residuals should appear normal)</li>
+<li>Q-Q Plots (residuals should follow a straight line, reflecting normality)</li>
+<li>Scatter plots of residuals against <span class="math inline">\(\hat y\)</span> or <span class="math inline">\(x_{ij}\)</span> (should be a fluffy, patternless cloud)</li>
+</ul>
+<p>Partial regression plots can also be used to assess the assumptions for each predictor on its own. To assess the assumptions for <span class="math inline">\(x_{j}\)</span>:</p>
+<ol type="1">
+<li>Regress <span class="math inline">\(y\)</span> on <span class="math inline">\(\{ x_1, ..., x_{j-1}, x_{j+1}, ..., x_p \}\)</span> and obtain residuals <span class="math inline">\(e_i(y|x_{-j})\)</span>.</li>
+<li>Regress <span class="math inline">\(x_j\)</span> on <span class="math inline">\(\{x_1, ..., x_{j-1}, x_{j+1}, ..., x_p \}\)</span> and obtain residuals <span class="math inline">\(e_i(x_j|x_{-j})\)</span>.</li>
+<li>Plot the residuals <span class="math inline">\(e_i(y|x_{-j})\)</span> on <span class="math inline">\(e_i(x_j|x_{-j})\)</span>.</li>
+</ol>
+</section>
+</section>
+<section id="outliers-leverage-influence" class="level2">
+<h2 class="anchored" data-anchor-id="outliers-leverage-influence">Outliers, Leverage, Influence</h2>
+<p>Outlying data points have the potential to greatly affect the slope of our fitted regression line. We can calculate several quantities for each data point to assess which ones either potentially or actually exert strong influence on our fitted model.</p>
+</section>
+<section id="leverage" class="level2">
+<h2 class="anchored" data-anchor-id="leverage">Leverage</h2>
+<p>The <span class="vocab">leverage</span> of the <span class="math inline">\(i\)</span>th observation is denoted with <span class="math inline">\(h_i\)</span>, and it measures how far observation <span class="math inline">\(i\)</span>’s covariates are from the overall covariate average.</p>
+<p>The average of <span class="math inline">\(h_i\)</span> is <span class="math inline">\(\bar h = (p+1)/n\)</span> so a rule of thumb is that if $h_i &gt; </p>
+<p>Leave-one-out or jackknife residuals can give us a better sense of the effect of leverage: let the <span class="math inline">\((-i)\)</span> subscript denote a quantity from the model refit without the <span class="math inline">\(i\)</span>th observation.</p>
+<p><span class="math display">\[r_{(-i)} = \frac{e_i}{\sqrt{MSE_{(-i)}(1-h_i)}} = e_i \left[ \frac{n-p-2}{SSE(1-h_i) - e_i^2}\right]^{1/2}.\]</span></p>
+<p>These residuals have mean near 0 and variance slightly greater than 1.</p>
+</section>
+<section id="cooks-distance-1" class="level2">
+<h2 class="anchored" data-anchor-id="cooks-distance-1">Cook’s Distance</h2>
+<p>How much does inclusion/exclusion of one particular value affect all of the predictions?</p>
+<p><span class="math display">\[D_i = \frac{\hat y - \hat y_{(-i)}^T(\hat y - \hat y_{(-i)})}{(p+1)MSE} =
+\frac{e^2_i}{(p+1)MSE}\left( \frac{h_i}{1-h_i}\right) \]</span></p>
+<p><span class="math inline">\(D_i\)</span> values can be compared to a <span class="math inline">\(F_{p+1,n-p-1}\)</span> distribution; observations with percentiles on this distribution above 50% have high influence. We are not saying they should be distributed according to this <span class="math inline">\(F\)</span> distribution. As a rule of thumb, a Cook’s distance value is considered large if <span class="math inline">\(d_i &gt; \frac{4}{n-2}\)</span>.</p>
+</section>
+<section id="dffits" class="level2">
+<h2 class="anchored" data-anchor-id="dffits">DFFITS</h2>
+<p>How much does the inclusion or exclusion of a particular observation affect the prediction for <em>that value</em>?</p>
+<p><span class="math display">\[(DFFITS)_i = \frac{\hat y_i - \hat y_{(-i)i}}{\sqrt{MSE_{(-i)}h_i}}\]</span></p>
+<p><span class="math display">\[(DFFITS)_i = \left( \frac{h_i}{1-h_i} \right)^{1/2} \times e_i \left[ \frac{n-p-2}{SSE(1-h_i) - e_i^2}\right]^{1/2}\]</span></p>
+<p>Points with <span class="math inline">\(|DFFITS_i|&gt;2 \sqrt{\frac{p+1}{n}}\)</span> should be investigated. DFFITS value patterns should be close or identical to Cook’s distance since they are conceptually similar.</p>
+<p>##DFBETAS</p>
+<p>Whereas the previous quantities assessed each point’s impact on overall model fit, the <span class="math inline">\(DFBETAS_i\)</span> statistic quantifies how much a particular coefficient <span class="math inline">\(\hat \beta_k\)</span> changes if we delete a particular observation <span class="math inline">\(i\)</span>.</p>
+<p><span class="math display">\[(DFBETAS)_{k(i)} = \frac{\hat \beta_k - \hat \beta_{k(-i)}}{\sqrt{\text{Var}(\hat\beta_k)}}.\]</span></p>
+<p>The number is presented in standard error units of how far the “new” <span class="math inline">\(\hat \beta_k\)</span> falls from the “old” <span class="math inline">\(\hat\beta_k\)</span>, so an observation can be considered influential if the absolute value of the <span class="math inline">\(DFBETAS\)</span> exceed 1 (for smaller data sets) or <span class="math inline">\(2 / \sqrt{n}\)</span> for larger data sets.</p>
+<section id="dealing-with-outliers" class="level3">
+<h3 class="anchored" data-anchor-id="dealing-with-outliers">Dealing with Outliers</h3>
+<ul>
+<li>Do not just exclude outliers. There is no rule of thumb that can be used to automatically discard observations.</li>
+<li>Consider data measurement errors, data entry errors, coding oddities, etc.</li>
+<li>Consider physical plausibility of measurement and goal of study.</li>
+<li>Run the analyses with and without the observation; Report both if they differ substantially.</li>
+</ul>
+</section>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<p>Prove that <span class="math inline">\(\text{Var}(e) = \sigma^2(I-H)\)</span>. Hint: derive the values of <span class="math inline">\(I^T\)</span>, <span class="math inline">\(H^T\)</span>, <span class="math inline">\(II\)</span>, and <span class="math inline">\(HH\)</span> first.</p>
+<p><span class="math display">\[HH = X\cancel{(X'X)^{-1}X'X}(X'X)^{-1}X' = H,\]</span> <span class="math display">\[I^T = I, \quad I^2 = I\]</span> <span class="math display">\[H' = (X(X'X)^{-1}X')' = X''(\underbrace{(X'X)^{-1}}_{\text{symmetric}})'X' = X(X'X)^{-1}X'\]</span></p>
+<p><span class="math display">\[\begin{aligned}\text{Var}(\hat e) &amp; = \text{Var}(y - \hat y) \\
+&amp; = \text{Var}(y - Hy) \\
+&amp; = \text{Var}((I-H)y) \\
+&amp; = (I-H)\text{Var}(y)(I-H)' \\
+&amp; = (I-H)\sigma^2I(I-H)' \\
+&amp; = \sigma^2(I-H)(I-H)' \\
+&amp; = \sigma^2(I-H)(I-H) \\
+&amp; = \sigma^2(I-H - H + H^2) \\
+&amp; = \sigma^2(I-H)
+\end{aligned}\]</span></p>
+<section id="trace" class="level3">
+<h3 class="anchored" data-anchor-id="trace">Trace</h3>
+<p>Define the trace of an <span class="math inline">\(n \times n\)</span> square matrix <span class="math inline">\(S\)</span> as <span class="math inline">\(tr(S)= \sum_{i=1}^n s_{i,i}\)</span>, the sum of the diagonal elements.</p>
+<p>Prove that for any <span class="math inline">\(m \times n\)</span> matrix <span class="math inline">\(A\)</span> and an <span class="math inline">\(n \times m\)</span> matrix <span class="math inline">\(B\)</span>, <span class="math inline">\(tr(AB) = tr(BA)\)</span>. Use that to prove that traces are invariant to (finite) cyclic permutations. Then conclude that <span class="math inline">\(\bar h = \sum_{i=1}^n h_i/n = (p+1)/n\)</span>.</p>
+<p><span class="math display">\[tr(AB) = tr\left[
+\begin{pmatrix}
+a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
+a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+a_{m1} &amp; a_{mn} &amp; \cdots &amp; a_{mn} \\
+\end{pmatrix}
+\begin{pmatrix}
+b_{11} &amp; b_{12} &amp; \cdots &amp; b_{1m} \\
+b_{21} &amp; b_{22} &amp; \cdots &amp; b_{2m} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+b_{n1} &amp; b_{nm} &amp; \cdots &amp; b_{nm} \\
+\end{pmatrix}
+\right]\]</span></p>
+<p><span class="math display">\[
+= tr\left[
+\begin{pmatrix}
+\sum_{i=1}^n a_i b_{i1} &amp; \cdots &amp; \cdots &amp; \cdots \\
+\cdots &amp; \sum_{i=1}^n a_{2i} b_i &amp; \cdots &amp; \cdots \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots
+\end{pmatrix}
+\right]\]</span></p>
+<p><span class="math display">\[ \bar h = \frac{1}{n} tr(H)\]</span></p>
+<p><span class="math display">\[ = \frac{1}{n} tr[X(X'X)^{-1}X']\]</span> <span class="math display">\[ = \frac{1}{n} tr[X'X(X'X)^{-1}]\]</span> <span class="math display">\[ = \frac{1}{n} tr[I_{p+1}] = \frac{p+1}{n}\]</span></p>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

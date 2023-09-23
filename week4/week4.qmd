@@ -183,7 +183,7 @@ where $h_i$ is the $i$th element on the diagonal of the hat matrix and $0 \leq h
 
 The quantity 
 
-$$r_i = \frac{e_i}{\sqrt{MSE(1-h_i)}} = \frac{e_i}{\sqrt{\hat\sigma^2(I-H)$$
+$$r_i = \frac{e_i}{\sqrt{MSE(1-h_i)}} = \frac{e_i}{\sqrt{\hat\sigma^2(I-H)}}$$
 
 is a <span class='vocab'>studentized residual</span> and approximately 
 follows a $t$ distribution with $n - p - 1$ degrees of freedom, 
@@ -634,7 +634,7 @@ a model $n$ times as computational power was lacking, so analytic methods were d
 
 Because $(n-p-1)MSE = (n-p-2)MSE(-i) + e_i^2/(1-h_i)$ (see KNNL Ch. 10), we can show 
 $$r_{(-i)} = r_i \sqrt{\frac{MSE}{MSE_{(-i)}}} = e_i \left[
-\frac{n-p-2}{SSE_{(-i)}(1-h_i)
+\frac{n-p-2}{SSE_{(-i)}(1-h_i)}
 \right]^{1/2}$$
 $$ = e_i \left[ \frac{n-p-2}{SSE(1-h_i) - e_i^2\right]^{1/2}$$
 
@@ -754,3 +754,154 @@ We can check the leverage and influence of a given observation using
   * DFFITS 
   * DFBETAS 
   
+# Lab 
+
+## Multiple Linear Regression Diagnostics 
+
+Continuing with the matrix notation for MLR used in lecture and last week's lab. The residuals 
+$e = (e_1, ..., e_n)'$ can be computed using the hat matrix $H = X(X'X)^{-1}X'$:
+
+$$e = (I-H)y, \, \text{ with variance } \Var(e) = \sigma^2 (I-H).$$
+
+Define $h_i$ to be the $(i,i)$ value of $H$. Then the residual for the $i$th observation has 
+$\Var(e_i) = \sigma^2 (1-h_i)$. This leads to the studentized residual:
+
+$$ r_i = \frac{e_i}{\sqrt{\hat \sigma^2 (1-h_i)}} = \frac{e_i}{\sqrt{MSE(1-h_i)}}$$
+
+These are asymptotically distributed according to a $t_{n-p-1}$ distribution under the model 
+assumptions, which can be approximated as $\mathcal N(0,1)$ for large $n$. 
+
+The $h_i$ values represent how far away from the centroid of the $X$ values the $i$th observation is. 
+
+### Residual Plots
+
+Residuals are extremely useful to assessing model assumptions graphically. 
+
+  * Histograms (residuals should appear normal)
+  * Q-Q Plots (residuals should follow a straight line, reflecting normality)
+  * Scatter plots of residuals against $\hat y$ or $x_{ij}$ (should be a fluffy, patternless cloud)
+  
+Partial regression plots can also be used to assess the assumptions for each predictor
+on its own. To assess the assumptions for $x_{j}$:
+
+  1. Regress $y$ on $\{ x_1, ..., x_{j-1}, x_{j+1}, ..., x_p \}$ and obtain residuals $e_i(y|x_{-j})$.
+  2. Regress $x_j$ on $\{x_1, ..., x_{j-1}, x_{j+1}, ..., x_p \}$ and obtain residuals $e_i(x_j|x_{-j})$. 
+  3. Plot the residuals $e_i(y|x_{-j})$ on $e_i(x_j|x_{-j})$. 
+  
+## Outliers, Leverage, Influence
+
+Outlying data points have the potential to greatly affect the slope of our
+fitted regression line. We can calculate several quantities for each data point
+to assess which ones either potentially or actually exert strong influence on
+our fitted model.
+
+
+## Leverage
+
+The <span class='vocab'>leverage</span> of the $i$th observation is denoted with $h_i$,
+and it measures how far observation $i$'s covariates are from the overall covariate average. 
+
+The average of $h_i$ is $\bar h = (p+1)/n$ so a rule of thumb is that if $h_i > \frac{2(p+1)}{n}
+
+Leave-one-out or jackknife residuals can give us a better sense of the effect of leverage:
+let the $(-i)$ subscript denote a quantity from the model refit without the $i$th observation.
+
+$$r_{(-i)} = \frac{e_i}{\sqrt{MSE_{(-i)}(1-h_i)}} = e_i \left[ \frac{n-p-2}{SSE(1-h_i) - e_i^2}\right]^{1/2}.$$
+
+These residuals have mean near 0 and variance slightly greater than 1. 
+
+## Cook's Distance 
+
+How much does inclusion/exclusion of one particular value affect all of the predictions?
+
+$$D_i = \frac{\hat y - \hat y_{(-i)}^T(\hat y - \hat y_{(-i)})}{(p+1)MSE} = 
+\frac{e^2_i}{(p+1)MSE}\left( \frac{h_i}{1-h_i}\right) $$
+
+$D_i$ values can be compared to a $F_{p+1,n-p-1}$ distribution; observations with percentiles on 
+this distribution above 50% have high influence. We are not saying they should be 
+distributed according to this $F$ distribution. As a rule of thumb, a Cook's distance value is considered large if $d_i > \frac{4}{n-2}$. 
+
+## DFFITS 
+
+How much does the inclusion or exclusion of a particular observation affect the prediction for _that value_? 
+
+$$(DFFITS)_i = \frac{\hat y_i - \hat y_{(-i)i}}{\sqrt{MSE_{(-i)}h_i}}$$
+
+$$(DFFITS)_i = \left( \frac{h_i}{1-h_i} \right)^{1/2} \times e_i \left[ \frac{n-p-2}{SSE(1-h_i) - e_i^2}\right]^{1/2}$$
+
+Points with $|DFFITS_i|>2 \sqrt{\frac{p+1}{n}}$ should be investigated. DFFITS value patterns should 
+be close or identical to Cook's distance since they are conceptually similar. 
+
+##DFBETAS 
+
+Whereas the previous quantities assessed each point's impact on overall model fit, the 
+$DFBETAS_i$ statistic quantifies how much a particular coefficient $\hat \beta_k$ changes if we 
+delete a particular observation $i$. 
+
+$$(DFBETAS)_{k(i)} = \frac{\hat \beta_k - \hat \beta_{k(-i)}}{\sqrt{\Var(\hat\beta_k)}}.$$
+
+The number is presented in standard error units of how far the "new" $\hat \beta_k$ falls from the "old" $\hat\beta_k$, so an observation can be considered influential if the absolute value of the $DFBETAS$ 
+exceed 1 (for smaller data sets) or $2 / \sqrt{n}$ for larger data sets. 
+
+### Dealing with Outliers 
+
+  * Do not just exclude outliers. There is no rule of thumb that can be used to automatically discard observations. 
+  * Consider data measurement errors, data entry errors, coding oddities, etc.
+  * Consider physical plausibility of measurement and goal of study.
+  * Run the analyses with and without the observation; Report both if they differ substantially. 
+  
+## Exercises 
+
+Prove that $\Var(e) = \sigma^2(I-H)$. Hint: derive the values of $I^T$, $H^T$, $II$, and $HH$ first. 
+
+$$HH = X\cancel{(X'X)^{-1}X'X}(X'X)^{-1}X' = H,$$
+$$I^T = I, \quad I^2 = I$$
+$$H' = (X(X'X)^{-1}X')' = X''(\underbrace{(X'X)^{-1}}_{\text{symmetric}})'X' = X(X'X)^{-1}X'$$
+
+$$\begin{aligned}\Var(\hat e) & = \Var(y - \hat y) \\
+& = \Var(y - Hy) \\
+& = \Var((I-H)y) \\
+& = (I-H)\Var(y)(I-H)' \\ 
+& = (I-H)\sigma^2I(I-H)' \\
+& = \sigma^2(I-H)(I-H)' \\
+& = \sigma^2(I-H)(I-H) \\ 
+& = \sigma^2(I-H - H + H^2) \\ 
+& = \sigma^2(I-H)
+\end{aligned}$$
+
+### Trace 
+
+Define the trace of an $n \times n$ square
+matrix $S$ as $tr(S)= \sum_{i=1}^n s_{i,i}$, the sum of the diagonal elements. 
+
+Prove that for any $m \times n$ matrix $A$ and an $n \times m$ matrix $B$, $tr(AB) = tr(BA)$. Use that to prove that traces are invariant to (finite) cyclic permutations. Then conclude that $\bar h = \sum_{i=1}^n h_i/n = (p+1)/n$. 
+
+$$tr(AB) = tr\left[ 
+\begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\ 
+a_{21} & a_{22} & \cdots & a_{2n} \\ 
+\vdots & \vdots & \ddots & \vdots \\ 
+a_{m1} & a_{mn} & \cdots & a_{mn} \\ 
+\end{pmatrix} 
+\begin{pmatrix}
+b_{11} & b_{12} & \cdots & b_{1m} \\ 
+b_{21} & b_{22} & \cdots & b_{2m} \\ 
+\vdots & \vdots & \ddots & \vdots \\ 
+b_{n1} & b_{nm} & \cdots & b_{nm} \\ 
+\end{pmatrix} 
+\right]$$
+
+$$
+= tr\left[ 
+\begin{pmatrix}
+\sum_{i=1}^n a_i b_{i1} & \cdots & \cdots & \cdots \\ 
+\cdots & \sum_{i=1}^n a_{2i} b_i & \cdots & \cdots \\ 
+\vdots & \vdots & \ddots & \vdots 
+\end{pmatrix}
+\right]$$
+
+$$ \bar h = \frac{1}{n} tr(H)$$
+
+$$ = \frac{1}{n} tr[X(X'X)^{-1}X']$$
+$$ = \frac{1}{n} tr[X'X(X'X)^{-1}]$$
+$$ = \frac{1}{n} tr[I_{p+1}] = \frac{p+1}{n}$$
