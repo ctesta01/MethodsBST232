@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods (BST 232) Notes - 6&nbsp; Week 5</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../week4/week4.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-title">Week 5</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Methods (BST 232) Notes</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Methods (BST 232) Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week1/week1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week2/week2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week3/week3.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week4/week4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week5/week5.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 5</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#model-selection-substantive-statistical-and-predictive-criteria" id="toc-model-selection-substantive-statistical-and-predictive-criteria" class="nav-link active" data-scroll-target="#model-selection-substantive-statistical-and-predictive-criteria">Model Selection: Substantive, Statistical, and Predictive Criteria</a>
+  <ul class="collapse">
+  <li><a href="#hierarchically-well-formulated-models" id="toc-hierarchically-well-formulated-models" class="nav-link" data-scroll-target="#hierarchically-well-formulated-models">Hierarchically Well Formulated Models</a></li>
+  <li><a href="#causal-selection" id="toc-causal-selection" class="nav-link" data-scroll-target="#causal-selection">Causal Selection</a></li>
+  <li><a href="#statistical-criteria" id="toc-statistical-criteria" class="nav-link" data-scroll-target="#statistical-criteria">Statistical Criteria</a>
+  <ul class="collapse">
+  <li><a href="#akaike-information-criteria" id="toc-akaike-information-criteria" class="nav-link" data-scroll-target="#akaike-information-criteria">Akaike Information Criteria</a></li>
+  <li><a href="#best-subsets-selection" id="toc-best-subsets-selection" class="nav-link" data-scroll-target="#best-subsets-selection">Best subsets selection</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-title">Week 5</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="model-selection-substantive-statistical-and-predictive-criteria" class="level1">
+<h1>Model Selection: Substantive, Statistical, and Predictive Criteria</h1>
+<p>Main reading for this week is Sections 5.1, 6.1-6.2 from <a href="https://trevorhastie.github.io/ISLR/"><em>Introduction to Statistical Learning</em></a>.</p>
+<p>So far we have assumed that we know what variables should be included in a regression model. We’ve focused on specification and interpretation of the linear regression model and regression diagnostics for testing if we have the correct functional form or verifying the underlying assumptions.</p>
+<p>However, we might not be sure which variables should be included in the model to begin with.</p>
+<p>Model selection will be dependent on the study design and objectives.</p>
+<p>Interest could be on:</p>
+<ul>
+<li>The association between an outcome and some predictor(s), where we would want to make sure that:
+<ul>
+<li>The estimates are not impacted by confounding.</li>
+<li>We are not oversimplifying these associations by ignoring important effect modification.</li>
+<li>We have a parsimonious model for interpretability.
+<ul>
+<li><span class="vocab">Parsimony</span> refers to the principle of preferring the less complex model that performs just as well to a more complex model.</li>
+</ul></li>
+</ul></li>
+<li>If our goal is prediction, we would want to make sure that
+<ul>
+<li>We have identified the important predictors of the outcome.</li>
+<li>The selected set of regressors minimizes prediction error.</li>
+<li>Less interested in causal inferences.</li>
+<li>And to be careful of overfitting</li>
+</ul></li>
+</ul>
+<p>In all situations, it is important that the model be as parsimonious as possible:</p>
+<ul>
+<li>Interpretation becomes more complex for larger models;</li>
+<li>Unnecessary variables may increase the variability of <span class="math inline">\(\hat \beta\)</span> because they waste degrees of freedom without increasing SSR or decreasing SSE.
+<ul>
+<li>This is because <span class="math inline">\(\widehat{\text{Var}}(\hat \beta) = MSE(X'X)^{-1}\)</span> and <span class="math inline">\(MSE = SSE/(n-p-1)\)</span>, so adding useless variables will decrease the denominator while leaving the SSE unchanged, thus inflating the MSE.</li>
+</ul></li>
+<li>Multicollinearity can cause problems in estimation.</li>
+</ul>
+<p>However, we don’t want the model to be so overly simplistic that it yields biased estimates.</p>
+<section id="hierarchically-well-formulated-models" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchically-well-formulated-models">Hierarchically Well Formulated Models</h3>
+<p>We should always consider <span class="vocab">hierarchically well formulated models</span>.</p>
+<p>A model is said to be hierarchically well formulated when all lower order components of any term are included in a model.</p>
+<p>That is, all main effects should be included in models containing two-way interactions.</p>
+<p>Similarly, the appropriate two-way interactions need to be included in models which contain three-way interactions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> .<span class="dv">5</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">2</span>) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> x2<span class="sc">*</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">sd =</span> .<span class="dv">25</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x1 =</span> x1, <span class="at">x2 =</span> <span class="fu">factor</span>(x2), <span class="at">y =</span> y),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> x1,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> y,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> x2,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">shape =</span> x2</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>       )) <span class="sc">+</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">'lm'</span>, <span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"A Model with Inappropriate Hierarchical Structured"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The following aesthetics were dropped during statistical transformation:
+colour, shape
+ℹ This can happen when ggplot fails to infer the correct grouping structure in
+  the data.
+ℹ Did you forget to specify a `group` aesthetic or to convert a numerical
+  variable into a factor?</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="week5_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x1 =</span> x1, <span class="at">x2 =</span> <span class="fu">factor</span>(x2), <span class="at">y =</span> y)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> x1,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> y,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> x2,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">shape =</span> x2</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>       )) <span class="sc">+</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">data =</span> df, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">'lm'</span>,  </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">formula =</span> y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x) <span class="sc">+</span> </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Another Model with Inappropriate Hierarchical Structured"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="week5_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="causal-selection" class="level2">
+<h2 class="anchored" data-anchor-id="causal-selection">Causal Selection</h2>
+<p>Ideally, the primary piece of model building and model selection (choosing what terms to include) should be substantive knowledge.</p>
+<p>On a causal DAG, an association between two variables (exposure/treatment) and Y (outcome) can arise in 3 ways:</p>
+<ol type="1">
+<li><span class="math inline">\(A\)</span> causes <span class="math inline">\(Y\)</span>:</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="standalone_figures/direct/direct.svg" class="img-fluid figure-img" style="width:55.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Confounding: Common causes of variables considered in the model that are not conditioned on.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="standalone_figures/confounder/confounder.svg" class="img-fluid figure-img" style="width:55.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Collider: Variables that have a common effect on another variable which is conditioned on.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="standalone_figures/collider/collider.svg" class="img-fluid figure-img" style="width:55.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the case of confounders, we <em>should</em> adjust for them. On the other hand, we should <em>not</em> adjust for colliders (which creates collider stratification bias).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="standalone_figures/confounder/controlled_confounder/controlled_confounder.svg" class="img-fluid figure-img" style="width:55.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Another scenario we might be interested in is <span class="vocab">mediation</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="standalone_figures/mediation/mediation.svg" class="img-fluid figure-img" style="width:55.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Conditioning on a mediator will attenuate the observed effects.</p>
+<p>If one fits a model like <span class="math inline">\(Y \sim A + M\)</span> the coefficient on <span class="math inline">\(A\)</span> can be interpreted as the direct effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</span> not through <span class="math inline">\(M\)</span>.</p>
+</section>
+<section id="statistical-criteria" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-criteria">Statistical Criteria</h2>
+<p>Some model selection criteria we might use are <span class="math inline">\(R^2\)</span>, Adjusted <span class="math inline">\(R^2\)</span>, or the Akaike Information Criterion (AIC).</p>
+<p>Recall that <span class="math display">\[R^2 \stackrel{def}{=} \frac{SSR}{SST} = 1 - \frac{SSE}{SST}.\]</span></p>
+<p>The SSE will never go down as we add more predictors. More particularly, the SSE is exactly equivalent to the measure we try to minimize with respect to <span class="math inline">\(\beta\)</span> (<span class="math inline">\(S(\beta)\)</span>). As we add more degrees of freedom (or from a linear algebra perspective, adding more orthogonal vectors to the span of our prediction space), we are able to more closely fit the <span class="math inline">\(y\)</span> values. Or in other words, if we add another predictor to the regression that adds no additional explanatory value, then the <span class="math inline">\(\hat \beta\)</span> coefficient on that term can be set to 0 and we won’t increase <span class="math inline">\(S(\beta)\)</span> at all.</p>
+<p>Thus <span class="math inline">\(R^2\)</span> has the undesirable property that adding more predictors will never decrease it.</p>
+<p>Recall that adjusted <span class="math inline">\(R^2\)</span> is</p>
+<p><span class="math display">\[R^2_{adj} = 1 - \frac{MSE}{SST/(n-1)},\]</span></p>
+<p>where using MSE instead of the SSE penalizes the addition of predictors that don’t improve model performance.</p>
+<section id="akaike-information-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="akaike-information-criteria">Akaike Information Criteria</h3>
+<p>AIC is a general variable selection criterion defined for any likelihood-based model. For a model with parameters <span class="math inline">\(\theta \in \mathbb R^d\)</span> and log-likelihood <span class="math inline">\(\ell (\theta)\)</span></p>
+<p><span class="math display">\[\begin{aligned}AIC &amp; = -2 \left(\ell(\hat \theta_{MLE}) - d\right) \\
+&amp; = -2 \ell (\hat \theta_{MLE}) + 2d \end{aligned}\]</span></p>
+<p><span class="math inline">\(\ell(\hat \theta)\)</span> captures goodness of fit on the observed sample.</p>
+<p><span class="math inline">\(d\)</span> captures model complexity.</p>
+<p>Lower AIC is preferred, thus AIC penalizes models with large numbers of parameters (high model complexity) by adding <span class="math inline">\(2d\)</span>.</p>
+<p>For a regression model with <span class="math inline">\(n\)</span> observations and normally distributed errors, the log-likelihood is</p>
+<p><span class="math display">\[\ell(\beta, \sigma^2 ; y) = c - \frac{n}{2} \log(\sigma^2) - \frac{1}{2\sigma^2}
+\sum_{i=1}^n (y_i - x_i' \beta)^2.\]</span></p>
+<p>Plugging in the MLEs, we have that</p>
+<p><span class="math display">\[\ell(\hat \beta, \hat \sigma^2_{MLE}; y) = c - \frac{n}{2} \log(\hat \sigma^2_{MLE}) - \frac{n}{2}\]</span> subtracting off the number of parameters <span class="math inline">\((p+1)\)</span>, and multiplying by <span class="math inline">\(-2\)</span>, we have that</p>
+<p><span class="math display">\[AIC = n \log(SSE/n) + 2(p+1) + c.\]</span></p>
+<p>From a set of candidate models, we could then select the model that leads to the lowest AIC.</p>
+</section>
+<section id="best-subsets-selection" class="level3">
+<h3 class="anchored" data-anchor-id="best-subsets-selection">Best subsets selection</h3>
+<p>We could use the best subset selection algorithm to fit separate models for each possible combination of the <span class="math inline">\(p\)</span> predictors and try to pick the best.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Best subsets selection algorithm</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">--------------------------------</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>For j <span class="op">=</span> <span class="dv">1</span><span class="op">,...,</span>p</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span>a<span class="op">)</span> Fit all <span class="op">(</span>p choose j<span class="op">)</span> models containing exactly j predictors<span class="op">.</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span>b<span class="op">)</span> Pick the best model from <span class="kw">this</span> set<span class="op">,</span> i<span class="op">.</span>e<span class="op">.,</span> the model with the highest R<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="kw">or</span> lowest SSE<span class="op">.</span> Call it M_j<span class="op">.</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>End</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>Among M_1<span class="op">,...,</span>M_p<span class="op">,</span> select the single best model as the one with the highest</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>adjusted R<span class="op">^</span><span class="dv">2</span> <span class="kw">or</span> lowest AIC<span class="op">.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Exhaustive search for best subsets can be performed in R using the <code>{leaps}</code> package with the function <code>leaps::regsubsets</code>.</p>
+<p>In addition to considering all model subsets, people have traditionally used automated algorithms for model building. Most commonly these include forward selection, backward elimination, stepwise selection.</p>
+<p>These typically inflate Type I error rates by doing tons and tons of hypothesis tests.</p>
+<p>For a discussion of these, see [Harrell F.E. (2015) <em>Regression Modeling Strategies</em>](.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../week4/week4.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Week 4</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,253 @@
+---
+title: Week 5
+---
+
+# Model Selection: Substantive, Statistical, and Predictive Criteria
+
+Main reading for this week is 
+Sections 5.1, 6.1-6.2 from [*Introduction to Statistical Learning*](https://trevorhastie.github.io/ISLR/). 
+
+
+So far we have assumed that we know what variables should be included
+in a regression model. We've focused on specification and interpretation of 
+the linear regression model and regression diagnostics for testing if 
+we have the correct functional form or verifying the underlying assumptions. 
+
+However, we might not be sure which variables should be included in the model 
+to begin with. 
+
+
+Model selection will be dependent on the study design and 
+objectives. 
+
+Interest could be on: 
+
+  * The association between an outcome and some predictor(s), where we would 
+    want to make sure that: 
+    * The estimates are not impacted by confounding.
+    * We are not oversimplifying these associations by ignoring important
+    effect modification. 
+    * We have a parsimonious model for interpretability.
+      * <span class='vocab'>Parsimony</span> refers to the principle of
+      preferring the less complex model that performs just as well to a more
+      complex model.
+  * If our goal is prediction, we would want to make sure that 
+    * We have identified the important predictors of the outcome.
+    * The selected set of regressors minimizes prediction error. 
+    * Less interested in causal inferences.
+    * And to be careful of overfitting
+  
+In all situations, it is important that the model be as parsimonious as 
+possible: 
+
+  * Interpretation becomes more complex for larger models;
+  * Unnecessary variables may increase the variability of $\hat \beta$
+  because they waste degrees of freedom without
+  increasing SSR or decreasing SSE. 
+    * This is because $\widehat{\text{Var}}(\hat \beta) = MSE(X'X)^{-1}$
+    and $MSE = SSE/(n-p-1)$, so adding useless variables will 
+    decrease the denominator while leaving the SSE unchanged, thus inflating
+    the MSE. 
+  * Multicollinearity can cause problems in estimation.
+
+However, we don't want the model to be so overly simplistic that it yields 
+biased estimates.
+
+### Hierarchically Well Formulated Models 
+
+We should always consider <span class='vocab'>hierarchically well formulated models</span>.
+
+A model is said to be hierarchically well formulated when all lower order
+components of any term are included in a model. 
+
+That is, all main effects should be included in models containing two-way
+interactions. 
+
+Similarly, the appropriate two-way interactions need to be included in models 
+which contain three-way interactions.
+
+```{r}
+library(tidyverse)
+
+x2 <- rbinom(n = 100, size = 1, prob = .5)
+x1 <- runif(n = 100, min = 0, max = 2) 
+y <- x2*2 + rnorm(n = 100, sd = .25)
+
+ggplot(data.frame(x1 = x1, x2 = factor(x2), y = y),
+       aes(
+         x = x1,
+         y = y,
+         color = x2,
+         shape = x2
+       )) + 
+  geom_point() + 
+  geom_smooth(method = 'lm', aes(group = 1)) + 
+  theme_bw() +
+  ggtitle("A Model with Inappropriate Hierarchical Structured")
+
+
+
+df <- data.frame(x1 = x1, x2 = factor(x2), y = y)
+ggplot(df,
+       aes(
+         x = x1,
+         y = y,
+         color = x2,
+         shape = x2
+       )) + 
+  geom_point() + 
+    geom_smooth(data = df, 
+                method = 'lm',  
+                formula = y ~ 0 + x) + 
+  theme_bw() + 
+  ggtitle("Another Model with Inappropriate Hierarchical Structured")
+```
+
+## Causal Selection 
+
+Ideally, the primary piece of model building and model selection 
+(choosing what terms to include) should be substantive knowledge. 
+
+On a causal DAG, an association between two variables (exposure/treatment)
+and Y (outcome) can arise in 3 ways: 
+
+  1. $A$ causes $Y$:
+
+```{r}
+#| echo: FALSE
+#| fig-align: center
+#| out.width: 55%
+knitr::include_graphics("standalone_figures/direct/direct.svg")
+```
+
+  2. Confounding: Common causes of variables considered in the model that are not conditioned on. 
+  
+```{r}
+#| echo: FALSE
+#| fig-align: center
+#| out.width: 55%
+knitr::include_graphics("standalone_figures/confounder/confounder.svg")
+```
+
+  3. Collider: Variables that have a common effect on another variable which is 
+  conditioned on.
+  
+```{r}
+#| echo: FALSE
+#| fig-align: center
+#| out.width: 55%
+knitr::include_graphics("standalone_figures/collider/collider.svg")
+```
+
+In the case of confounders, we *should* adjust for them. On the other hand, 
+we should *not* adjust for colliders (which creates collider stratification bias).
+
+```{r}
+#| echo: FALSE
+#| fig-align: center
+#| out.width: 55%
+knitr::include_graphics("standalone_figures/confounder/controlled_confounder/controlled_confounder.svg")
+```
+
+
+Another scenario we might be interested in is <span class='vocab'>mediation</span>.
+
+```{r}
+#| echo: FALSE
+#| fig-align: center
+#| out.width: 55%
+knitr::include_graphics("standalone_figures/mediation/mediation.svg")
+```
+
+Conditioning on a mediator will attenuate the observed effects. 
+
+If one fits a model like $Y \sim A + M$ the coefficient on $A$ can 
+be interpreted as the direct effect of $A$ on $Y$ not through $M$. 
+
+## Statistical Criteria
+
+Some model selection criteria we might use are $R^2$, Adjusted $R^2$, 
+or the Akaike Information Criterion (AIC). 
+
+Recall that $$R^2 \stackrel{def}{=} \frac{SSR}{SST} = 1 - \frac{SSE}{SST}.$$
+
+The SSE will never go down as we add more predictors. More particularly, the SSE
+is exactly equivalent to the measure we try to minimize with respect to $\beta$
+($S(\beta)$). As we add more degrees of freedom (or from a linear algebra
+perspective, adding more orthogonal vectors to the span of our prediction space), we are able to more closely fit the $y$ values. Or in other words, if we add 
+another predictor to the regression that adds no additional explanatory value, 
+then the $\hat \beta$ coefficient on that term can be set to 0 and we 
+won't increase $S(\beta)$ at all. 
+
+Thus $R^2$ has the undesirable property that adding more predictors will 
+never decrease it. 
+
+Recall that adjusted $R^2$ is 
+
+$$R^2_{adj} = 1 - \frac{MSE}{SST/(n-1)},$$
+
+where using MSE instead of the SSE penalizes the addition of predictors that 
+don't improve model performance.
+
+### Akaike Information Criteria 
+
+AIC is a general variable selection criterion defined for any likelihood-based
+model. For a model with parameters $\theta \in \mathbb R^d$ and log-likelihood
+$\ell (\theta)$
+
+$$\begin{aligned}AIC & = -2 \left(\ell(\hat \theta_{MLE}) - d\right) \\ 
+& = -2 \ell (\hat \theta_{MLE}) + 2d \end{aligned}$$
+
+$\ell(\hat \theta)$ captures goodness of fit on the observed sample. 
+
+$d$ captures model complexity. 
+
+Lower AIC is preferred, thus AIC penalizes models with large numbers of 
+parameters (high model complexity) by adding $2d$. 
+
+For a regression model with $n$ observations and normally distributed errors, 
+the log-likelihood is 
+
+$$\ell(\beta, \sigma^2 ; y) = c - \frac{n}{2} \log(\sigma^2) - \frac{1}{2\sigma^2} 
+\sum_{i=1}^n (y_i - x_i' \beta)^2.$$
+
+Plugging in the MLEs, we have that 
+
+$$\ell(\hat \beta, \hat \sigma^2_{MLE}; y) = c - \frac{n}{2} \log(\hat \sigma^2_{MLE}) - \frac{n}{2}$$
+subtracting off the number of parameters $(p+1)$, and multiplying by 
+$-2$, we have that 
+
+$$AIC = n \log(SSE/n) + 2(p+1) + c.$$
+
+From a set of candidate models, we could then select the model that 
+leads to the lowest AIC. 
+
+### Best subsets selection
+
+We could use the best subset selection algorithm to fit separate models 
+for each possible combination of the $p$ predictors and try to pick the best.
+
+```{cpp, eval=FALSE}
+Best subsets selection algorithm
+--------------------------------
+  
+For j = 1,...,p
+  (a) Fit all (p choose j) models containing exactly j predictors.
+  (b) Pick the best model from this set, i.e., the model with the highest R^2
+      or lowest SSE. Call it M_j.
+End
+Among M_1,...,M_p, select the single best model as the one with the highest
+adjusted R^2 or lowest AIC.
+```
+
+Exhaustive search for best subsets can be performed in R using the 
+`{leaps}` package with the function `leaps::regsubsets`. 
+
+In addition to considering all model subsets, people have traditionally 
+used automated algorithms for model building. Most commonly these
+include forward selection, backward elimination, stepwise selection. 
+
+These typically inflate Type I error rates by doing tons 
+and tons of hypothesis tests. 
+
+For a discussion of these, see [Harrell F.E. (2015) *Regression Modeling Strategies*](.
