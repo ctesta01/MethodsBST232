@@ -204,7 +204,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#akaike-information-criteria" id="toc-akaike-information-criteria" class="nav-link" data-scroll-target="#akaike-information-criteria">Akaike Information Criteria</a></li>
   <li><a href="#best-subsets-selection" id="toc-best-subsets-selection" class="nav-link" data-scroll-target="#best-subsets-selection">Best subsets selection</a></li>
   </ul></li>
+  <li><a href="#predictive-performance-train-vs.-test-error" id="toc-predictive-performance-train-vs.-test-error" class="nav-link" data-scroll-target="#predictive-performance-train-vs.-test-error">Predictive Performance: Train vs.&nbsp;Test Error</a>
+  <ul class="collapse">
+  <li><a href="#model-selection-using-test-error" id="toc-model-selection-using-test-error" class="nav-link" data-scroll-target="#model-selection-using-test-error">Model Selection Using Test Error</a></li>
+  <li><a href="#k-fold-validation" id="toc-k-fold-validation" class="nav-link" data-scroll-target="#k-fold-validation">K-Fold Validation</a></li>
+  <li><a href="#n-fold-validation-and-the-press-statistic" id="toc-n-fold-validation-and-the-press-statistic" class="nav-link" data-scroll-target="#n-fold-validation-and-the-press-statistic">n-fold Validation and the PRESS Statistic</a></li>
   </ul></li>
+  <li><a href="#bias-variance-tradeoff" id="toc-bias-variance-tradeoff" class="nav-link" data-scroll-target="#bias-variance-tradeoff">Bias-Variance Tradeoff</a></li>
+  <li><a href="#penalized-regression-methods-for-variable-selection" id="toc-penalized-regression-methods-for-variable-selection" class="nav-link" data-scroll-target="#penalized-regression-methods-for-variable-selection">Penalized Regression Methods for Variable Selection</a></li>
+  </ul></li>
+  <li><a href="#ridge-regression" id="toc-ridge-regression" class="nav-link" data-scroll-target="#ridge-regression">Ridge Regression</a></li>
   </ul>
 </nav>
     </div>
@@ -437,11 +446,159 @@ colour, shape
 <p>Exhaustive search for best subsets can be performed in R using the <code>{leaps}</code> package with the function <code>leaps::regsubsets</code>.</p>
 <p>In addition to considering all model subsets, people have traditionally used automated algorithms for model building. Most commonly these include forward selection, backward elimination, stepwise selection.</p>
 <p>These typically inflate Type I error rates by doing tons and tons of hypothesis tests.</p>
-<p>For a discussion of these, see [Harrell F.E. (2015) <em>Regression Modeling Strategies</em>](.</p>
-
-
+<p>For a discussion of these, see Harrell F.E. (2015) <em>Regression Modeling Strategies</em>.</p>
 </section>
 </section>
+<section id="predictive-performance-train-vs.-test-error" class="level2">
+<h2 class="anchored" data-anchor-id="predictive-performance-train-vs.-test-error">Predictive Performance: Train vs.&nbsp;Test Error</h2>
+<p>In machine learning, model selection is usually aimed at obtaining good predictive performance (small amount of error in predictions).</p>
+<p>Very flexible/complex models are common (not usually worried about interpretation!), so overfitting is a key concern.</p>
+<p>They usually focus on a variant of the MSE defined as</p>
+<p><span class="math display">\[MSE^* = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_i)^2 = SSE/n\]</span></p>
+<p>When computed on the sample used to fit the model (or “training data”), by design MSE* always decreases as more predictors are added in linear models.</p>
+<p>Thus we should evaluate and compare <span class="math inline">\(MSE^*\)</span> of models when applied to data that is independent from the training data (“test data”).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/MSE.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure 2.9 from the Introduction to Statistical Learning</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The black line in the left panel shows the true mean <span class="math inline">\(\mathbb E[Y|X]\)</span>. A linear model (orange), a spline model (blue) and a wildly wiggly model (green) are fit. On the right-hand-side, we see that the more complex models overfit the data and start to diverge in the test-data <span class="math inline">\(MSE^*\)</span>.</p>
+<p>Because the data were generated, we know the “true” minimum possible MSE in the test dataset, indicated in the dashed line at <span class="math inline">\(Y=1\)</span>.</p>
+<section id="model-selection-using-test-error" class="level3">
+<h3 class="anchored" data-anchor-id="model-selection-using-test-error">Model Selection Using Test Error</h3>
+<p>Suppose we have fitted candidate model(s) on the training data sample and collected new data. Let <span class="math inline">\(m = 1, ..., M\)</span> index the observations in the test set and <span class="math inline">\(y_m^{new}\)</span> and <span class="math inline">\(\hat y_m^{new}\)</span> be their observed outcomes and predicted outcomes from a given model fit on the training data, respectively.</p>
+<p>We define the train and test <span class="math inline">\(MSE^*\)</span> as</p>
+<p><span class="math display">\[MSE_{train}^* = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_i)^2\]</span> <span class="math display">\[MSE_{test}^* = \frac{1}{n} \sum_{i=1}^n (y_{new} - \hat y_{new})^2\]</span></p>
+<p>Usually we don’t have the ability to collect entirely new data to evaluate our models. A simple way to estimate the test error in this setting is to randomly split your one observed dataset into a training and testing and then use the same procedures as in the previous slide.</p>
+<p>Disadvantages:</p>
+<ul>
+<li>You lose samples from the training data.</li>
+<li>Results could depend heavily on the choice of points held out of the model.</li>
+</ul>
+<div class="hottip">
+<p>Questions:</p>
+<ul>
+<li>How, in general, should one choose what data to hold out? Should it match the prediction problem, somehow?</li>
+<li>Should one use test/train splitting to validate choice of model and then report on a model trained on the entire dataset?</li>
+</ul>
+</div>
+</section>
+<section id="k-fold-validation" class="level3">
+<h3 class="anchored" data-anchor-id="k-fold-validation">K-Fold Validation</h3>
+<p>Divide the observations into <span class="math inline">\(K\)</span> groups (“folds”) of roughly equal size.</p>
+<p>Make <span class="math inline">\(K\)</span> passes, where in pass <span class="math inline">\(k = 1, ..., K\)</span>, fold <span class="math inline">\(k\)</span> is treated as a testing set and the rest is a training set.</p>
+<p>Estimate the <span class="math inline">\(MSE_{testcv}^*\)</span> as the average of the <span class="math inline">\(K\)</span> estimates of <span class="math inline">\(MSE_{test}^*\)</span> from each pass and compare <span class="math inline">\(MSE_{testcv}^*\)</span> across candidate models.</p>
+<div class="hottip">
+<p>Should one calculate dispersion (variance) metrics across the <span class="math inline">\(MSE_{testcv, k}^*\)</span> measures? Because one could imagine that one may not want a model that has low <span class="math inline">\(\bar{MSE_{testcv}^*}\)</span> but occasionally performs very poorly. This is essentially getting my wondering about <em>reliability</em>. Rachel’s suggestion is to measure the “MSE of the MSE” — here meaning the average squared deviation of the <span class="math inline">\(MSE^*_{k, testcv}\)</span> from <span class="math inline">\(\bar{MSE_{k, testcv}^*}\)</span>.</p>
+</div>
+<p>Typical numbers for <span class="math inline">\(K\)</span> are 5 or 10. One important special case is when <span class="math inline">\(K = n\)</span>, leave-one-out cross-validation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using a tidymodels approach to k-fold cross-validation: </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.tidymodels.org/start/resampling/ </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>hers <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/hers.csv"</span>))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>hers_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(hers)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>hers_train <span class="ot">&lt;-</span> <span class="fu">training</span>(hers_split)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>hers_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(hers_split)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>rf_mod <span class="ot">&lt;-</span> </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rand_forest</span>(<span class="at">trees =</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"prediction"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="n-fold-validation-and-the-press-statistic" class="level3">
+<h3 class="anchored" data-anchor-id="n-fold-validation-and-the-press-statistic">n-fold Validation and the PRESS Statistic</h3>
+<p>Clearly the DFFITS, Cook’s Distance, and jackknife residuals are related to <span class="math inline">\(n\)</span>-fold cross validation (aka leave-one-out cross-validation).</p>
+<p>The PRESS Statistic is defined</p>
+<p><span class="math display">\[PRESS = \sum_{i=1}^n \left(Y_i - \underbrace{\hat Y_{i(-i)}}_{\substack{\text{prediction from a model} \\ \text{that doesn't include obs. } i}}\right)^2\]</span></p>
+<p>PRESS is just <span class="math inline">\(n \times MSE_{testcv}^*\)</span> from leave-one-out cross-validation.</p>
+<p>As we have seen from other “delete-one” diagnostics, this can be computed from the original fit in linear models.</p>
+<p>One can use the <code>PRESS()</code> function from the <code>{MPV}</code> package, which will compute the <span class="math inline">\(MSE\)</span> from n-fold cross-validation.</p>
+</section>
+</section>
+<section id="bias-variance-tradeoff" class="level2">
+<h2 class="anchored" data-anchor-id="bias-variance-tradeoff">Bias-Variance Tradeoff</h2>
+<p>As model complexity increases, test error initially decreases as we better approximate the true model form, and then we pass through an inflection point, after-which the model starts to overfit.</p>
+<p>This is due to the bias-variance decomposition, i.e., that MSE can be decomposed as:</p>
+<p><span class="math display">\[\text{MSE}_{\text{test}}^* = \text{bias}^2 + \text{variance} + \text{noise}.\]</span></p>
+<p>Formally, suppose that <span class="math inline">\(Y_i = f(x_i) + \varepsilon_i\)</span> and we fit some model that gives us predictions <span class="math inline">\(\hat Y_i = \hat g(x_i).\)</span> In this class, we usually have that <span class="math inline">\(\hat g(x_i) = x_i' \hat \beta\)</span>.</p>
+<p>Then the expected squared error of the prediction for any test data point is</p>
+<p><span class="math display">\[\mathbb E((\hat g(x_0) - Y_0)^2) = (\mathbb E(\hat g(x_0)) - f(x_0))^2 + \text{Var}(\hat g(x_0)) + \text{Var}(\varepsilon)\]</span></p>
+<p><a href="https://allenkunle.me/bias-variance-decomposition" class="uri">https://allenkunle.me/bias-variance-decomposition</a></p>
+</section>
+<section id="penalized-regression-methods-for-variable-selection" class="level2">
+<h2 class="anchored" data-anchor-id="penalized-regression-methods-for-variable-selection">Penalized Regression Methods for Variable Selection</h2>
+<p>The two best-known penalized regression techniques are <em>ridge regression</em> and <em>LASSO</em>.</p>
+<p>The basic idea is to shrink parameters toward zero. This increases bias but decreases variance.</p>
+<p>In least-squares, we find coefficients that minimize the SSE. Meanwhile, in <em>penalized regression</em>, we minimize</p>
+<p><span class="math display">\[SSE + \lambda \text{Penalty}(\beta).\]</span></p>
+<p><span class="math inline">\(\lambda \geq 0\)</span> and the penalty function can take various forms.</p>
+<ul>
+<li>Ridge or <span class="math inline">\(\ell_2\)</span>: <span class="math inline">\(\text{Penalty}(\beta) = \sum_{j=1}^p \beta_j^2.\)</span></li>
+<li>LASSO or <span class="math inline">\(\ell_1\)</span>: <span class="math inline">\(\text{Penalty}(\beta) = \sum_{j=1}^p |\beta_j|.\)</span></li>
+</ul>
+</section>
+</section>
+<section id="ridge-regression" class="level1">
+<h1>Ridge Regression</h1>
+<p><span class="math display">\[SSE = \sum_{i=1}^n \left(
+y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
+\right)^2\]</span></p>
+<p>In ridge regression the coefficients are estimated by minimizing the SSE while constraining the sum of the squared coefficients:</p>
+<p><span class="math display">\[\min_{\beta} \left\{
+\sum_{i=1}^n \left(
+y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
+\right)
+\right\} \quad s.t. \quad
+\sum_{j=1}^p \beta_j^2 \leq s.
+\]</span></p>
+<p>By the theory of Lagrange multipliers (<a href="https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange">Joseph-Louis Lagrange, 1735-1813</a>) for constrained optimization, this is equivalent to minimizing the SSE with a penalty.</p>
+<p>In particular the ridge regression coefficient estimates <span class="math inline">\(\beta_{\lambda}^R\)</span> are the values that minimize</p>
+<p><span class="math display">\[
+\sum_{i=1}^n \left(
+y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
+\right)^2 +
+\lambda \sum_{j=1}^p \beta_j^2
+\]</span></p>
+<p>where <span class="math inline">\(\lambda \geq 0\)</span> is a tuning parameter that relates to, but is not the same as <span class="math inline">\(s\)</span>.</p>
+<p>The intuition is that the sum of squared terms drives the minimization to fit the data, but at the same time, the second summation penalizes the <span class="math inline">\(\beta_j\)</span> coefficients towards zero.</p>
+<div class="hottip">
+<p>Note that we usually want to standardize the <span class="math inline">\(x_j\)</span> and do not want to shrink <span class="math inline">\(\beta_0\)</span>.</p>
+</div>
+<p>For fixed <span class="math inline">\(\lambda\)</span>, the solution <span class="math inline">\(\beta_{\lambda}^R\)</span> to the ridge regression problem is given by</p>
+<p><span class="math display">\[\hat{\beta_{\lambda}^R} = (X'X + \lambda D)^{-1} X'y\]</span></p>
+<p>where <span class="math inline">\(D = \text{Diag}(0,1_p)\)</span>.</p>
+<p>Inspecting this, we can see that</p>
+<ul>
+<li>As <span class="math inline">\(\lambda \to 0, \, \hat\beta_\lambda^R \to \hat\beta_{OLS}\)</span></li>
+<li>As <span class="math inline">\(\lambda \to \infty, \, \hat \beta_{\lambda}^R \to 0\)</span> for all predictors except the intercept.</li>
+</ul>
+<p>Typically one uses cross-validation techniques to determine the optimal value of <span class="math inline">\(\lambda\)</span> according to pre-specified criteria.</p>
+<p>As <span class="math inline">\(\lambda\)</span> increases, the flexibility of the ridge regression fit decreases, leading to decreased variance but increased bias.</p>
+<div class="cooltip">
+<p>Thus ridge regression is a good option in situations where OLS estimates have high variance, including when:</p>
+<ul>
+<li><span class="math inline">\(p \approx n\)</span> or <span class="math inline">\(p \geq n\)</span></li>
+<li>High multicollinearity</li>
+</ul>
+<p>Ridge regression also has substantial computational advantages over best subset selection.</p>
+</div>
+<div class="cooltip">
+<p>It’s worth reflecting on when <span class="math inline">\(p \geq n\)</span> happens (i.e., we have more potential predictors than observations). In situations like genetics where we have samples from populations, it’s straightforward to imagine that we could have genetic data from 100s or 1000s (or even 10s of 1000s), while the <a href="https://en.wikipedia.org/wiki/Human_genome">human genome</a> is estimated to have something like ~20,000 protein-coding genes in it.</p>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->

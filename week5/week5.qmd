@@ -2,6 +2,22 @@
 title: Week 5
 ---
 
+::: {.content-hidden}
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+% 1 create conditionally independent symbol:
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+$$
+:::
+
+
 # Model Selection: Substantive, Statistical, and Predictive Criteria
 
 Main reading for this week is 
@@ -250,4 +266,249 @@ include forward selection, backward elimination, stepwise selection.
 These typically inflate Type I error rates by doing tons 
 and tons of hypothesis tests. 
 
-For a discussion of these, see [Harrell F.E. (2015) *Regression Modeling Strategies*](.
+For a discussion of these, see Harrell F.E. (2015) *Regression Modeling Strategies*.
+
+## Predictive Performance: Train vs. Test Error
+
+In machine learning, model selection is usually aimed at obtaining good predictive performance
+(small amount of error in predictions). 
+
+Very flexible/complex models are common (not usually worried about interpretation!), so 
+overfitting is a key concern. 
+
+They usually focus on a variant of the MSE defined as 
+
+$$MSE^* = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_i)^2 = SSE/n$$
+
+When computed on the sample used to fit the model (or "training data"), by 
+design MSE* always decreases as more predictors are added in linear models. 
+
+Thus we should evaluate and compare $MSE^*$ of models when applied to data that is 
+independent from the training data ("test data").
+
+```{r, fig.cap = "Figure 2.9 from the Introduction to Statistical Learning"}
+#| echo: FALSE
+knitr::include_graphics("images/MSE.png")
+```
+
+The black line in the left panel shows the true mean $\mathbb E[Y|X]$. 
+A linear model (orange), a spline model (blue) and a wildly wiggly 
+model (green) are fit. On the right-hand-side, we see that the 
+more complex models overfit the data and start to diverge in the test-data
+$MSE^*$.
+
+Because the data were generated, we know the "true" 
+minimum possible MSE in the test dataset, indicated in the dashed line at
+$Y=1$. 
+
+### Model Selection Using Test Error 
+
+Suppose we have fitted candidate model(s) on the training data sample and
+collected new data. Let $m = 1, ..., M$ index the observations in the
+test set and $y_m^{new}$ and $\hat y_m^{new}$ be their observed outcomes and 
+predicted outcomes from a given model fit on the training data, respectively. 
+
+We define the train and test $MSE^*$ as
+
+$$MSE_{train}^* = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_i)^2$$
+$$MSE_{test}^* = \frac{1}{n} \sum_{i=1}^n (y_{new} - \hat y_{new})^2$$
+
+Usually we don't have the ability to collect entirely new data to evaluate
+our models. A simple way to estimate the test error in this setting is to randomly 
+split your one observed dataset into a training and testing and then use the same procedures
+as in the previous slide. 
+
+Disadvantages: 
+
+  * You lose samples from the training data. 
+  * Results could depend heavily on the choice of points held out of the model.
+  
+:::{.hottip}
+Questions:
+
+  * How, in general, should one choose what data to hold out? Should it match the 
+  prediction problem, somehow? 
+  * Should one use test/train splitting to validate choice of model and then report
+  on a model trained on the entire dataset?
+  
+:::
+
+### K-Fold Validation
+
+Divide the observations into $K$ groups ("folds") of roughly equal size. 
+
+Make $K$ passes, where in pass $k = 1, ..., K$, fold $k$ is treated as a 
+testing set and the rest is a training set. 
+
+Estimate the $MSE_{testcv}^*$ as the average of the $K$ estimates of $MSE_{test}^*$
+from each pass and compare $MSE_{testcv}^*$ across candidate models. 
+
+:::{.hottip}
+Should one calculate dispersion (variance) metrics across the $MSE_{testcv, k}^*$ 
+measures? Because one could imagine that one may not want a model that has low 
+$\bar{MSE_{testcv}^*}$ but occasionally performs very poorly. This is essentially 
+getting my wondering about *reliability*. Rachel's suggestion is to measure the 
+"MSE of the MSE" — here meaning the average squared deviation of the 
+$MSE^*_{k, testcv}$ from $\bar{MSE_{k, testcv}^*}$. 
+:::
+
+Typical numbers for $K$ are 5 or 10. One important special case is when $K = n$,
+leave-one-out cross-validation.
+
+```{r, eval=FALSE}
+# using a tidymodels approach to k-fold cross-validation: 
+# https://www.tidymodels.org/start/resampling/ 
+library(tidyverse)
+library(here)
+library(tidymodels)
+
+hers <- readr::read_csv(here::here("data/hers.csv"))
+
+hers_split <- initial_split(hers)
+
+hers_train <- training(hers_split)
+hers_test  <- testing(hers_split)
+
+rf_mod <- 
+  rand_forest(trees = 1000) %>% 
+  set_engine("ranger") %>% 
+  set_mode("prediction")
+```
+
+### n-fold Validation and the PRESS Statistic
+
+Clearly the DFFITS, Cook's Distance, and jackknife residuals are related to $n$-fold
+cross validation (aka leave-one-out cross-validation). 
+
+The PRESS Statistic is defined
+
+$$PRESS = \sum_{i=1}^n \left(Y_i - \underbrace{\hat Y_{i(-i)}}_{\substack{\text{prediction from a model} \\ \text{that doesn't include obs. } i}}\right)^2$$
+
+PRESS is just $n \times MSE_{testcv}^*$ from leave-one-out cross-validation.
+
+As we have seen from other "delete-one" diagnostics, this can be computed from the original 
+fit in linear models. 
+
+One can use the `PRESS()` function from the `{MPV}` package, which will compute the 
+$MSE$ from n-fold cross-validation. 
+
+## Bias-Variance Tradeoff
+
+As model complexity increases, test error initially decreases as we 
+better approximate the true model form, and then we pass through 
+an inflection point, after-which the model starts to overfit. 
+
+This is due to the bias-variance decomposition, i.e., 
+that MSE can be decomposed as: 
+
+$$\t{MSE}_{\t{test}}^* = \t{bias}^2 + \t{variance} + \t{noise}.$$
+
+Formally, suppose that $Y_i = f(x_i) + \varepsilon_i$ and 
+we fit some model that gives us predictions $\hat Y_i = \hat g(x_i).$
+In this class, we usually have that $\hat g(x_i) = x_i' \hat \beta$. 
+
+Then the expected squared error of the prediction for any test data 
+point is 
+
+$$\E((\hat g(x_0) - Y_0)^2) = (\E(\hat g(x_0)) - f(x_0))^2 + \Var(\hat g(x_0)) + \Var(\varepsilon)$$
+
+<https://allenkunle.me/bias-variance-decomposition>
+
+## Penalized Regression Methods for Variable Selection 
+
+The two best-known penalized regression techniques are *ridge regression* 
+and *LASSO*. 
+
+The basic idea is to shrink parameters toward zero. This increases
+bias but decreases variance. 
+
+In least-squares, we find coefficients that minimize the SSE. 
+Meanwhile, in *penalized regression*, we minimize 
+
+$$SSE + \lambda \t{Penalty}(\beta).$$
+
+$\lambda \geq 0$ and the penalty function can take various forms.
+
+  * Ridge or $\ell_2$: $\t{Penalty}(\beta) = \sum_{j=1}^p \beta_j^2.$
+  * LASSO or $\ell_1$: $\t{Penalty}(\beta) = \sum_{j=1}^p |\beta_j|.$
+  
+# Ridge Regression 
+
+$$SSE = \sum_{i=1}^n \left( 
+y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
+\right)^2$$
+
+In ridge regression the coefficients are estimated by minimizing
+the SSE while constraining the sum of the squared coefficients:
+
+$$\min_{\beta} \left\{ 
+\sum_{i=1}^n \left( 
+y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
+\right)
+\right\} \quad s.t. \quad 
+\sum_{j=1}^p \beta_j^2 \leq s.
+$$
+
+By the theory of Lagrange multipliers ([Joseph-Louis Lagrange, 1735-1813](https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange))
+for constrained optimization, this is equivalent to minimizing the 
+SSE with a penalty. 
+
+In particular the ridge regression coefficient estimates $\beta_{\lambda}^R$ are the values that minimize 
+
+$$
+\sum_{i=1}^n \left( 
+y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
+\right)^2 + 
+\lambda \sum_{j=1}^p \beta_j^2
+$$
+
+where $\lambda \geq 0$ is a tuning parameter that relates to, but is
+not the same as $s$. 
+
+The intuition is that the sum of squared terms drives the minimization
+to fit the data, but at the same time, the second summation 
+penalizes the $\beta_j$ coefficients towards zero. 
+
+:::{.hottip}
+Note that we usually want to standardize the $x_j$ and do not want to 
+shrink $\beta_0$. 
+:::
+
+For fixed $\lambda$, the solution $\beta_{\lambda}^R$ to the ridge
+regression problem is given by 
+
+$$\hat{\beta_{\lambda}^R} = (X'X + \lambda D)^{-1} X'y$$
+
+where $D = \t{Diag}(0,1_p)$.
+
+Inspecting this, we can see that 
+
+  * As $\lambda \to 0, \, \hat\beta_\lambda^R \to \hat\beta_{OLS}$
+  * As $\lambda \to \infty, \, \hat \beta_{\lambda}^R \to 0$ for all 
+  predictors except the intercept. 
+  
+Typically one uses cross-validation techniques to determine the 
+optimal value of $\lambda$ according to pre-specified criteria. 
+
+As $\lambda$ increases, the flexibility of the ridge regression
+fit decreases, leading to decreased variance but increased bias. 
+
+:::{.cooltip}
+Thus ridge regression is a good option in situations where OLS estimates
+have high variance, including when: 
+
+  * $p \approx n$ or $p \geq n$
+  * High multicollinearity 
+
+Ridge regression also has substantial computational advantages over
+best subset selection.
+:::
+
+:::{.cooltip}
+It's worth reflecting on when $p \geq n$ happens (i.e., we have more 
+potential predictors than observations). In situations like 
+genetics where we have samples from populations, it's straightforward
+to imagine that we could have genetic data from 100s or 1000s (or
+even 10s of 1000s), while the [human genome](https://en.wikipedia.org/wiki/Human_genome) is estimated to have
+something like ~20,000 protein-coding genes in it.
+:::
