@@ -1,0 +1,116 @@
+---
+title: Week 7
+---
+
+::: content-hidden
+\$\$
+
+\newcommand{\E}[0]{\mathbb E}
+
+\% 1 create conditionally independent symbol:
+
+```{=tex}
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+```
+```{=tex}
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+```
+\$\$
+:::
+
+```{=html}
+<!-- 
+-->
+```
+
+## Recap 
+
+Last week we went over the bootstrap and the permutation test. Today we'll wrap up 
+
+# More Complicated Permutation Testing
+
+Consider the setting in which we have $M$ groups and want to perform ANOVA testing. 
+
+We'll say we have $N$ subjects in $M$ treatment groups of size $n_m$, $m=1, ..., M$,
+and responses $Y_{mj} \, (j = 1,...,n_m)$ are recorded. We wish to test the null hypothesis: 
+
+$$H_0 \colon \text{No difference in the distribution of $Y$ in the treatment groups,}
+$$
+where 
+$$
+H_1 \colon \text{The distribution of at least one of the treatment groups differs}
+$$
+
+Recall that ANOVA is just multiple linear regression with multiple indicator variables included for the categorical group variable. 
+
+Whereas before we had ${ N \choose n }$ possible permutations, but now we have 
+
+$${ N \choose n_1 n_2 \cdots n_M}
+$$
+possible permutations of the observations into the $M$ groups. 
+
+For each one, we calculate a test statistic
+
+$$T = \sum_{m=1}^M n_M \bar Y^2_{m:}, \text{ where } \bar Y_{m:} = \sum_{j=1}^{n_m} Y_{mj} / n_m. 
+$$
+
+This test statistic is a simplification of the ANOVA $F$ that yields the same ordering across permutations. Large values in the observed data support the alternative hypothesis.  Recall that previously we've discussed how as long as the ordering 
+is preserved and we're using one-sided tests, we can use test statistic simplifications to perform equivalent inference to the ANOVA $F$ test as long as we're working in a permutation test setting. (The $F$ test is classically a one-sided upper-tail test.)
+
+Compute one-sided upper tail permutation $p$-values using the procedure described before. 
+
+### Exact Multiple Comparisons 
+
+As in the parametric setting, when there is a difference between treatments, we would like to know which treatments are significantly different from which others. 
+
+A total of ${ M \choose 2 }$ treatment comparisons can be made. If we test each pair at the $\alpha = 0.05$ level, the probability we find at least one significant difference purely by chance (when $H_0$ is true) will be greater than $\alpha$. 
+
+This overall Type 1 Error inflation that results from performing multiple tests is a widely studied statistical problem known as the <span class='vocab'>multiple comparisons problem</span>. 
+
+With permutation tests, we can controll the <span class='vocab'>overall</span> Type I error rate by obtaining a critical value $C_\alpha$ such that 
+
+$$
+P(\lvert\bar Y_{m:} - \bar Y_{m'})\rvert \geq C_\alpha; \text{ at least one } m, m' \mid H_0) = \alpha
+$$
+
+We need $C_\alpha$ such that 
+
+$$P(\text{max}_{1 \leq m < m' \leq M} \lvert \bar Y_{m:} - \bar Y_{m':} \rvert \geq C_\alpha \mid H_0) = \alpha
+$$
+
+This is now a distribution of the maximum difference in the group means across 
+permutations. 
+
+### Monte Carlo Samples
+
+Computation of the permutation distribution of a test statistic requires
+enumeration of all ${ N \choose n_1 n_2 \cdots n_M }$ permutations
+
+Example: 30 observations, with 
+
+In settings where this nunber is large, we don't have to compute 
+all possible divisions, but can take only a random sample of them. 
+
+For instance, out of the 155 million possible permutations, we could 
+base inference on a random subset of, say, 9,999. 
+
+This yields a <span class='vocab'>Monte Carlo estimate</span> of the exact $p$-value
+
+$$\hat p = \frac{1 + \sum_{i=1}^{9999} I(t_i \geq t^*)}{9999 + 1}
+$$
+
+This test is exact. 
+
+
+-----------------------------------------------------------------
+
+Going to need to fill in the content from the video during the week.
+
+-----------------------------------------------------------------
+
+Midterm content will be up through 5b. 
+

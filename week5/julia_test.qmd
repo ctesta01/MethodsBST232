@@ -1,0 +1,13 @@
+---
+title: Testing Julia code in Quarto
+---
+
+```{julia}
+println("hello world")
+```
+
+```{julia}
+using Plots
+display(plot(sin, x -> sin(2x), 0, 2))
+display(plot(x -> sin(4x), y -> sin(5y), 0, 2))
+```

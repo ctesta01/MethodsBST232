@@ -2,85 +2,67 @@
 title: Week 5
 ---
 
-::: {.content-hidden}
-$$
+::: content-hidden
+\$\$
+
 \newcommand{\E}[0]{\mathbb E}
 
-% 1 create conditionally independent symbol:
+\% 1 create conditionally independent symbol:
+
+```{=tex}
 \newcommand\independent{\perp\!\!\!\perp}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
-
+```
+```{=tex}
 \newcommand{\Var}[0]{\text{Var}}
 \newcommand{\Cov}[0]{\text{Cov}}
 \newcommand{\e}[0]{\epsilon}
 \newcommand{\t}[1]{\text{#1}}
-$$
+```
+\$\$
 :::
-
 
 # Model Selection: Substantive, Statistical, and Predictive Criteria
 
-Main reading for this week is 
-Sections 5.1, 6.1-6.2 from [*Introduction to Statistical Learning*](https://trevorhastie.github.io/ISLR/). 
+Main reading for this week is Sections 5.1, 6.1-6.2 from [*Introduction to Statistical Learning*](https://trevorhastie.github.io/ISLR/).
 
+So far we have assumed that we know what variables should be included in a regression model. We've focused on specification and interpretation of the linear regression model and regression diagnostics for testing if we have the correct functional form or verifying the underlying assumptions.
 
-So far we have assumed that we know what variables should be included
-in a regression model. We've focused on specification and interpretation of 
-the linear regression model and regression diagnostics for testing if 
-we have the correct functional form or verifying the underlying assumptions. 
+However, we might not be sure which variables should be included in the model to begin with.
 
-However, we might not be sure which variables should be included in the model 
-to begin with. 
+Model selection will be dependent on the study design and objectives.
 
+Interest could be on:
 
-Model selection will be dependent on the study design and 
-objectives. 
+-   The association between an outcome and some predictor(s), where we would want to make sure that:
+    -   The estimates are not impacted by confounding.
+    -   We are not oversimplifying these associations by ignoring important effect modification.
+    -   We have a parsimonious model for interpretability.
+        -   [Parsimony]{.vocab} refers to the principle of preferring the less complex model that performs just as well to a more complex model.
+-   If our goal is prediction, we would want to make sure that
+    -   We have identified the important predictors of the outcome.
+    -   The selected set of regressors minimizes prediction error.
+    -   Less interested in causal inferences.
+    -   And to be careful of overfitting
 
-Interest could be on: 
+In all situations, it is important that the model be as parsimonious as possible:
 
-  * The association between an outcome and some predictor(s), where we would 
-    want to make sure that: 
-    * The estimates are not impacted by confounding.
-    * We are not oversimplifying these associations by ignoring important
-    effect modification. 
-    * We have a parsimonious model for interpretability.
-      * <span class='vocab'>Parsimony</span> refers to the principle of
-      preferring the less complex model that performs just as well to a more
-      complex model.
-  * If our goal is prediction, we would want to make sure that 
-    * We have identified the important predictors of the outcome.
-    * The selected set of regressors minimizes prediction error. 
-    * Less interested in causal inferences.
-    * And to be careful of overfitting
-  
-In all situations, it is important that the model be as parsimonious as 
-possible: 
+-   Interpretation becomes more complex for larger models;
+-   Unnecessary variables may increase the variability of $\hat \beta$ because they waste degrees of freedom without increasing SSR or decreasing SSE.
+    -   This is because $\widehat{\text{Var}}(\hat \beta) = MSE(X'X)^{-1}$ and $MSE = SSE/(n-p-1)$, so adding useless variables will decrease the denominator while leaving the SSE unchanged, thus inflating the MSE.
+-   Multicollinearity can cause problems in estimation.
 
-  * Interpretation becomes more complex for larger models;
-  * Unnecessary variables may increase the variability of $\hat \beta$
-  because they waste degrees of freedom without
-  increasing SSR or decreasing SSE. 
-    * This is because $\widehat{\text{Var}}(\hat \beta) = MSE(X'X)^{-1}$
-    and $MSE = SSE/(n-p-1)$, so adding useless variables will 
-    decrease the denominator while leaving the SSE unchanged, thus inflating
-    the MSE. 
-  * Multicollinearity can cause problems in estimation.
+However, we don't want the model to be so overly simplistic that it yields biased estimates.
 
-However, we don't want the model to be so overly simplistic that it yields 
-biased estimates.
+### Hierarchically Well Formulated Models
 
-### Hierarchically Well Formulated Models 
+We should always consider [hierarchically well formulated models]{.vocab}.
 
-We should always consider <span class='vocab'>hierarchically well formulated models</span>.
+A model is said to be hierarchically well formulated when all lower order components of any term are included in a model.
 
-A model is said to be hierarchically well formulated when all lower order
-components of any term are included in a model. 
+That is, all main effects should be included in models containing two-way interactions.
 
-That is, all main effects should be included in models containing two-way
-interactions. 
-
-Similarly, the appropriate two-way interactions need to be included in models 
-which contain three-way interactions.
+Similarly, the appropriate two-way interactions need to be included in models which contain three-way interactions.
 
 ```{r}
 library(tidyverse)
@@ -119,15 +101,13 @@ ggplot(df,
   ggtitle("Another Model with Inappropriate Hierarchical Structured")
 ```
 
-## Causal Selection 
+## Causal Selection
 
-Ideally, the primary piece of model building and model selection 
-(choosing what terms to include) should be substantive knowledge. 
+Ideally, the primary piece of model building and model selection (choosing what terms to include) should be substantive knowledge.
 
-On a causal DAG, an association between two variables (exposure/treatment)
-and Y (outcome) can arise in 3 ways: 
+On a causal DAG, an association between two variables (exposure/treatment) and Y (outcome) can arise in 3 ways:
 
-  1. $A$ causes $Y$:
+1.  $A$ causes $Y$:
 
 ```{r}
 #| echo: FALSE
@@ -136,8 +116,8 @@ and Y (outcome) can arise in 3 ways:
 knitr::include_graphics("standalone_figures/direct/direct.svg")
 ```
 
-  2. Confounding: Common causes of variables considered in the model that are not conditioned on. 
-  
+2.  Confounding: Common causes of variables considered in the model that are not conditioned on.
+
 ```{r}
 #| echo: FALSE
 #| fig-align: center
@@ -145,9 +125,8 @@ knitr::include_graphics("standalone_figures/direct/direct.svg")
 knitr::include_graphics("standalone_figures/confounder/confounder.svg")
 ```
 
-  3. Collider: Variables that have a common effect on another variable which is 
-  conditioned on.
-  
+3.  Collider: Variables that have a common effect on another variable which is conditioned on.
+
 ```{r}
 #| echo: FALSE
 #| fig-align: center
@@ -155,8 +134,7 @@ knitr::include_graphics("standalone_figures/confounder/confounder.svg")
 knitr::include_graphics("standalone_figures/collider/collider.svg")
 ```
 
-In the case of confounders, we *should* adjust for them. On the other hand, 
-we should *not* adjust for colliders (which creates collider stratification bias).
+In the case of confounders, we *should* adjust for them. On the other hand, we should *not* adjust for colliders (which creates collider stratification bias).
 
 ```{r}
 #| echo: FALSE
@@ -165,8 +143,7 @@ we should *not* adjust for colliders (which creates collider stratification bias
 knitr::include_graphics("standalone_figures/confounder/controlled_confounder/controlled_confounder.svg")
 ```
 
-
-Another scenario we might be interested in is <span class='vocab'>mediation</span>.
+Another scenario we might be interested in is [mediation]{.vocab}.
 
 ```{r}
 #| echo: FALSE
@@ -175,73 +152,55 @@ Another scenario we might be interested in is <span class='vocab'>mediation</spa
 knitr::include_graphics("standalone_figures/mediation/mediation.svg")
 ```
 
-Conditioning on a mediator will attenuate the observed effects. 
+Conditioning on a mediator will attenuate the observed effects.
 
-If one fits a model like $Y \sim A + M$ the coefficient on $A$ can 
-be interpreted as the direct effect of $A$ on $Y$ not through $M$. 
+If one fits a model like $Y \sim A + M$ the coefficient on $A$ can be interpreted as the direct effect of $A$ on $Y$ not through $M$.
 
 ## Statistical Criteria
 
-Some model selection criteria we might use are $R^2$, Adjusted $R^2$, 
-or the Akaike Information Criterion (AIC). 
+Some model selection criteria we might use are $R^2$, Adjusted $R^2$, or the Akaike Information Criterion (AIC).
 
 Recall that $$R^2 \stackrel{def}{=} \frac{SSR}{SST} = 1 - \frac{SSE}{SST}.$$
 
-The SSE will never go down as we add more predictors. More particularly, the SSE
-is exactly equivalent to the measure we try to minimize with respect to $\beta$
-($S(\beta)$). As we add more degrees of freedom (or from a linear algebra
-perspective, adding more orthogonal vectors to the span of our prediction space), we are able to more closely fit the $y$ values. Or in other words, if we add 
-another predictor to the regression that adds no additional explanatory value, 
-then the $\hat \beta$ coefficient on that term can be set to 0 and we 
-won't increase $S(\beta)$ at all. 
+The SSE will never go down as we add more predictors. More particularly, the SSE is exactly equivalent to the measure we try to minimize with respect to $\beta$ ($S(\beta)$). As we add more degrees of freedom (or from a linear algebra perspective, adding more orthogonal vectors to the span of our prediction space), we are able to more closely fit the $y$ values. Or in other words, if we add another predictor to the regression that adds no additional explanatory value, then the $\hat \beta$ coefficient on that term can be set to 0 and we won't increase $S(\beta)$ at all.
 
-Thus $R^2$ has the undesirable property that adding more predictors will 
-never decrease it. 
+Thus $R^2$ has the undesirable property that adding more predictors will never decrease it.
 
-Recall that adjusted $R^2$ is 
+Recall that adjusted $R^2$ is
 
 $$R^2_{adj} = 1 - \frac{MSE}{SST/(n-1)},$$
 
-where using MSE instead of the SSE penalizes the addition of predictors that 
-don't improve model performance.
+where using MSE instead of the SSE penalizes the addition of predictors that don't improve model performance.
 
-### Akaike Information Criteria 
+### Akaike Information Criteria
 
-AIC is a general variable selection criterion defined for any likelihood-based
-model. For a model with parameters $\theta \in \mathbb R^d$ and log-likelihood
-$\ell (\theta)$
+AIC is a general variable selection criterion defined for any likelihood-based model. For a model with parameters $\theta \in \mathbb R^d$ and log-likelihood $\ell (\theta)$
 
 $$\begin{aligned}AIC & = -2 \left(\ell(\hat \theta_{MLE}) - d\right) \\ 
 & = -2 \ell (\hat \theta_{MLE}) + 2d \end{aligned}$$
 
-$\ell(\hat \theta)$ captures goodness of fit on the observed sample. 
+$\ell(\hat \theta)$ captures goodness of fit on the observed sample.
 
-$d$ captures model complexity. 
+$d$ captures model complexity.
 
-Lower AIC is preferred, thus AIC penalizes models with large numbers of 
-parameters (high model complexity) by adding $2d$. 
+Lower AIC is preferred, thus AIC penalizes models with large numbers of parameters (high model complexity) by adding $2d$.
 
-For a regression model with $n$ observations and normally distributed errors, 
-the log-likelihood is 
+For a regression model with $n$ observations and normally distributed errors, the log-likelihood is
 
 $$\ell(\beta, \sigma^2 ; y) = c - \frac{n}{2} \log(\sigma^2) - \frac{1}{2\sigma^2} 
 \sum_{i=1}^n (y_i - x_i' \beta)^2.$$
 
-Plugging in the MLEs, we have that 
+Plugging in the MLEs, we have that
 
-$$\ell(\hat \beta, \hat \sigma^2_{MLE}; y) = c - \frac{n}{2} \log(\hat \sigma^2_{MLE}) - \frac{n}{2}$$
-subtracting off the number of parameters $(p+1)$, and multiplying by 
-$-2$, we have that 
+$$\ell(\hat \beta, \hat \sigma^2_{MLE}; y) = c - \frac{n}{2} \log(\hat \sigma^2_{MLE}) - \frac{n}{2}$$ subtracting off the number of parameters $(p+1)$, and multiplying by $-2$, we have that
 
 $$AIC = n \log(SSE/n) + 2(p+1) + c.$$
 
-From a set of candidate models, we could then select the model that 
-leads to the lowest AIC. 
+From a set of candidate models, we could then select the model that leads to the lowest AIC.
 
 ### Best subsets selection
 
-We could use the best subset selection algorithm to fit separate models 
-for each possible combination of the $p$ predictors and try to pick the best.
+We could use the best subset selection algorithm to fit separate models for each possible combination of the $p$ predictors and try to pick the best.
 
 ```{cpp, eval=FALSE}
 Best subsets selection algorithm
@@ -256,104 +215,72 @@ Among M_1,...,M_p, select the single best model as the one with the highest
 adjusted R^2 or lowest AIC.
 ```
 
-Exhaustive search for best subsets can be performed in R using the 
-`{leaps}` package with the function `leaps::regsubsets`. 
+Exhaustive search for best subsets can be performed in R using the `{leaps}` package with the function `leaps::regsubsets`.
 
-In addition to considering all model subsets, people have traditionally 
-used automated algorithms for model building. Most commonly these
-include forward selection, backward elimination, stepwise selection. 
+In addition to considering all model subsets, people have traditionally used automated algorithms for model building. Most commonly these include forward selection, backward elimination, stepwise selection.
 
-These typically inflate Type I error rates by doing tons 
-and tons of hypothesis tests. 
+These typically inflate Type I error rates by doing tons and tons of hypothesis tests.
 
 For a discussion of these, see Harrell F.E. (2015) *Regression Modeling Strategies*.
 
 ## Predictive Performance: Train vs. Test Error
 
-In machine learning, model selection is usually aimed at obtaining good predictive performance
-(small amount of error in predictions). 
+In machine learning, model selection is usually aimed at obtaining good predictive performance (small amount of error in predictions).
 
-Very flexible/complex models are common (not usually worried about interpretation!), so 
-overfitting is a key concern. 
+Very flexible/complex models are common (not usually worried about interpretation!), so overfitting is a key concern.
 
-They usually focus on a variant of the MSE defined as 
+They usually focus on a variant of the MSE defined as
 
 $$MSE^* = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_i)^2 = SSE/n$$
 
-When computed on the sample used to fit the model (or "training data"), by 
-design MSE* always decreases as more predictors are added in linear models. 
+When computed on the sample used to fit the model (or "training data"), by design MSE\* always decreases as more predictors are added in linear models.
 
-Thus we should evaluate and compare $MSE^*$ of models when applied to data that is 
-independent from the training data ("test data").
+Thus we should evaluate and compare $MSE^*$ of models when applied to data that is independent from the training data ("test data").
 
 ```{r, fig.cap = "Figure 2.9 from the Introduction to Statistical Learning"}
 #| echo: FALSE
 knitr::include_graphics("images/MSE.png")
 ```
 
-The black line in the left panel shows the true mean $\mathbb E[Y|X]$. 
-A linear model (orange), a spline model (blue) and a wildly wiggly 
-model (green) are fit. On the right-hand-side, we see that the 
-more complex models overfit the data and start to diverge in the test-data
-$MSE^*$.
+The black line in the left panel shows the true mean $\mathbb E[Y|X]$. A linear model (orange), a spline model (blue) and a wildly wiggly model (green) are fit. On the right-hand-side, we see that the more complex models overfit the data and start to diverge in the test-data $MSE^*$.
 
-Because the data were generated, we know the "true" 
-minimum possible MSE in the test dataset, indicated in the dashed line at
-$Y=1$. 
+Because the data were generated, we know the "true" minimum possible MSE in the test dataset, indicated in the dashed line at $Y=1$.
 
-### Model Selection Using Test Error 
+### Model Selection Using Test Error
 
-Suppose we have fitted candidate model(s) on the training data sample and
-collected new data. Let $m = 1, ..., M$ index the observations in the
-test set and $y_m^{new}$ and $\hat y_m^{new}$ be their observed outcomes and 
-predicted outcomes from a given model fit on the training data, respectively. 
+Suppose we have fitted candidate model(s) on the training data sample and collected new data. Let $m = 1, ..., M$ index the observations in the test set and $y_m^{new}$ and $\hat y_m^{new}$ be their observed outcomes and predicted outcomes from a given model fit on the training data, respectively.
 
 We define the train and test $MSE^*$ as
 
-$$MSE_{train}^* = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_i)^2$$
-$$MSE_{test}^* = \frac{1}{n} \sum_{i=1}^n (y_{new} - \hat y_{new})^2$$
+$$MSE_{train}^* = \frac{1}{n} \sum_{i=1}^n (y_i - \hat y_i)^2$$ $$MSE_{test}^* = \frac{1}{n} \sum_{i=1}^n (y_{new} - \hat y_{new})^2$$
 
-Usually we don't have the ability to collect entirely new data to evaluate
-our models. A simple way to estimate the test error in this setting is to randomly 
-split your one observed dataset into a training and testing and then use the same procedures
-as in the previous slide. 
+Usually we don't have the ability to collect entirely new data to evaluate our models. A simple way to estimate the test error in this setting is to randomly split your one observed dataset into a training and testing and then use the same procedures as in the previous slide.
 
-Disadvantages: 
+Disadvantages:
 
-  * You lose samples from the training data. 
-  * Results could depend heavily on the choice of points held out of the model.
-  
-:::{.hottip}
+-   You lose samples from the training data.
+-   Results could depend heavily on the choice of points held out of the model.
+
+::: hottip
 Questions:
 
-  * How, in general, should one choose what data to hold out? Should it match the 
-  prediction problem, somehow? 
-  * Should one use test/train splitting to validate choice of model and then report
-  on a model trained on the entire dataset?
-  
+-   How, in general, should one choose what data to hold out? Should it match the prediction problem, somehow?
+-   Should one use test/train splitting to validate choice of model and then report on a model trained on the entire dataset?
 :::
 
 ### K-Fold Validation
 
-Divide the observations into $K$ groups ("folds") of roughly equal size. 
+Divide the observations into $K$ groups ("folds") of roughly equal size.
 
-Make $K$ passes, where in pass $k = 1, ..., K$, fold $k$ is treated as a 
-testing set and the rest is a training set. 
+Make $K$ passes, where in pass $k = 1, ..., K$, fold $k$ is treated as a testing set and the rest is a training set.
 
-Estimate the $MSE_{testcv}^*$ as the average of the $K$ estimates of $MSE_{test}^*$
-from each pass and compare $MSE_{testcv}^*$ across candidate models. 
+Estimate the $MSE_{testcv}^*$ as the average of the $K$ estimates of $MSE_{test}^*$ from each pass and compare $MSE_{testcv}^*$ across candidate models.
 
-:::{.hottip}
-Should one calculate dispersion (variance) metrics across the $MSE_{testcv, k}^*$ 
-measures? Because one could imagine that one may not want a model that has low 
-$\bar{MSE_{testcv}^*}$ but occasionally performs very poorly. This is essentially 
-getting my wondering about *reliability*. Rachel's suggestion is to measure the 
-"MSE of the MSE" — here meaning the average squared deviation of the 
-$MSE^*_{k, testcv}$ from $\bar{MSE_{k, testcv}^*}$. 
+::: hottip
+Should one calculate dispersion (variance) metrics across the $MSE_{testcv, k}^*$ measures? Because one could imagine that one may not want a model that has low $\bar{MSE_{testcv}^*}$ but occasionally performs very poorly. This is essentially getting my wondering about *reliability*. Rachel's suggestion is to measure the "MSE of the MSE" --- here meaning the average squared deviation of the $MSE^*_{k, testcv}$ from $\bar{MSE_{k, testcv}^*}$.
 :::
 
-Typical numbers for $K$ are 5 or 10. One important special case is when $K = n$,
-leave-one-out cross-validation.
+Typical numbers for $K$ are 5 or 10. One important special case is when $K = n$, leave-one-out cross-validation.
 
 ```{r, eval=FALSE}
 # using a tidymodels approach to k-fold cross-validation: 
@@ -377,8 +304,7 @@ rf_mod <-
 
 ### n-fold Validation and the PRESS Statistic
 
-Clearly the DFFITS, Cook's Distance, and jackknife residuals are related to $n$-fold
-cross validation (aka leave-one-out cross-validation). 
+Clearly the DFFITS, Cook's Distance, and jackknife residuals are related to $n$-fold cross validation (aka leave-one-out cross-validation).
 
 The PRESS Statistic is defined
 
@@ -386,60 +312,48 @@ $$PRESS = \sum_{i=1}^n \left(Y_i - \underbrace{\hat Y_{i(-i)}}_{\substack{\text{
 
 PRESS is just $n \times MSE_{testcv}^*$ from leave-one-out cross-validation.
 
-As we have seen from other "delete-one" diagnostics, this can be computed from the original 
-fit in linear models. 
+As we have seen from other "delete-one" diagnostics, this can be computed from the original fit in linear models.
 
-One can use the `PRESS()` function from the `{MPV}` package, which will compute the 
-$MSE$ from n-fold cross-validation. 
+One can use the `PRESS()` function from the `{MPV}` package, which will compute the $MSE$ from n-fold cross-validation.
 
 ## Bias-Variance Tradeoff
 
-As model complexity increases, test error initially decreases as we 
-better approximate the true model form, and then we pass through 
-an inflection point, after-which the model starts to overfit. 
+As model complexity increases, test error initially decreases as we better approximate the true model form, and then we pass through an inflection point, after-which the model starts to overfit.
 
-This is due to the bias-variance decomposition, i.e., 
-that MSE can be decomposed as: 
+This is due to the bias-variance decomposition, i.e., that MSE can be decomposed as:
 
-$$\t{MSE}_{\t{test}}^* = \t{bias}^2 + \t{variance} + \t{noise}.$$
+$$\text{MSE}_{\text{test}}^* = \text{bias}^2 + \text{variance} + \text{noise}.$$
 
-Formally, suppose that $Y_i = f(x_i) + \varepsilon_i$ and 
-we fit some model that gives us predictions $\hat Y_i = \hat g(x_i).$
-In this class, we usually have that $\hat g(x_i) = x_i' \hat \beta$. 
+Formally, suppose that $Y_i = f(x_i) + \varepsilon_i$ and we fit some model that gives us predictions $\hat Y_i = \hat g(x_i).$ In this class, we usually have that $\hat g(x_i) = x_i' \hat \beta$.
 
-Then the expected squared error of the prediction for any test data 
-point is 
+Then the expected squared error of the prediction for any test data point is
 
-$$\E((\hat g(x_0) - Y_0)^2) = (\E(\hat g(x_0)) - f(x_0))^2 + \Var(\hat g(x_0)) + \Var(\varepsilon)$$
+$$\mathbb E((\hat g(x_0) - Y_0)^2) = (\mathbb E(\hat g(x_0)) - f(x_0))^2 + \text{Var}(\hat g(x_0)) + \text{Var}(\varepsilon)$$
 
 <https://allenkunle.me/bias-variance-decomposition>
 
-## Penalized Regression Methods for Variable Selection 
+## Penalized Regression Methods for Variable Selection
 
-The two best-known penalized regression techniques are *ridge regression* 
-and *LASSO*. 
+The two best-known penalized regression techniques are *ridge regression* and *LASSO*.
 
-The basic idea is to shrink parameters toward zero. This increases
-bias but decreases variance. 
+The basic idea is to shrink parameters toward zero. This increases bias but decreases variance.
 
-In least-squares, we find coefficients that minimize the SSE. 
-Meanwhile, in *penalized regression*, we minimize 
+In least-squares, we find coefficients that minimize the SSE. Meanwhile, in *penalized regression*, we minimize
 
-$$SSE + \lambda \t{Penalty}(\beta).$$
+$$SSE + \lambda \text{Penalty}(\beta).$$
 
 $\lambda \geq 0$ and the penalty function can take various forms.
 
-  * Ridge or $\ell_2$: $\t{Penalty}(\beta) = \sum_{j=1}^p \beta_j^2.$
-  * LASSO or $\ell_1$: $\t{Penalty}(\beta) = \sum_{j=1}^p |\beta_j|.$
-  
-# Ridge Regression 
+-   Ridge or $\ell_2$: $\text{Penalty}(\beta) = \sum_{j=1}^p \beta_j^2.$
+-   LASSO or $\ell_1$: $\text{Penalty}(\beta) = \sum_{j=1}^p |\beta_j|.$
+
+# Ridge Regression
 
 $$SSE = \sum_{i=1}^n \left( 
 y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
 \right)^2$$
 
-In ridge regression the coefficients are estimated by minimizing
-the SSE while constraining the sum of the squared coefficients:
+In ridge regression the coefficients are estimated by minimizing the SSE while constraining the sum of the squared coefficients:
 
 $$\min_{\beta} \left\{ 
 \sum_{i=1}^n \left( 
@@ -449,11 +363,9 @@ y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
 \sum_{j=1}^p \beta_j^2 \leq s.
 $$
 
-By the theory of Lagrange multipliers ([Joseph-Louis Lagrange, 1735-1813](https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange))
-for constrained optimization, this is equivalent to minimizing the 
-SSE with a penalty. 
+By the theory of Lagrange multipliers ([Joseph-Louis Lagrange, 1735-1813](https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange)) for constrained optimization, this is equivalent to minimizing the SSE with a penalty.
 
-In particular the ridge regression coefficient estimates $\beta_{\lambda}^R$ are the values that minimize 
+In particular the ridge regression coefficient estimates $\beta_{\lambda}^R$ are the values that minimize
 
 $$
 \sum_{i=1}^n \left( 
@@ -462,53 +374,238 @@ y_i - \beta_0 - \sum_{j=1}^p \beta_j x_{ij}
 \lambda \sum_{j=1}^p \beta_j^2
 $$
 
-where $\lambda \geq 0$ is a tuning parameter that relates to, but is
-not the same as $s$. 
+where $\lambda \geq 0$ is a tuning parameter that relates to, but is not the same as $s$.
 
-The intuition is that the sum of squared terms drives the minimization
-to fit the data, but at the same time, the second summation 
-penalizes the $\beta_j$ coefficients towards zero. 
+The intuition is that the sum of squared terms drives the minimization to fit the data, but at the same time, the second summation penalizes the $\beta_j$ coefficients towards zero.
 
-:::{.hottip}
-Note that we usually want to standardize the $x_j$ and do not want to 
-shrink $\beta_0$. 
+::: hottip
+Note that we usually want to standardize the $x_j$ and do not want to shrink $\beta_0$.
 :::
 
-For fixed $\lambda$, the solution $\beta_{\lambda}^R$ to the ridge
-regression problem is given by 
+For fixed $\lambda$, the solution $\beta_{\lambda}^R$ to the ridge regression problem is given by
 
 $$\hat{\beta_{\lambda}^R} = (X'X + \lambda D)^{-1} X'y$$
 
-where $D = \t{Diag}(0,1_p)$.
+where $D = \text{Diag}(0,1_p)$.
 
-Inspecting this, we can see that 
+Inspecting this, we can see that
 
-  * As $\lambda \to 0, \, \hat\beta_\lambda^R \to \hat\beta_{OLS}$
-  * As $\lambda \to \infty, \, \hat \beta_{\lambda}^R \to 0$ for all 
-  predictors except the intercept. 
-  
-Typically one uses cross-validation techniques to determine the 
-optimal value of $\lambda$ according to pre-specified criteria. 
+-   As $\lambda \to 0, \, \hat\beta_\lambda^R \to \hat\beta_{OLS}$
+-   As $\lambda \to \infty, \, \hat \beta_{\lambda}^R \to 0$ for all predictors except the intercept.
 
-As $\lambda$ increases, the flexibility of the ridge regression
-fit decreases, leading to decreased variance but increased bias. 
+Typically one uses cross-validation techniques to determine the optimal value of $\lambda$ according to pre-specified criteria.
 
-:::{.cooltip}
-Thus ridge regression is a good option in situations where OLS estimates
-have high variance, including when: 
+As $\lambda$ increases, the flexibility of the ridge regression fit decreases, leading to decreased variance but increased bias.
 
-  * $p \approx n$ or $p \geq n$
-  * High multicollinearity 
+::: cooltip
+Thus ridge regression is a good option in situations where OLS estimates have high variance, including when:
 
-Ridge regression also has substantial computational advantages over
-best subset selection.
+-   $p \approx n$ or $p \geq n$
+-   High multicollinearity
+
+Ridge regression also has substantial computational advantages over best subset selection.
 :::
 
-:::{.cooltip}
-It's worth reflecting on when $p \geq n$ happens (i.e., we have more 
-potential predictors than observations). In situations like 
-genetics where we have samples from populations, it's straightforward
-to imagine that we could have genetic data from 100s or 1000s (or
-even 10s of 1000s), while the [human genome](https://en.wikipedia.org/wiki/Human_genome) is estimated to have
-something like ~20,000 protein-coding genes in it.
+::: cooltip
+It's worth reflecting on when $p \geq n$ happens (i.e., we have more potential predictors than observations). In situations like genetics where we have samples from populations, it's straightforward to imagine that we could have genetic data from 100s or 1000s (or even 10s of 1000s), while the [human genome](https://en.wikipedia.org/wiki/Human_genome) is estimated to have something like \~20,000 protein-coding genes in it.
 :::
+
+# Lab 4
+
+Two major themes of our course are those of inference and prediction.
+
+Why would we ever want to use a linear model for prediction?
+
+-   avoids over-fitting
+-   interpretability
+
+When does OLS perform poorly?
+
+-   multicollinearity
+    -   the reason for this is because the $\beta$ coefficients are calculated via $(X^T)^{-1} XY$ where if the column-spaces of $X$ are highly correlated, the inverse becomes highly unstable.
+-   if the number of predictors is close to or above the number of observations.
+-   heteroscedasticity.
+
+How would we know if our model predicts poorly?
+
+-   $R^2$ or adjusted $R^2$ $$R^2 = 1 - \frac{SSE}{SST}$$
+-   Cross-validation
+-   Akaike Information Criterion $$2p-2 \hat \ell = 2p - n \log (SSE) - n\log (n)$$
+
+Note that all of these focus on using the $SSE$.
+
+## Bias-Variance Tradeoff
+
+This week we mentioned the "bias-variance tradeoff."
+
+Show that $$MSE(\hat \theta) = \text{Var}(\hat \theta) + \text{Bias}(\hat \theta)^2.$$
+
+::: cooltip
+Use the formulas
+
+$$\text{Bias}(\hat \theta) = \mathbb E(\hat \theta) - \theta$$ $$\text{Var}(\hat \theta) = \mathbb E\left[\hat \theta - \mathbb E(\hat theta))^2 \right]$$ $$\text{MSE}(\hat \theta) = \mathbb E(\hat \theta - \theta)^2$$
+
+I think the idea is that we should take the MSE and add a convenient expression for 0 to it.
+
+$$\begin{aligned}\text{MSE}(\hat \theta) & = \mathbb E(\hat \theta - \mathbb E(\hat \theta) + \mathbb E(\hat \theta) - \theta)^2 \\ 
+& = \mathbb E(\hat \theta - \mathbb E(\hat \theta))^2 + \mathbb E(\hat \theta - \theta)^2 + 
+2 \underbrace{\mathbb E(\theta - \mathbb E(\hat \theta))}_{=2(\mathbb E\hat \theta - \mathbb E\hat \theta) = 0}(\mathbb E\hat \theta - \theta) \\ 
+& = \mathbb E(\hat \theta - \mathbb E(\hat \theta))^2 + (\mathbb E( \hat \theta) - \theta)^2 \\ 
+& = \text{Var}(\hat \theta) + \text{Bias}(\hat \theta)^2 \end{aligned}$$
+:::
+
+Recall that we defined two different estimators for $\sigma^2$:
+
+$$\hat \sigma_{OLS}^2 = \frac{1}{n-1} \sum_{i=1}^n (y_i - \hat \mu)^2$$
+
+$$ \hat \sigma^2_{MLE} = \frac{1}{n} \sum_{i=1}^n (y_i - \hat \mu)^2.$$
+
+We mentioned that $\hat \sigma^2_{OLS}$ is unbiased and $\hat \sigma^2_{MLE}$ is biased, i.e.
+
+$$\mathbb E(\hat \sigma^2_{OLS}) = \sigma^2 \quad \quad \mathbb E(\hat \sigma^2_{MLE})= \left( 
+\frac{n-1}{n}
+\right) \sigma^2.$$
+
+It can also be shown that $$\text{Var}(\hat \sigma^2_{OLS}) = \frac{2 \sigma^4}{n-1} \quad \quad \text{Var}(\hat \sigma^2_{MLE}) = \frac{2(n-1)\sigma^4}{n^2}.$$
+
+Use the formula above to find $MSE(\hat \sigma^2_{OLS})$ and $MSE(\hat \sigma^2_{MLE})$.
+
+$$\begin{aligned} 
+MSE(\hat \sigma^2_{OLS}) & = \text{Var}(\hat \sigma^2_{OLS}) + \text{Bias}(\hat \sigma^2_{OLS})^2 \\ 
+& = \frac{2\sigma^4}{n-1} + (\mathbb E(\hat \sigma^2_{OLS}) - \sigma^2)^2 \\ 
+& = \frac{2\sigma^4}{n-1} + (\sigma^2 - \sigma^2)^2 \\ 
+& = \frac{2\sigma^4}{n-1}\\ 
+\end{aligned}$$
+
+While
+
+$$\begin{aligned} 
+MSE(\hat \sigma^2_{MLE}) & = \text{Var}(\hat \sigma^2_{MLE}) + \text{Bias}(\hat \sigma^2_{MLE})^2 \\ 
+& = \frac{2(n-1)\sigma^4}{n^2} + (\mathbb E(\hat \sigma^2_{MLE}) - \sigma^2)^2 \\ 
+& = \frac{2(n-1)\sigma^4}{n^2} + (\frac{n-1}{n} \sigma^2 - \sigma^2)^2 \\ 
+& = \frac{2(n-1)\sigma^4}{n^2} + \frac{\sigma^4}{n^2}\\ 
+& = \frac{2n\sigma^4}{n^2}\\ 
+\end{aligned}$$
+
+Determine conditions for when $MSE(\hat \sigma^2_{OLS}) > MSE(\hat \sigma^2_{MLE})$ for $n \geq 2$. In these cases, trading off some bias for a reduction in variance, the MSE of $\hat \sigma^2_{MLE}$ is improved.
+
+So when is $$\left( \frac{2}{n-1}\right) \cancel{\sigma^4} > 
+\frac{2n-1}{n^2} \cancel{\sigma^4}$$
+
+$$\frac{2}{n-1} > \frac{2}{n}$$
+
+## Penalized Regression
+
+The most common procedure for penalization is LASSO, popularized by Robert Tibshirani in 1996. The objective of LASSO is to minimize the residual sum of squares subject to a constraint on the size of the parameters.
+
+$$\sum_{i=1}^n (Y_i - x_i^T \beta)^2 \, \text{ subject to } \sum_{j=1}^p |\beta_j| \leq s,$$
+
+for some $s$. (Why should we care about the budget if we show this is equivalent to the optimization with a penalty later? Well it puts the problem in the language of convex optimization). Generally we center and standardize the $Y_i$ values before running LASSO, and we drop the intercept term from the formula.
+
+We can equivalently write as minimizing:
+
+$$\sum_{i=1}^n (Y_i - x_i^T \beta)^2 + \lambda \sum_{j=1}^p |\beta_j|.$$
+
+What is the bias of our regression parameter estimates if $\lambda = \infty$?
+
+Well the $\hat \beta$ values get set to 0s, so the bias ends up being $\mathbb E(0 - \beta) = -\beta$.
+
+The ridge penalty can be rewritten in matrix notation as $$(Y-X\beta)'(Y-X\beta) + \lambda \beta' D\beta,$$ where $D = diag(0,1,...1).$ Minimize this expression to show $\hat \beta_{\lambda} = (X'X + \lambda D)^{-1} X'Y.$
+
+Remember $\frac{\partial AZ}{\partial Z} = A, \, \frac{\partial Z'B}{\partial Z} = B'$, and if $C$ is symmetric $\frac{\partial Z'CZ}{\partial Z} = 2Z'C.$
+
+$$\begin{aligned} 
+\frac{\partial}{\partial \beta} R & = \frac{\partial}{\partial \beta}
+(Y^TY - Y^T X \beta - \beta^T X^T Y + \beta^T X^T X \beta + \lambda \beta^T D
+\beta) \quad \text{foil...} \\
+& = -Y^TX - Y^TX + 2 \beta^T X^TX + 2\lambda \beta^T D \\ 
+& \Rightarrow -2Y^TX + 2 \beta^T X^TX + 2\lambda \beta^T D \stackrel{set}{=} 0_{(p+1) \times 1} \\ 
+& \Leftrightarrow -X^TY + X^T \hat \beta + \lambda D\beta = 0 \\ 
+& \Leftrightarrow (X^TX + \lambda D)\hat \beta = X^T Y \\ 
+& \Leftrightarrow \hat \beta = (X^T X + \lambda D)^{-1} X^T Y,
+\end{aligned}$$
+
+which is a nice closed form solution.
+
+Find the expectation of $\hat \beta_{\lambda}$. Determine when it is a biased estimator of $\beta$.
+
+$$\mathbb E(\hat \beta) = \mathbb E((X^T + \lambda D)^{-1} X^TY) = (X^T X + \lambda D)^{-1} X^T \mathbb E(Y) \\
+= (\X^TX + \lambda D)^{-1} X^T X \beta$$
+
+If we set $\lambda = 0$, then we recover $\beta_{OLS}$.
+
+```{r}
+library(car)
+library(glmnet)
+library(tidyverse)
+
+df <- readr::read_csv(here::here("week5/data/nhanes_sample.csv")) |> 
+  select(-1) |> scale() |> as.data.frame() 
+
+model <- lm(blood_pressure ~ ., data = df)
+jtools::summ(model)
+print("Variance Inflation Factors:")
+
+car::vif(model)
+```
+
+Usually one starts to be concerned around variance inflation factors of about 5 to 10.
+
+```{r}
+jtools::summ(lm(blood_pressure ~ DR1TPFAT + DR1TP182, data = df), model.info = FALSE, model.fit = FALSE)
+jtools::summ(lm(DR1TPFAT ~  DR1TP182, data = df), model.info = FALSE)
+```
+
+Notice the $R^2$ values in explaining one variable with the other!
+
+### Ridge Regression Application
+
+The most common R package for fitting LASSO and ridge regression is `glmnet`, which can be fit as follows:
+
+The function `glmnet` takes in a matrix of covariates X and a vector of outcomes y.
+
+The alpha parameter controls the type of regularized regression; alpha=0 corresponds to ridge.
+
+For linear regression, we use `family="gaussian"`.
+
+Since every variable in our dataframe has been centered, we set `intercept=F`.
+
+When a ridge regression is fit in `glmnet`, the model is fit over a grid of $\lambda$ tuning parameters. This can be input manually, but here we will let the package select the grid automatically. Plotting this model outputs a coefficient profile plot ("path plot") displaying the value of each coefficient as $\log(\lambda)$ increases.
+
+Let's fit the model:
+
+```{r}
+X <- as.matrix(select(df, !blood_pressure))
+y <- df$blood_pressure
+
+ridge <- glmnet(X, y, family = "gaussian", alpha = 0, intercept = F)
+
+plot(ridge, xvar = "lambda")
+```
+
+```{r}
+set.seed(232)
+ridge_cv <- cv.glmnet(x = X, y = y, family = "gaussian", alpha = 0,
+                      type.measure = "mse", nfolds = 10, intercept = F)
+plot(ridge_cv)
+coef(ridge_cv, s = "lambda.min")
+```
+
+### LASSO Application
+
+```{r}
+lasso <- glmnet(X, y, family = "gaussian", alpha = 1, intercept = F)
+plot(lasso, xvar = "lambda")
+
+lasso_cv <- cv.glmnet(x = X, y = y, family = "gaussian", alpha = 1,
+                      type.measure = "mse", nfolds = 10, intercept = F)
+
+plot(lasso_cv)
+coef(lasso_cv, s = "lambda.min")
+```
+
+A few notes on the interpretation of LASSO results:
+
+-   Because LASSO is just optimizing for prediction, selection of variables has no implications for the scientific importance of variables or their statistical significance.
+
+-   One shouldn't really use LASSO to select predictive variables and then go back to run an OLS regression on those variables
