@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -30,6 +93,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../week8/week8.html" rel="next">
 <link href="../week6/week6.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -133,6 +197,11 @@ ul.task-list li input[type="checkbox"] {
   <a href="../week7/week7.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 7</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week8/week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -146,6 +215,15 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#more-complicated-permutation-testing" id="toc-more-complicated-permutation-testing" class="nav-link" data-scroll-target="#more-complicated-permutation-testing">More Complicated Permutation Testing</a>
   <ul class="collapse">
   <li><a href="#exact-multiple-comparisons" id="toc-exact-multiple-comparisons" class="nav-link" data-scroll-target="#exact-multiple-comparisons">Exact Multiple Comparisons</a></li>
+  <li><a href="#monte-carlo-samples" id="toc-monte-carlo-samples" class="nav-link" data-scroll-target="#monte-carlo-samples">Monte Carlo Samples</a></li>
+  <li><a href="#ignoring-heteroscedasticity" id="toc-ignoring-heteroscedasticity" class="nav-link" data-scroll-target="#ignoring-heteroscedasticity">Ignoring Heteroscedasticity</a></li>
+  </ul></li>
+  <li><a href="#key-messages" id="toc-key-messages" class="nav-link" data-scroll-target="#key-messages">Key Messages</a>
+  <ul class="collapse">
+  <li><a href="#transforming-the-response-variable" id="toc-transforming-the-response-variable" class="nav-link" data-scroll-target="#transforming-the-response-variable">Transforming the response variable</a></li>
+  <li><a href="#valid-variance-estimation-for-hat-beta_ols" id="toc-valid-variance-estimation-for-hat-beta_ols" class="nav-link" data-scroll-target="#valid-variance-estimation-for-hat-beta_ols">Valid variance estimation for <span class="math inline">\(\hat \beta_{OLS}\)</span></a></li>
+  <li><a href="#bootstrap" id="toc-bootstrap" class="nav-link" data-scroll-target="#bootstrap">Bootstrap</a></li>
+  <li><a href="#generalized-least-squares" id="toc-generalized-least-squares" class="nav-link" data-scroll-target="#generalized-least-squares">Generalized Least Squares</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -206,6 +284,228 @@ P(\lvert\bar Y_{m:} - \bar Y_{m'})\rvert \geq C_\alpha; \text{ at least one } m,
 <p><span class="math display">\[P(\text{max}_{1 \leq m &lt; m' \leq M} \lvert \bar Y_{m:} - \bar Y_{m':} \rvert \geq C_\alpha \mid H_0) = \alpha
 \]</span></p>
 <p>This is now a distribution of the maximum difference in the group means across permutations.</p>
+</section>
+<section id="monte-carlo-samples" class="level3">
+<h3 class="anchored" data-anchor-id="monte-carlo-samples">Monte Carlo Samples</h3>
+<p>Computation of the permutation distribution of a test statistic requires enumeration of all <span class="math inline">\({ N \choose n_1 n_2 \cdots n_M }\)</span> permutations</p>
+<p>Example: 30 observations, with</p>
+<p>In settings where this nunber is large, we don’t have to compute all possible divisions, but can take only a random sample of them.</p>
+<p>For instance, out of the 155 million possible permutations, we could base inference on a random subset of, say, 9,999.</p>
+<p>This yields a <span class="vocab">Monte Carlo estimate</span> of the exact <span class="math inline">\(p\)</span>-value</p>
+<p><span class="math display">\[\hat p = \frac{1 + \sum_{i=1}^{9999} I(t_i \geq t^*)}{9999 + 1}
+\]</span></p>
+<p>This test is exact.</p>
+<hr>
+<p>Going to need to fill in the content from the video during the week.</p>
+<hr>
+<p>Midterm content will be up through 5b.</p>
+</section>
+<section id="ignoring-heteroscedasticity" class="level2">
+<h2 class="anchored" data-anchor-id="ignoring-heteroscedasticity">Ignoring Heteroscedasticity</h2>
+<p>We’ve seen reasonably convincing evidence that, for the fitted model, <span class="math inline">\(\text{Var}[\varepsilon_i]\)</span> is non-constant.</p>
+<p>Suppose we naively base estimation and inference on</p>
+<p><span class="math display">\[\hat \beta_{OLS} = (X'X)^{-1}X'Y
+\]</span></p>
+<p><span class="math display">\[\widehat{\text{Var}}[\hat \beta_{OLS}] = \underbrace{\hat \sigma^2}_{\text{this came from }\text{Var}(\varepsilon) = \sigma^2 I_n}(X'X)^{-1}.
+\]</span></p>
+<p>This second formula is the problematic one.</p>
+<p>We’ve talked before about how usually OLS is robust to non-normal error since the central limit theorem will kick in. But technically, these estimates are invalid.</p>
+<p>When <span class="math inline">\(\text{Var}[\varepsilon_i] \neq \sigma^2 \forall i\)</span>, the naive estimate of <span class="math inline">\(\text{Var}[\hat \beta_{OLS}]\)</span> that ignores heteroscedasticity is invalid.</p>
+<p>Let <span class="math inline">\(\Sigma = \text{diag}(\sigma_1^2, \sigma_2^2, ..., \sigma_n^2)\)</span>.</p>
+<p>The true variance of <span class="math inline">\(\hat \beta_{OLS}\)</span> is</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Var}[\hat \beta_{OLS}] &amp; = \text{Var}[(X'X)^{-1} X'Y] \\
+&amp; = (X'X)^{-1}X' \text{Var}[Y] X(X'X)^{-1} \\
+&amp; = (X'X)^{-1}X' \Sigma X (X'X)^{-1} \\
+&amp; \neq \sigma^2 (X'X)^{-1}
+\end{aligned}
+\]</span></p>
+<p>We can conduct a simulation study where we generate data with heteroscedastic errors and then compare</p>
+<p><span class="math display">\[\text{Var}_{\text{naïve}}[\beta_{OLS}] = \sigma^2 (X'X)^{-1}
+\]</span></p>
+<p>to</p>
+<p><span class="math display">\[\text{Var}_{\text{true}} [\beta_{OLS}] = (X'X)^{-1} X' \Sigma X (X'X)^{-1}.
+\]</span></p>
+<p>We will assess the “relative uncertainty,” defined as</p>
+<p><span class="math display">\[
+\frac{\sqrt{\text{Var}_{\text{naïve}}[\hat \beta_{OLS}]}}
+{\sqrt{\text{Var}_{\text{true}}[\hat \beta_{OLS}]}}
+\times 100.
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data/NorthCarolina_data.dat"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sim_data <span class="ot">&lt;-</span> infants[,<span class="fu">c</span>(<span class="st">'weeks'</span>, <span class="st">'sex'</span>, <span class="st">'race'</span>, <span class="st">'smoker'</span>, <span class="st">'mage'</span>, <span class="st">'weight'</span>)]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fitLinear <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> weeks <span class="sc">+</span> mage <span class="sc">+</span> sex <span class="sc">+</span> race, <span class="at">data =</span> sim_data)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sim_data<span class="sc">$</span>mu_hat <span class="ot">&lt;-</span> <span class="fu">fitted</span>(fitLinear)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>betaHat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow=</span>R, <span class="at">ncol=</span><span class="dv">6</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>seHat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow=</span>R, <span class="at">ncol=</span><span class="dv">6</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (r <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R) {</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  sim_data<span class="sc">$</span>Y <span class="ot">&lt;-</span> sim_data<span class="sc">$</span>mu_hat <span class="sc">+</span> </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="fu">nrow</span>(sim_data), <span class="at">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> ((sim_data<span class="sc">$</span>smoker<span class="sc">*</span><span class="fl">0.55</span>) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>sim_data<span class="sc">$</span>smoker)<span class="sc">*</span><span class="fl">0.45</span>))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  fitSim <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> weeks <span class="sc">+</span> sex <span class="sc">+</span> race <span class="sc">+</span> smoker <span class="sc">+</span> mage, <span class="at">data =</span> sim_data)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  betaHat[r,] <span class="ot">&lt;-</span> <span class="fu">summary</span>(fitSim)<span class="sc">$</span>coef[,<span class="dv">1</span>]</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  seHat[r,] <span class="ot">&lt;-</span> <span class="fu">summary</span>(fitSim)<span class="sc">$</span>coef[,<span class="dv">2</span>]</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>trueBeta <span class="ot">&lt;-</span> <span class="fu">coef</span>(fitLinear)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>pBias <span class="ot">&lt;-</span> ((<span class="fu">apply</span>(betaHat, <span class="dv">2</span>, mean) <span class="sc">-</span> trueBeta) <span class="sc">/</span> trueBeta) <span class="sc">*</span> <span class="dv">100</span> </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>trueSE <span class="ot">&lt;-</span> <span class="fu">apply</span>(betaHat, <span class="dv">2</span>, sd)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>estSE <span class="ot">&lt;-</span> <span class="fu">apply</span>(seHat, <span class="dv">2</span>, mean)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>simRes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">'Int'</span>, <span class="st">'weeks'</span>, <span class="st">'sex'</span>, <span class="st">'race'</span>, <span class="st">'smoker'</span>, <span class="st">'mage'</span>),</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(trueBeta, <span class="dv">4</span>), <span class="fu">round</span>(pBias, <span class="dv">1</span>), <span class="fu">round</span>(trueSE, <span class="dv">4</span>), <span class="fu">round</span>(estSE, <span class="dv">4</span>), <span class="fu">round</span>(estSE <span class="sc">/</span> trueSE <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(simRes) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'varname'</span>, <span class="st">'betaEst'</span>, <span class="st">'pBias'</span>, <span class="st">'trueSE'</span>, <span class="st">'estSE'</span>, <span class="st">'Rel.Unc'</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(simRes) <span class="sc">|&gt;</span> <span class="fu">tab_options</span>(<span class="at">table.align=</span><span class="st">'left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="key-messages" class="level1">
+<h1>Key Messages</h1>
+<p>Ignoring heteroscedasticity impacts inference, which runs the risk of drawing the wrong conclusion.</p>
+<p>We need alternative analysis strategies.</p>
+<p>We can consider three ways to address non-constant variance:</p>
+<ol type="1">
+<li>Transform the response variance</li>
+<li>Use a valid estimator for <span class="math inline">\(\hat \beta_{OLS}\)</span>.</li>
+<li>Find an alternative estimator for <span class="math inline">\(\beta\)</span>.</li>
+</ol>
+<p>Or use a Bayesian paradigm.</p>
+<section id="transforming-the-response-variable" class="level2">
+<h2 class="anchored" data-anchor-id="transforming-the-response-variable">Transforming the response variable</h2>
+<p>The goal is to find a function such that the error terms in your linear model have constant variance.</p>
+<p>This is basically an ad-hoc approach (e.g., apply some <span class="math inline">\(g(\cdot)\)</span> and check the residual plots).</p>
+<p>A consequence is that the interpretation of the regression parameters is with respect to the transformed response.</p>
+<p>By transforming the outcome, you are answering a different scientific question.</p>
+<p>Is it reasonable to change the scientific question because of statistical model limitations/inadequacies?</p>
+</section>
+<section id="valid-variance-estimation-for-hat-beta_ols" class="level2">
+<h2 class="anchored" data-anchor-id="valid-variance-estimation-for-hat-beta_ols">Valid variance estimation for <span class="math inline">\(\hat \beta_{OLS}\)</span></h2>
+<p>Earlier we derived the true variance of the OLS estimator to be</p>
+<p><span class="math display">\[\text{Var}[\hat \beta_{OLS}] = (X'X)^{-1} X' \Sigma X(X'X)^{-1}
+\]</span></p>
+<p>where <span class="math inline">\(\Sigma = \text{diag}(\sigma_1^2, \sigma_2^2, ..., \sigma_n^2)\)</span>.</p>
+<p>One strategy is to obtain a valid variance estimator is to estimate <span class="math inline">\(\Sigma\)</span> and plug-in to give</p>
+<p><span class="math display">\[\widehat{\text{Var}}_{HW}[\hat \beta_{OLS}] = (X'X)^{-1} X' \hat \Sigma X (X'X)^{-1}
+\]</span></p>
+<p>This variance estimator has several names</p>
+<ul>
+<li>The Huber-White estimator</li>
+<li>The sandwich estimator</li>
+<li>The robust variance estimator</li>
+</ul>
+<div class="cooltip">
+<p>As an aside, remember that technically the residuals are not independent once we’ve estimated them.</p>
+</div>
+<p>We need an estimator of the form</p>
+<p><span class="math display">\[\hat \Sigma = \begin{bmatrix}
+\hat \sigma_1^2 &amp; 0 &amp; \cdots &amp; 0 \\
+0 &amp; \hat \sigma_2^2 &amp; \cdots &amp; 0 \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; \cdots &amp; \hat \sigma_n^2
+\end{bmatrix}
+\]</span></p>
+<p>A natural estimator of the <span class="math inline">\(i^{th}\)</span> diagonal entry is the squared residual:</p>
+<p><span class="math display">\[\sigma_i^2 = (Y_i - \hat \mu_i)^2 = \hat \varepsilon_i^2
+\]</span></p>
+<p>where <span class="math inline">\(\hat \mu_i = x_i' \hat \beta_{OLS}\)</span> is the fitted value for unit <span class="math inline">\(i\)</span>.</p>
+<p>A challenge is that each <span class="math inline">\(\sigma_i^2\)</span> is being estimated by a single data point.</p>
+<p>In some settings, we might be willing to assume the non-constant variance arises solely because of a mean-variance relationship, i.e., <span class="math inline">\(\sigma_i^2 = V(\mu_i)\)</span> where <span class="math inline">\(V\)</span> is some unknown function.</p>
+<p>If so, we can use this assumption to add structure/stability to our estimates of <span class="math inline">\(\sigma_i^2\)</span>.</p>
+<p>For example, we could estimate <span class="math inline">\(V(\hat \mu_i)\)</span> by</p>
+<ol type="1">
+<li>smoothing <span class="math inline">\(\hat \varepsilon_i^2\)</span> against <span class="math inline">\(\hat \mu_i\)</span> to get <span class="math inline">\(\hat V(\hat \mu_i)\)</span></li>
+<li>grouping the <span class="math inline">\(\hat \mu_i\)</span> into quantiles and taking <span class="math inline">\(\hat V(\hat \mu_i)\)</span> to be the variance of the residuals in the corresponding quantile.</li>
+</ol>
+<div class="chilltip">
+<p>One could ask if we’re concerned with heteroscedasticity in estimating the relationship between <span class="math inline">\(\hat \varepsilon^2 \sim \hat \mu\)</span>, but the key is to realize that even if there were, if our assumptions are true, then it’s sufficient to estimate this relationship because incorporating it will lead to unbiased estimates.</p>
+</div>
+</section>
+<section id="bootstrap" class="level2">
+<h2 class="anchored" data-anchor-id="bootstrap">Bootstrap</h2>
+<p>A second option is to use the bootstrap.</p>
+<p>There are other ways of doing this, but one way is as follows:</p>
+<ol type="1">
+<li>Let <span class="math inline">\(d = \{ (y_i, x_i) : i = 1, ..., n \}\)</span> denote the original dataset</li>
+<li>Drawing a sample size of <span class="math inline">\(n\)</span> with replacement from <span class="math inline">\(d \Rightarrow d_b^*\)</span></li>
+<li>obtain the OLS estimates of <span class="math inline">\(\beta\)</span> based on <span class="math inline">\(d_b^* \Rightarrow \hat \beta_b^*\)</span>.</li>
+<li>repeat steps (2) and (3) <span class="math inline">\(B\)</span> times</li>
+<li>estimate <span class="math inline">\(\text{Var}[\hat \beta_{OLS}]\)</span> via the empirical variance of the <span class="math inline">\(\{ \hat \beta_1^*, ..., \hat \beta_B^*\}\)</span>.</li>
+</ol>
+<p>Denoting the resulting estimate <span class="math inline">\(\widehat{\text{Var}_B}[\hat \beta_{OLS}]\)</span>.</p>
+<p>Why should we not always use these estimates?</p>
+<p>There is a trade-off for this robustness property.</p>
+<p>We get valid but <em>conservative</em> inferences.</p>
+<p>This is saying that our Type I error is less than <span class="math inline">\(\alpha\)</span>.</p>
+</section>
+<section id="generalized-least-squares" class="level2">
+<h2 class="anchored" data-anchor-id="generalized-least-squares">Generalized Least Squares</h2>
+<p>Although we can perform valid estimation/inference for <span class="math inline">\(\beta\)</span> based on <span class="math inline">\(\hat \beta_{OLS}\)</span>, might other estimates be ‘better’?</p>
+<p>The Gauss-Markov theorem says that the <span class="math inline">\(\hat \beta_{OLS}\)</span> is the BLUE (best, linear, unbiased estimator) when <span class="math inline">\(\Sigma = \sigma^2 I\)</span>, but now we are in a more general setting.</p>
+<p>It turns out if we estimate <span class="math inline">\(\beta\)</span> minimizing the squared Mahalanobis distance between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\beta\)</span> (rather than the squared Euclidean distance as in OLS), we can get an estimator that is BLUE under arbitrary <span class="math inline">\(\Sigma\)</span>.</p>
+<p>The squared Mahalanobis distance has the form</p>
+<p><span class="math display">\[(Y - X\beta)' \Sigma^{-1} (Y - X \beta)
+\]</span> and minimizing with respect to <span class="math inline">\(\beta\)</span> gives the generalized least squares estimator</p>
+<p><span class="math display">\[\hat \beta_{GLS} = (X'\Sigma^{-1}X)^{-1} X' \Sigma^{-1} Y
+\]</span></p>
+<p>GLS is a general strategy that can be used for any variance-covariance matrix <span class="math inline">\(\Sigma\)</span> (even for correlated data). Let’s suppose temporarily that <span class="math inline">\(\Sigma\)</span> is known.</p>
+<p>You can easily show that <span class="math inline">\(\hat \beta_{GLS}\)</span> is unbiased (try it!) and that it’s a linear combination of the <span class="math inline">\(Y\)</span>.</p>
+<p>It’s variance is</p>
+<p><span class="math display">\[\text{Var}[\hat \beta_{GLS}] = (X'\Sigma^{-1}X)^{-1}
+\]</span></p>
+<p>It’s also the MLE if we assume <span class="math inline">\(\varepsilon \sim \mathcal N(0, \Sigma)\)</span>.</p>
+<p>If we assume normality, <span class="math inline">\(\hat \beta_{GLS}\)</span> is also normal. Or we can apply the Lindeberg-Feller Central Limit Theorem in large samples and this doesn’t require a constant variance, but does require regularity conditions.</p>
+<p>We can show that <span class="math inline">\(\hat \beta_{GLS}\)</span> is BLUE under heteroscedasticity by:</p>
+<ol type="1">
+<li>Writing the GLS estimator as an OLS estimator in a transformed space that has homoscedastic errors.</li>
+<li>Applying the Gauss-Markov Theorem.</li>
+</ol>
+<p>For any positive definite matrix <span class="math inline">\(\Sigma\)</span> we can find a non-singular symmetric matrix such that <span class="math inline">\(\Sigma = AA\)</span>. E.g., if <span class="math inline">\(\Sigma = \text{diag}(\sigma_1^2, ..., \sigma_n^2),\)</span> then <span class="math inline">\(A = \text{diag}(\sigma_1, ..., \sigma_n)\)</span>.</p>
+<p>Assuming <span class="math inline">\(\Sigma\)</span> is known (and therefore <span class="math inline">\(A\)</span>), use <span class="math inline">\(A\)</span> to define</p>
+<ul>
+<li><span class="math inline">\(Z = A^{-1} Y\)</span>, a transformed response vector</li>
+<li><span class="math inline">\(C = A^{-1} X\)</span>, a transformed covariance matrix.</li>
+</ul>
+<p>Consider the linear regression in this transformed space</p>
+<p><span class="math display">\[Z = C \gamma + \varepsilon^*
+\]</span></p>
+<p>This is the same as writing <span class="math display">\[A^{-1} Y \sim A^{-1}X \beta
+\]</span></p>
+<p>where <span class="math inline">\(\varepsilon^* = A^{-1} \varepsilon\)</span>.</p>
+<p>Note that <span class="math inline">\(E[\varepsilon^*] = 0\)</span> and <span class="math inline">\(\text{Var}[\varepsilon^*] = I_n\)</span>.</p>
+<p>Plug in <span class="math inline">\(\varepsilon^* = A^{-1} \varepsilon\)</span> to see the above.</p>
+<p>Also note that</p>
+<p><span class="math display">\[E[Z] = C \gamma \]</span></p>
+<p><span class="math display">\[ E[Z] = A^{-1} E[Y] = A^{-1} X \beta = C \beta \]</span></p>
+<p>because <span class="math inline">\(E[Z] = C\gamma = C\beta\)</span>.</p>
+<p>The OLS estimator for this transformed regression problem is</p>
+<p><span class="math display">\[\hat \gamma_{OLS} = (C'C)^{-1} C' Z
+\]</span></p>
+<p><span class="math display">\[ = (X'\Sigma^{-1}X)^{-1} X' \Sigma^{-1} Y
+\]</span></p>
+<p><span class="math display">\[ = \hat \beta_{GLS}
+\]</span></p>
+<p>By the Gauss-Markov Theorem, <span class="math inline">\(\hat \beta_{GLS}\)</span> is BLUE for <span class="math inline">\(\gamma = \beta\)</span> in the transformed space</p>
+<ul>
+<li>since <span class="math inline">\(E[\varepsilon^*] = 0\)</span> and <span class="math inline">\(\text{Var}[\varepsilon^*] = I_n\)</span></li>
+<li>which implies that for any unbiased estimator <span class="math inline">\(\tilde{\beta} = DZ\)</span>, <span class="math inline">\(\text{Var}(\hat \beta_{GLS}) \leq \text{Var}(\tilde{\beta})\)</span>.</li>
+</ul>
+<p>The optimality in the transformed space is retained by <span class="math inline">\(\hat \beta_{GLS}\)</span> in the original space.</p>
+<p>Because for any linear unbiased estimator in the original space <span class="math inline">\(\tilde{\beta} = LY\)</span>, it can also be written as a linear unbiased estimator in the transformed space, <span class="math inline">\(\tilde{\beta} = LY = LAZ\)</span>.</p>
+<p>So <span class="math inline">\(\hat \beta_{GLS}\)</span> is BLUE for the linear model where <span class="math inline">\(\text{Var}[\varepsilon] = \Sigma\)</span>.</p>
 
 
 </section>
@@ -352,6 +652,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../week8/week8.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-title">Week 8</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

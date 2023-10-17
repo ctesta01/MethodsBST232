@@ -3,23 +3,17 @@ title: Week 7
 ---
 
 ::: content-hidden
-\$\$
-
+$$
 \newcommand{\E}[0]{\mathbb E}
 
-\% 1 create conditionally independent symbol:
-
-```{=tex}
 \newcommand\independent{\perp\!\!\!\perp}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
-```
-```{=tex}
+
 \newcommand{\Var}[0]{\text{Var}}
 \newcommand{\Cov}[0]{\text{Cov}}
 \newcommand{\e}[0]{\epsilon}
 \newcommand{\t}[1]{\text{#1}}
-```
-\$\$
+$$
 :::
 
 ```{=html}
@@ -113,4 +107,295 @@ Going to need to fill in the content from the video during the week.
 -----------------------------------------------------------------
 
 Midterm content will be up through 5b. 
+
+## Ignoring Heteroscedasticity 
+
+We've seen reasonably convincing evidence that, for the fitted model, $\Var[\varepsilon_i]$ is non-constant. 
+
+Suppose we naively base estimation and inference on 
+
+$$\hat \beta_{OLS} = (X'X)^{-1}X'Y
+$$
+
+$$\widehat{\Var}[\hat \beta_{OLS}] = \underbrace{\hat \sigma^2}_{\text{this came from }\Var(\varepsilon) = \sigma^2 I_n}(X'X)^{-1}.
+$$
+
+This second formula is the problematic one. 
+
+We've talked before about how usually OLS is robust to non-normal 
+error since the central limit theorem will kick in. But technically, these estimates are invalid. 
+
+When $\Var[\varepsilon_i] \neq \sigma^2 \forall i$, the naive estimate
+of $\Var[\hat \beta_{OLS}]$ that ignores heteroscedasticity is
+invalid. 
+
+Let $\Sigma = \text{diag}(\sigma_1^2, \sigma_2^2, ..., \sigma_n^2)$. 
+
+The true variance of $\hat \beta_{OLS}$ is 
+
+$$
+\begin{aligned}
+\Var[\hat \beta_{OLS}] & = \Var[(X'X)^{-1} X'Y] \\ 
+& = (X'X)^{-1}X' \Var[Y] X(X'X)^{-1} \\ 
+& = (X'X)^{-1}X' \Sigma X (X'X)^{-1} \\ 
+& \neq \sigma^2 (X'X)^{-1}
+\end{aligned}
+$$
+
+We can conduct a simulation study where we generate data with 
+heteroscedastic errors and then compare 
+
+$$\Var_{\text{naïve}}[\beta_{OLS}] = \sigma^2 (X'X)^{-1}
+$$
+
+to 
+
+$$\Var_{\text{true}} [\beta_{OLS}] = (X'X)^{-1} X' \Sigma X (X'X)^{-1}.
+$$ 
+
+We will assess the "relative uncertainty," defined as 
+
+$$
+\frac{\sqrt{\Var_{\text{naïve}}[\hat \beta_{OLS}]}}
+{\sqrt{\Var_{\text{true}}[\hat \beta_{OLS}]}} 
+\times 100.
+$$
+
+```{r, eval=FALSE}
+library(here)
+
+load(here("data/NorthCarolina_data.dat"))
+sim_data <- infants[,c('weeks', 'sex', 'race', 'smoker', 'mage', 'weight')]
+
+fitLinear <- lm(weight ~ weeks + mage + sex + race, data = sim_data)
+
+sim_data$mu_hat <- fitted(fitLinear)
+
+R <- 10000
+betaHat <- matrix(NA, nrow=R, ncol=6)
+seHat <- matrix(NA, nrow=R, ncol=6)
+
+for (r in 1:R) {
+  sim_data$Y <- sim_data$mu_hat + 
+    rnorm(nrow(sim_data), mean = 0,
+    sd = ((sim_data$smoker*0.55) + (1-sim_data$smoker)*0.45))
+
+  fitSim <- lm(Y ~ weeks + sex + race + smoker + mage, data = sim_data)
+
+  betaHat[r,] <- summary(fitSim)$coef[,1]
+  seHat[r,] <- summary(fitSim)$coef[,2]
+}
+
+trueBeta <- coef(fitLinear)
+pBias <- ((apply(betaHat, 2, mean) - trueBeta) / trueBeta) * 100 
+trueSE <- apply(betaHat, 2, sd)
+estSE <- apply(seHat, 2, mean)
+
+simRes <- data.frame(
+  c('Int', 'weeks', 'sex', 'race', 'smoker', 'mage'),
+  round(trueBeta, 4), round(pBias, 1), round(trueSE, 4), round(estSE, 4), round(estSE / trueSE * 100, 1))
+
+names(simRes) <- c('varname', 'betaEst', 'pBias', 'trueSE', 'estSE', 'Rel.Unc')
+
+gt(simRes) |> tab_options(table.align='left')
+
+```
+
+
+
+# Key Messages 
+
+Ignoring heteroscedasticity impacts inference, 
+which runs the risk of drawing the wrong conclusion. 
+
+We need alternative analysis strategies. 
+
+We can consider three ways to address non-constant variance: 
+
+  1. Transform the response variance 
+  2. Use a valid estimator for $\hat \beta_{OLS}$. 
+  3. Find an alternative estimator for $\beta$. 
+
+Or use a Bayesian paradigm. 
+
+## Transforming the response variable 
+
+The goal is to find a function such that the error terms in your linear model have constant variance. 
+
+This is basically an ad-hoc approach (e.g., apply some $g(\cdot)$ and check the residual plots). 
+
+A consequence is that the interpretation of the regression parameters is with respect to the transformed response. 
+
+By transforming the outcome, you are answering a different scientific question. 
+
+Is it reasonable to change the scientific question because of statistical model limitations/inadequacies? 
+
+## Valid variance estimation for $\hat \beta_{OLS}$
+
+Earlier we derived the true variance of the OLS estimator to be 
+
+$$\Var[\hat \beta_{OLS}] = (X'X)^{-1} X' \Sigma X(X'X)^{-1}
+$$
+
+where $\Sigma = \text{diag}(\sigma_1^2, \sigma_2^2, ..., \sigma_n^2)$. 
+
+One strategy is to obtain a valid variance estimator is to 
+estimate $\Sigma$ and plug-in to give 
+
+$$\widehat{\Var}_{HW}[\hat \beta_{OLS}] = (X'X)^{-1} X' \hat \Sigma X (X'X)^{-1}
+$$
+
+This variance estimator has several names 
+  
+  * The Huber-White estimator
+  * The sandwich estimator 
+  * The robust variance estimator 
+
+:::{.cooltip}
+As an aside, remember that technically the residuals are not independent once we've estimated them. 
+:::
+
+We need an estimator of the form 
+
+$$\hat \Sigma = \begin{bmatrix}
+\hat \sigma_1^2 & 0 & \cdots & 0 \\ 
+0 & \hat \sigma_2^2 & \cdots & 0 \\ 
+\vdots & \vdots & \ddots & \vdots \\ 
+0 & 0 & \cdots & \hat \sigma_n^2
+\end{bmatrix} 
+$$
+
+A natural estimator of the $i^{th}$ diagonal entry is the squared residual: 
+
+$$\sigma_i^2 = (Y_i - \hat \mu_i)^2 = \hat \varepsilon_i^2
+$$
+
+where $\hat \mu_i = x_i' \hat \beta_{OLS}$ is the fitted value for unit $i$. 
+
+A challenge is that each $\sigma_i^2$ is being estimated by a single data point.
+
+In some settings, we might be willing to assume the non-constant variance arises solely because of a mean-variance relationship, i.e., $\sigma_i^2 = V(\mu_i)$ where $V$ is some unknown function. 
+
+If so, we can use this assumption to add structure/stability to our estimates of $\sigma_i^2$. 
+
+For example, we could estimate $V(\hat \mu_i)$ by 
+
+  1. smoothing $\hat \varepsilon_i^2$ against $\hat \mu_i$ to get $\hat V(\hat \mu_i)$
+  2. grouping the $\hat \mu_i$ into quantiles and taking $\hat V(\hat \mu_i)$ to be the variance of the residuals in the corresponding quantile. 
+
+:::{.chilltip}
+One could ask if we're concerned with heteroscedasticity in estimating the relationship between $\hat \varepsilon^2 \sim \hat \mu$, but the key is to realize that even if there were, if our assumptions are true, then it's sufficient to estimate this relationship because incorporating it will lead to unbiased estimates. 
+:::
+
+## Bootstrap 
+
+A second option is to use the bootstrap. 
+
+There are other ways of doing this, but one way is as follows: 
+
+  1. Let $d = \{ (y_i, x_i) : i = 1, ..., n \}$ denote the original dataset 
+  2. Drawing a sample size of $n$ with replacement from $d \Rightarrow d_b^*$ 
+  3. obtain the OLS estimates of $\beta$ based on $d_b^* \Rightarrow \hat \beta_b^*$. 
+  4. repeat steps (2) and (3) $B$ times 
+  5. estimate $\Var[\hat \beta_{OLS}]$ via the empirical variance of the $\{ \hat \beta_1^*, ..., \hat \beta_B^*\}$. 
+
+Denoting the resulting estimate $\widehat{\Var_B}[\hat \beta_{OLS}]$. 
+
+Why should we not always use these estimates? 
+
+There is a trade-off for this robustness property. 
+
+We get valid but *conservative* inferences. 
+
+This is saying that our Type I error is less than $\alpha$. 
+
+## Generalized Least Squares
+
+Although we can perform valid estimation/inference for $\beta$ based on $\hat \beta_{OLS}$, might other estimates be 'better'? 
+
+The Gauss-Markov theorem says that the $\hat \beta_{OLS}$ is the BLUE (best, linear, unbiased estimator) when $\Sigma = \sigma^2 I$, but now we are in a more general setting. 
+
+It turns out if we estimate $\beta$ minimizing the squared 
+Mahalanobis distance between $Y$ and $X\beta$ (rather than the squared Euclidean distance as in OLS), we can get an estimator that is BLUE under arbitrary $\Sigma$. 
+
+The squared Mahalanobis distance has the form 
+
+$$(Y - X\beta)' \Sigma^{-1} (Y - X \beta)
+$$ 
+and minimizing with respect to $\beta$ gives the generalized least squares estimator 
+
+$$\hat \beta_{GLS} = (X'\Sigma^{-1}X)^{-1} X' \Sigma^{-1} Y
+$$
+
+GLS is a general strategy that can be used for any variance-covariance matrix $\Sigma$ (even for correlated data). Let's suppose temporarily that $\Sigma$ is known. 
+
+You can easily show that $\hat \beta_{GLS}$ is unbiased (try it!) and that it's a linear combination of the $Y$. 
+
+It's variance is 
+
+$$\Var[\hat \beta_{GLS}] = (X'\Sigma^{-1}X)^{-1}
+$$
+
+It's also the MLE if we assume $\varepsilon \sim \mathcal N(0, \Sigma)$. 
+
+If we assume normality, $\hat \beta_{GLS}$ is also normal. Or we can apply the Lindeberg-Feller Central Limit Theorem in large samples and this doesn't require a constant variance, but does require regularity conditions. 
+
+We can show that $\hat \beta_{GLS}$ is BLUE under heteroscedasticity by: 
+
+  1. Writing the GLS estimator as an OLS estimator in a transformed space that has homoscedastic errors. 
+  2. Applying the Gauss-Markov Theorem. 
+
+For any positive definite matrix $\Sigma$ we can find a non-singular symmetric matrix such that $\Sigma = AA$. E.g., if $\Sigma = \text{diag}(\sigma_1^2, ..., \sigma_n^2),$ then $A = \text{diag}(\sigma_1, ..., \sigma_n)$. 
+
+Assuming $\Sigma$ is known (and therefore $A$), use $A$ to define 
+
+  * $Z = A^{-1} Y$, a transformed response vector
+  * $C = A^{-1} X$, a transformed covariance matrix. 
+
+Consider the linear regression in this transformed space 
+
+$$Z = C \gamma + \varepsilon^*
+$$
+
+This is the same as writing 
+$$A^{-1} Y \sim A^{-1}X \beta
+$$
+
+where $\varepsilon^* = A^{-1} \varepsilon$. 
+
+Note that $E[\varepsilon^*] = 0$ and $\Var[\varepsilon^*] = I_n$. 
+
+Plug in $\varepsilon^* = A^{-1} \varepsilon$ to see the above. 
+
+Also note that 
+
+$$E[Z] = C \gamma $$ 
+
+$$ E[Z] = A^{-1} E[Y] = A^{-1} X \beta = C \beta $$ 
+
+because $E[Z] = C\gamma = C\beta$. 
+
+The OLS estimator for this transformed regression problem is 
+
+$$\hat \gamma_{OLS} = (C'C)^{-1} C' Z
+$$ 
+
+$$ = (X'\Sigma^{-1}X)^{-1} X' \Sigma^{-1} Y
+$$
+
+$$ = \hat \beta_{GLS}
+$$
+
+By the Gauss-Markov Theorem, $\hat \beta_{GLS}$ is BLUE for $\gamma = \beta$ in the transformed space
+
+  * since $E[\varepsilon^*] = 0$ and $\Var[\varepsilon^*] = I_n$ 
+  * which implies that for any unbiased estimator $\tilde{\beta} = DZ$, $\Var(\hat \beta_{GLS}) \leq \Var(\tilde{\beta})$. 
+
+The optimality in the transformed space is retained by $\hat \beta_{GLS}$ in the original space. 
+
+Because for any linear unbiased estimator in the original space 
+$\tilde{\beta} = LY$, it can also be written as a linear unbiased 
+estimator in the transformed space, $\tilde{\beta} = LY = LAZ$. 
+
+So $\hat \beta_{GLS}$ is BLUE for the linear model where $\Var[\varepsilon] = \Sigma$. 
 

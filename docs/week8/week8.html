@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods (BST 232) Notes - 9&nbsp; Week 8</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../week7/week7.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-title">Week 8</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Methods (BST 232) Notes</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Methods (BST 232) Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week1/week1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week2/week2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week3/week3.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week4/week4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week5/week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week6/week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week7/week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week8/week8.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 8</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#recap" id="toc-recap" class="nav-link active" data-scroll-target="#recap">Recap</a>
+  <ul class="collapse">
+  <li><a href="#generalized-least-squares" id="toc-generalized-least-squares" class="nav-link" data-scroll-target="#generalized-least-squares">Generalized Least Squares</a></li>
+  </ul></li>
+  <li><a href="#weighted-least-squares" id="toc-weighted-least-squares" class="nav-link" data-scroll-target="#weighted-least-squares">Weighted Least Squares</a>
+  <ul class="collapse">
+  <li><a href="#estimating-hat-beta_gls" id="toc-estimating-hat-beta_gls" class="nav-link" data-scroll-target="#estimating-hat-beta_gls">Estimating <span class="math inline">\(\hat \beta_{GLS}\)</span></a></li>
+  <li><a href="#iteratively-re-weighted-least-squares" id="toc-iteratively-re-weighted-least-squares" class="nav-link" data-scroll-target="#iteratively-re-weighted-least-squares">Iteratively re-weighted least squares</a></li>
+  </ul></li>
+  <li><a href="#inference-for-binomial-propoertions-and-contingency-tables" id="toc-inference-for-binomial-propoertions-and-contingency-tables" class="nav-link" data-scroll-target="#inference-for-binomial-propoertions-and-contingency-tables">Inference for Binomial Propoertions and Contingency Tables</a>
+  <ul class="collapse">
+  <li><a href="#the-binomial-distribution" id="toc-the-binomial-distribution" class="nav-link" data-scroll-target="#the-binomial-distribution">The Binomial Distribution</a>
+  <ul class="collapse">
+  <li><a href="#the-binomial-distribution-1" id="toc-the-binomial-distribution-1" class="nav-link" data-scroll-target="#the-binomial-distribution-1">The Binomial Distribution</a></li>
+  </ul></li>
+  <li><a href="#large-sample-inference-a-single-proportion" id="toc-large-sample-inference-a-single-proportion" class="nav-link" data-scroll-target="#large-sample-inference-a-single-proportion">Large Sample Inference: A Single Proportion</a></li>
+  <li><a href="#problems-with-wald-based-inference" id="toc-problems-with-wald-based-inference" class="nav-link" data-scroll-target="#problems-with-wald-based-inference">Problems with Wald-based inference</a></li>
+  <li><a href="#a-better-test-the-score-statistic" id="toc-a-better-test-the-score-statistic" class="nav-link" data-scroll-target="#a-better-test-the-score-statistic">A better test: the Score Statistic</a></li>
+  <li><a href="#confidence-intervals" id="toc-confidence-intervals" class="nav-link" data-scroll-target="#confidence-intervals">Confidence Intervals</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-title">Week 8</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="recap" class="level1">
+<h1>Recap</h1>
+<p>Last time we saw several ways of dealing with heteroscedasticity:</p>
+<ul>
+<li>transformations, which we’ve already seen, but is not ideal since it changes the scientific question being asked.</li>
+<li>robust variance estimators and the bootstrap — ways to estimate the variance alongside the OLS estimates of <span class="math inline">\(\beta\)</span>.</li>
+<li>and we just started with generalized least squares.</li>
+</ul>
+<section id="generalized-least-squares" class="level2">
+<h2 class="anchored" data-anchor-id="generalized-least-squares">Generalized Least Squares</h2>
+<p>The Gauss-Markov theorem says that <span class="math inline">\(\hat \beta_{OLS}\)</span> is BLUE when <span class="math inline">\(\Sigma = \sigma^2 I\)</span>, but now we’re in a more general setting.</p>
+<p>If we estimate <span class="math inline">\(\beta\)</span> by minimizing the Mahalanobis distance between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X \beta\)</span>, we can get an estimator that is BLUE under arbitrary <span class="math inline">\(\Sigma\)</span>.</p>
+<p>The squared Mahalanobis distance ..</p>
+<p>GLS can be used for any variance-covariance matrix <span class="math inline">\(\Sigma\)</span> including with correlated data. Supposing that <span class="math inline">\(\Sigma\)</span> is known, one can easily show that <span class="math inline">\(\hat \beta_{GLS}\)</span> is unbiased, that it’s the MLE if we assume <span class="math inline">\(\varepsilon \sim \mathcal N(0,\Sigma)\)</span>, and its varinace is</p>
+<p><span class="math display">\[
+\text{Var}[\hat \beta_{GLS}] = (X' \Sigma X)^{-1}.
+\]</span></p>
+<p>We show that <span class="math inline">\(\hat \beta_{GLS}\)</span> is BLUE under heteroscedasticity by:</p>
+<ol type="1">
+<li>Writing the GLS estimator as an OLS estimator in a transformed space that has homoscedastic error, and</li>
+<li>Applying the Gauss-Markov Theorem.</li>
+</ol>
+<p>For any positive-definite matrix <span class="math inline">\(\Sigma\)</span> we can find a nonsingular matrix <span class="math inline">\(A\)</span> such that <span class="math inline">\(\Sigma = AA\)</span>.</p>
+<p>Assuming <span class="math inline">\(\Sigma\)</span> is known, then define <span class="math inline">\(Z = A^{-1} Y\)</span> and <span class="math inline">\(C = A^{-1} X\)</span>. Linear regression in the transformed space is</p>
+<p><span class="math display">\[
+Z = C \gamma + \varepsilon^*,
+\]</span></p>
+<p>where <span class="math inline">\(\varepsilon^* = A^{-1} \varepsilon\)</span>.</p>
+<p>Note that <span class="math inline">\(\mathbb E[\varepsilon^*] = 0\)</span> and <span class="math inline">\(\text{Var}[\varepsilon^*] = I_n\)</span>, so we have homoscedastic errors in the transformed space.</p>
+<p>Also note that both of the following hold:</p>
+<p><span class="math display">\[\mathbb E[Z] = C \gamma
+\]</span></p>
+<p><span class="math display">\[
+\mathbb E[Z] = A^{-1} \mathbb E[Y] = A^{-1} X \beta = C \beta
+\]</span></p>
+<p>So <span class="math inline">\(\gamma \equiv \beta\)</span>.</p>
+<p>The OLS estimator for this transformed regression problem is</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat \gamma_{OLS} &amp; = (C'C)^{-1} C' Z \\
+&amp; = (X'\Sigma^{-1}X)^{-1} X' \Sigma^{-1} Y \\
+&amp; = \hat \beta_{GLS}
+\end{aligned}
+\]</span></p>
+<p>so <span class="math inline">\(\hat \beta_{GLS}\)</span> is equivalent to the OLS estimator in the transformed space.</p>
+<p>By the Gauss-Markov Theorem, <span class="math inline">\(\hat \beta_{GLS}\)</span> is BLUE for <span class="math inline">\(\gamma = \beta\)</span> in the transformed space.</p>
+<p>Since <span class="math inline">\(\mathbb E[\varepsilon^*] = 0\)</span> and <span class="math inline">\(\text{Var}[\varepsilon^*] = I_n\)</span>, this implies that for any other unbiased estimator <span class="math inline">\(\tilde \beta = DZ\)</span>, <span class="math inline">\(\text{Var}(\hat \beta_{GLS}) \leq \text{Var}(\tilde \beta)\)</span>.</p>
+<p>The optimality in the transformed space is retained by <span class="math inline">\(\hat \beta_{GLS}\)</span> is the original space. This is because for any linear unbiased estimator in the original space <span class="math inline">\(\tilde \beta = LY\)</span> can also be written as a linear unbiased estimator in the transformed space, <span class="math inline">\(\tilde \beta = LY = LAZ\)</span>.</p>
+<p>So <span class="math inline">\(\hat \beta_{GLS}\)</span> is BLUE for the linear model where <span class="math inline">\(\text{Var}[\varepsilon] = \Sigma\)</span>.</p>
+</section>
+</section>
+<section id="weighted-least-squares" class="level1">
+<h1>Weighted Least Squares</h1>
+<p>Returning to our special case when <span class="math inline">\(\Sigma = \text{diag}(\sigma_1^2, ..., \sigma_n^2)\)</span>, which implies the observations are independent with heteroscedasticity, this case is sometimes referred to as “weighted least squares,” because</p>
+<p><span class="math display">\[
+(Y - X \beta)' \Sigma^{-1} (Y-X\beta) = \sum_{i=1}^n \frac{1}{\sigma_i^2} (y_i - x_i' \beta)^2
+\]</span></p>
+<p>so that we are estimating <span class="math inline">\(\beta\)</span> by minimizing a weighted version of the SSE with weights <span class="math inline">\(1/\sigma_i^2\)</span>.</p>
+<p>This effectively upweights units with low variance and downweights those with high variance so that estimates are selected to give better fit for units with low variance.</p>
+<section id="estimating-hat-beta_gls" class="level2">
+<h2 class="anchored" data-anchor-id="estimating-hat-beta_gls">Estimating <span class="math inline">\(\hat \beta_{GLS}\)</span></h2>
+<p>In practice we don’t know the <span class="math inline">\(\sigma_i^2\)</span> values and need to estimate them. We had the same challenge with the robust variance estimator for the OLS estimator, <span class="math inline">\(\widehat{\text{Var}}_{HW}[\hat\beta_{OLS}]\)</span>.</p>
+<p>Recall our three potential estimation strategies:</p>
+<ol type="1">
+<li>Estimate <span class="math inline">\(\sigma_i^2\)</span> directly from the squared residual: $_i^2 = (y_i - _i)^2</li>
+<li>Assume <span class="math inline">\(\sigma_i^2 = V(\mu_i)\)</span> and estimate <span class="math inline">\(V(\cdot)\)</span> via smoothing of <span class="math inline">\(\varepsilon_i^2\)</span> vs.&nbsp;<span class="math inline">\(\hat \mu_i\)</span>.</li>
+<li>Assume <span class="math inline">\(\sigma_i^2 = V(\mu_i)\)</span> and estimate <span class="math inline">\(V(\cdot)\)</span> via grouping based on <span class="math inline">\(\hat \mu_i\)</span>.</li>
+</ol>
+<p>However, each of these strategies requires <span class="math inline">\(\hat \mu_i = x_i' \hat \beta_{GLS}\)</span>, but estimating <span class="math inline">\(\hat \beta_{GLS}\)</span> requires estimates of <span class="math inline">\(\sigma_i^2\)</span>.</p>
+</section>
+<section id="iteratively-re-weighted-least-squares" class="level2">
+<h2 class="anchored" data-anchor-id="iteratively-re-weighted-least-squares">Iteratively re-weighted least squares</h2>
+<div class="chilltip">
+<p><em>The iteratively reweighted least squares algorithm.</em></p>
+<p>Start with an initial estimate of <span class="math inline">\(\beta\)</span>, denoted <span class="math inline">\(\hat \beta^{(1)}\)</span>, for which we could use the OLS estimator <span class="math inline">\(\hat \beta_{OLS}\)</span>.</p>
+<p>At the <span class="math inline">\(j^{th}\)</span> iteration:</p>
+<ol type="1">
+<li>Calculate <span class="math inline">\(\hat \mu_i^{(j)} = x_i' \hat \beta^{(j)}\)</span></li>
+<li>Use the <span class="math inline">\(\hat \mu_i^{(j)}\)</span> to compute <span class="math inline">\(\hat \sigma_i^{2(j)}\)</span> using one of the three approaches outlined above</li>
+<li>Obtain a new estimate <span class="math inline">\(\hat \beta^{(j+1)}\)</span> by minimizing</li>
+</ol>
+<p><span class="math display">\[
+  \sum_{i=1}^n \frac{1}{\hat \sigma_i^{2(j)}} (y_i - x_i' \beta)^2
+  \]</span></p>
+<p>with respect to <span class="math inline">\(\beta\)</span>.</p>
+<p>Repeat steps (1)-(3) until the value of <span class="math inline">\(\hat \beta\)</span> converges.</p>
+</div>
+<p><br></p>
+<div class="cooltip">
+<p>Some resources that I might be interested in:</p>
+<ul>
+<li><a href="https://anilkeshwani.github.io/files/iterative-reweighted-least-squares-12.pdf">A Nice Writeup</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares">Wikipedia</a></li>
+<li><a href="https://stats.stackexchange.com/questions/36250/definition-and-convergence-of-iteratively-reweighted-least-squares">SE Thread on Convergence</a></li>
+<li><a href="https://stats.stackexchange.com/questions/521065/iteratively-reweighted-least-squares-weights-confusion">SE Thread on IRLS Confusions</a></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="inference-for-binomial-propoertions-and-contingency-tables" class="level1">
+<h1>Inference for Binomial Propoertions and Contingency Tables</h1>
+<section id="the-binomial-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="the-binomial-distribution">The Binomial Distribution</h2>
+<p>We will use data from a study on the teratogenicity of anti-epilectic drugs (AEDs) to motivate modeling and inference for discrete data. The data come from 922 births in 5 Boston area hospitals during 1986 and 1993 and are described in Holmes et al.&nbsp;(2000). The teratogenicity of anticonvulsant drugs. <em>New England Journal of Medicine</em> 344: 1132-1138.</p>
+<p>The study included 316 pregnant women taking anticonvulsants (intentionally over-sampled) and 606 pregnant control women and recorded whether the infants had any malformation.</p>
+<div class="bluetip">
+<p>A teratogen is any agent that causes an abnormality following fetal exposure during pregnancy</p>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Infant Status</th>
+<th>N</th>
+<th>Percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No major malformation</td>
+<td>895</td>
+<td>97.1%</td>
+</tr>
+<tr class="even">
+<td>Major malformation</td>
+<td>27</td>
+<td>2.9%</td>
+</tr>
+</tbody>
+</table>
+<p>The percent of infants with a major malformation is slightly higher than the US national rate of 2%.</p>
+<p>Is this difference statistically significant?</p>
+<p>What is the 95% confidence interval for the risk of having a major malformation based on this data?</p>
+<section id="the-binomial-distribution-1" class="level3">
+<h3 class="anchored" data-anchor-id="the-binomial-distribution-1">The Binomial Distribution</h3>
+<p>A binomially distributed random variable is the number of events resulting from <span class="math inline">\(n\)</span> independent Bernoulli trials, each with probability success <span class="math inline">\(\pi\)</span>.</p>
+<p>Let <span class="math inline">\(Y_i=1\)</span> indicate that infant <span class="math inline">\(i\)</span> has a major malformation and <span class="math inline">\(Y_i = 0\)</span> otherwise.</p>
+<p>Each <span class="math inline">\(Y_i\)</span> comes from a Bernoulli distribution such that</p>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(Y_i = y_i) &amp; = \pi^{y_i} (1-\pi)^{1-y_i} \\
+Pr(Y_i = 0) &amp; = 1- \pi \\
+Pr(Y_i = 1) &amp; = \pi.
+\end{aligned}
+\]</span></p>
+<p>Let <span class="math inline">\(Y = \sum_{i=1}^n Y_i\)</span>. Then <span class="math inline">\(Y\)</span> is binomial distributed and its pmf is</p>
+<p><span class="math display">\[
+Pr(Y = y) = { n \choose y } \pi^y (1-\pi)^{n-y}
+\]</span></p>
+<p>where <span class="math inline">\(y = 0, ..., n.\)</span></p>
+<p>Let’s remind ourselves of the derivation of the mean and the variance for <span class="math inline">\(Y\)</span>, a binomial distributed random variable</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbb E(Y_i) &amp; = \sum_{y_i=0}^1 y_i Pr(Y_i = y_i) \\
+&amp; = 0 \times Pr(Y_i = 0) + 1 \times Pr(Y_i = 1) \\
+&amp; = \pi \\
+\mathbb E(Y) &amp; = \mathbb E(Y_1) + ... + \mathbb E(Y_n) \\
+&amp; = n \pi.
+\end{aligned}
+\]</span></p>
+<p>And the variance</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Var}(Y_i) &amp; = \mathbb E(Y_i - \mathbb E(Y_i))^2 \\
+&amp; = (0-\pi)^2 \times Pr(Y_i = 0) + (1-\pi)^2 \times Pr(Y_i = 1) \\
+&amp; = \pi^2 (1-\pi) + (1-\pi)^2 \pi \\
+&amp; = \pi(1-\pi).
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Var}(Y) &amp; = \text{Var}(Y_1 + ... + Y_n) \\
+&amp; = \text{Var}(Y_1) + ... + \text{Var}(Y_n) \\
+&amp; = n \pi (1 - \pi).
+\end{aligned}
+\]</span></p>
+<p>Note that we make use of the independence assumption. Note also that the binomial variance is a function of the mean.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">dbinom</span>(<span class="at">x =</span> x, <span class="at">size =</span> <span class="dv">10</span>, <span class="fl">0.1</span>) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#f0932b"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtitle</span>(<span class="st">"10,000 Draws from a Binomial(10,0.1) Distribution"</span>) <span class="sc">+</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Frequency"</span>, <span class="at">x =</span> <span class="fu">expression</span>(Y[i]))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>plt2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">dbinom</span>(<span class="at">x =</span> x, <span class="at">size =</span> <span class="dv">10</span>, <span class="fl">0.5</span>) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span> </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#f0932b"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtitle</span>(<span class="st">"10,000 Draws from a Binomial(10,0.5) Distribution"</span>) <span class="sc">+</span> </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Frequency"</span>, <span class="at">x =</span> <span class="fu">expression</span>(Y[i]))</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>plt3 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">50</span>),</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">dbinom</span>(<span class="at">x =</span> x, <span class="at">size =</span> <span class="dv">922</span>, <span class="fl">0.029</span>) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span> </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#f0932b"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span> </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtitle</span>(<span class="st">"10,000 Draws from a Binomial(022,0.029) Distribution"</span>) <span class="sc">+</span> </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Frequency"</span>, <span class="at">x =</span> <span class="fu">expression</span>(Y[i]))</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>plt1 <span class="sc">/</span> plt2 <span class="sc">/</span> plt3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="week8_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<p>The central limit theorem states that standardized sums or averages of independent random variables are asymptotically normal (under light regularity conditions).</p>
+<p>Thus asymptotically,</p>
+<p><span class="math display">\[
+\frac{Y - \mathbb E(Y)}{s.e.(Y)} \sim \mathcal N(0, 1)
+\]</span></p>
+<p>and for <span class="math inline">\(\hat \pi = Y/n\)</span>,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\hat \pi - \mathbb E[\hat \pi]}{s.e.(\hat \pi)} &amp; \stackrel{\cdot}{\sim} \mathcal N(0,1) \quad \text{ where } \stackrel{\cdot}{\sim} \text{ indicates as } n \to \infty \\
+\mathbb E[\hat \pi] &amp; = \mathbb E(\frac{1}{n} - \sum Y_i) = \frac{1}{n} \cdot n \pi = \pi \\
+\text{Var}[\hat \pi] &amp; = \text{Var}\left(\frac{1}{n} \sum Y_i\right) = \frac{1}{n^2} \cdot n \pi (1-\pi) = \frac{\pi (1-\pi)}{n},
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\hat \pi = \frac{\sum Y_i}{n}.\)</span></p>
+</section>
+</section>
+<section id="large-sample-inference-a-single-proportion" class="level2">
+<h2 class="anchored" data-anchor-id="large-sample-inference-a-single-proportion">Large Sample Inference: A Single Proportion</h2>
+<p>Consider testing whether the probability of major malformation in our study sample is equal to the national probability of <span class="math inline">\(\pi_0 = 0.02\)</span>.</p>
+<p><span class="math display">\[
+H_0 \colon \pi = \pi_0 \quad \text{versus} \quad H_A \colon \pi \neq \pi_0.
+\]</span></p>
+<p>Using a Wald test:</p>
+<p><span class="math display">\[
+Z_W = \frac{\hat \pi - \pi_0}{\sqrt{\hat \pi (1 - \hat \pi) / n }} \stackrel \cdot \sim \mathcal N(0,1).
+\]</span></p>
+<p>Plugging in to compute the Z-statistic gives</p>
+<p><span class="math display">\[
+Z_W = \frac{0.0293 − 0.02}{\sqrt{0.0293(1 − 0.0293)/922}} = 1.67.
+\]</span></p>
+<p>The associated two-tailed <span class="math inline">\(p\)</span>-value is given by</p>
+<p><span class="math display">\[
+p = 2 \times Pr(\mathbb Z \geq 1.67) = 0.0949
+\]</span></p>
+<p>where <span class="math inline">\(\mathbb Z\)</span> is a standard normal random variable.</p>
+</section>
+<section id="problems-with-wald-based-inference" class="level2">
+<h2 class="anchored" data-anchor-id="problems-with-wald-based-inference">Problems with Wald-based inference</h2>
+<p>Suppose we observe <span class="math inline">\(y = 0\)</span> or <span class="math inline">\(y = n\)</span>, which correspond to <span class="math inline">\(\hat \pi = 0\)</span> and <span class="math inline">\(\hat \pi = 1\)</span> scenarios.</p>
+<p>The probability of this happening is non-negligible when <span class="math inline">\(n\)</span> is small and/or when <span class="math inline">\(\pi\)</span> is close to zero or one.</p>
+<p>In either case, the Wald statistic,</p>
+<p><span class="math display">\[
+Z_W = \frac{\hat \pi - \pi_0} { \sqrt{\hat \pi ( 1 - \hat \pi ) / n }}
+\]</span></p>
+<p>has a zero in the denominator and is therefore undefined.</p>
+</section>
+<section id="a-better-test-the-score-statistic" class="level2">
+<h2 class="anchored" data-anchor-id="a-better-test-the-score-statistic">A better test: the Score Statistic</h2>
+<p>The score test averts this problem by using the null rather than the estimated standard error.</p>
+<p><span class="math display">\[
+\begin{aligned}
+Z_S &amp; = \frac{\hat \pi - \pi_0}{\sqrt{\pi_0 ( 1- \pi_0)/n}} \\
+&amp; = \frac{0.0293 − 0.02}{\sqrt{0.02(1 − 0.02)/922}} = 2.02.
+\end{aligned}
+\]</span></p>
+<p>The associated two-tailed <span class="math inline">\(p\)</span>-value is given by</p>
+<p><span class="math display">\[
+p = 2 \times Pr(\mathbb Z \geq 2.02) = 0.0440
+\]</span></p>
+<p>where <span class="math inline">\(\mathbb Z\)</span> is a standard normal random variable.</p>
+<p>The evidence against <span class="math inline">\(H_0\)</span> is slightly stronger using the more appropriate score test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.test</span>(<span class="dv">27</span>, <span class="dv">922</span>, <span class="at">p =</span> <span class="fl">0.02</span>, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    1-sample proportions test without continuity correction
+
+data:  27 out of 922, null probability 0.02
+X-squared = 4.0547, df = 1, p-value = 0.04405
+alternative hypothesis: true p is not equal to 0.02
+95 percent confidence interval:
+ 0.02020271 0.04227177
+sample estimates:
+         p 
+0.02928416 </code></pre>
+</div>
+</div>
+<p>(For the purposes of this class, we’ll want to specify <code>correct = FALSE</code> — in other settings one may want to perform the continuity correction available in <code>prop.test</code>, but we won’t be using it in this class.)</p>
+<p>The <span class="math inline">\(\chi^2\)</span> value (<code>X-squared</code>) in the output above is <span class="math inline">\((Z_S)^2\)</span>, which is approximately <span class="math inline">\(\chi^2\)</span> distributed under the null. The <span class="math inline">\(p\)</span>-value from this <span class="math inline">\(\chi^2\)</span> test is the same as the one based on <span class="math inline">\(Z_S\)</span>.</p>
+</section>
+<section id="confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-intervals">Confidence Intervals</h2>
+<div class="cooltip">
+<p>One way of describing the confidence interval for a parameter is the set of values which, when used as the null value in a hypothesis test on the observed sample, would lead to failure to reject.</p>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../week7/week7.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Week 7</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

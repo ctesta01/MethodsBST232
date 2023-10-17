@@ -1,0 +1,377 @@
+---
+title: Week 8
+---
+
+::: content-hidden
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+$$
+:::
+
+# Recap
+
+Last time we saw several ways of dealing with heteroscedasticity: 
+
+  * transformations, which we've already seen, but is not ideal since it changes the scientific question being asked.
+  * robust variance estimators and the bootstrap — ways to estimate the variance alongside the OLS estimates of $\beta$. 
+  * and we just started with generalized least squares.
+
+## Generalized Least Squares
+
+The Gauss-Markov theorem says that $\hat \beta_{OLS}$ is BLUE when $\Sigma = \sigma^2 I$, but now we're 
+in a more general setting. 
+
+If we estimate $\beta$ by minimizing the Mahalanobis distance between $Y$ and $X \beta$, we can get an estimator
+that is BLUE under arbitrary $\Sigma$. 
+
+The squared Mahalanobis distance .. 
+
+GLS can be used for any variance-covariance matrix $\Sigma$ including with correlated data. Supposing that 
+$\Sigma$ is known, one can easily show that $\hat \beta_{GLS}$ is unbiased, that it's the MLE 
+if we assume $\varepsilon \sim \mathcal N(0,\Sigma)$, and its varinace is 
+
+$$
+\Var[\hat \beta_{GLS}] = (X' \Sigma X)^{-1}.
+$$
+
+We show that $\hat \beta_{GLS}$ is BLUE under heteroscedasticity by: 
+
+  1. Writing the GLS estimator as an OLS estimator in a transformed space that has homoscedastic error, and 
+  2. Applying the Gauss-Markov Theorem. 
+
+For any positive-definite matrix $\Sigma$ we can find a nonsingular matrix $A$ such that $\Sigma = AA$. 
+
+Assuming $\Sigma$ is known, then define $Z = A^{-1} Y$ and $C = A^{-1} X$. Linear regression in the 
+transformed space is 
+
+$$
+Z = C \gamma + \varepsilon^*,
+$$
+
+where $\varepsilon^* = A^{-1} \varepsilon$. 
+
+Note that $\E[\varepsilon^*] = 0$ and $\Var[\varepsilon^*] = I_n$, so we have homoscedastic errors in the transformed space. 
+
+Also note that both of the following hold: 
+
+$$\E[Z] = C \gamma
+$$
+
+$$
+\E[Z] = A^{-1} \E[Y] = A^{-1} X \beta = C \beta 
+$$
+
+So $\gamma \equiv \beta$. 
+
+The OLS estimator for this transformed regression problem is 
+
+$$
+\begin{aligned}
+\hat \gamma_{OLS} & = (C'C)^{-1} C' Z \\ 
+& = (X'\Sigma^{-1}X)^{-1} X' \Sigma^{-1} Y \\ 
+& = \hat \beta_{GLS}
+\end{aligned}
+$$
+
+so $\hat \beta_{GLS}$ is equivalent to the OLS estimator in the transformed space. 
+
+By the Gauss-Markov Theorem, $\hat \beta_{GLS}$ is BLUE for $\gamma = \beta$ in the 
+transformed space. 
+
+Since $\E[\varepsilon^*] = 0$ and $\Var[\varepsilon^*] = I_n$, this implies that for any other unbiased 
+estimator $\tilde \beta = DZ$, $\Var(\hat \beta_{GLS}) \leq \Var(\tilde \beta)$. 
+
+The optimality in the transformed space is retained by $\hat \beta_{GLS}$ is the original space. This is because for any linear unbiased estimator in the original space $\tilde \beta = LY$ can also be written as a linear unbiased estimator in the transformed space, $\tilde \beta = LY = LAZ$. 
+
+So $\hat \beta_{GLS}$ is BLUE for the linear model where $\Var[\varepsilon] = \Sigma$. 
+
+# Weighted Least Squares 
+
+Returning to our special case when $\Sigma = \text{diag}(\sigma_1^2, ..., \sigma_n^2)$, which 
+implies the observations are independent with heteroscedasticity, this case is sometimes referred to as 
+"weighted least squares," because 
+
+$$
+(Y - X \beta)' \Sigma^{-1} (Y-X\beta) = \sum_{i=1}^n \frac{1}{\sigma_i^2} (y_i - x_i' \beta)^2
+$$
+
+so that we are estimating $\beta$ by minimizing a weighted version of the SSE with weights $1/\sigma_i^2$. 
+
+This effectively upweights units with low variance and downweights those with high variance so that estimates are selected to give better fit for units with low variance. 
+
+## Estimating $\hat \beta_{GLS}$ 
+
+In practice we don't know the $\sigma_i^2$ values and need to estimate them.  We had the 
+same challenge with the robust variance estimator for the OLS estimator, $\widehat{\Var}_{HW}[\hat\beta_{OLS}]$. 
+
+Recall our three potential estimation strategies: 
+
+   1. Estimate $\sigma_i^2$ directly from the squared residual: $\hat \varepsilon_i^2 = (y_i - \hat \mu_i)^2
+   2. Assume $\sigma_i^2 = V(\mu_i)$ and estimate $V(\cdot)$ via smoothing of $\varepsilon_i^2$ vs. $\hat \mu_i$. 
+   3. Assume $\sigma_i^2 = V(\mu_i)$ and estimate $V(\cdot)$ via grouping based on $\hat \mu_i$. 
+
+However, each of these strategies requires $\hat \mu_i = x_i' \hat \beta_{GLS}$, but estimating 
+$\hat \beta_{GLS}$ requires estimates of $\sigma_i^2$. 
+
+## Iteratively re-weighted least squares 
+
+:::{.chilltip}
+*The iteratively reweighted least squares algorithm.*
+
+Start with an initial estimate of $\beta$, denoted $\hat \beta^{(1)}$, for which we could use the 
+OLS estimator $\hat \beta_{OLS}$. 
+
+At the $j^{th}$ iteration: 
+
+  1. Calculate $\hat \mu_i^{(j)} = x_i' \hat \beta^{(j)}$
+  2. Use the $\hat \mu_i^{(j)}$ to compute $\hat \sigma_i^{2(j)}$ using one of the three approaches outlined above
+  3. Obtain a new estimate $\hat \beta^{(j+1)}$ by minimizing 
+
+  $$
+  \sum_{i=1}^n \frac{1}{\hat \sigma_i^{2(j)}} (y_i - x_i' \beta)^2
+  $$
+
+  with respect to $\beta$.
+
+  Repeat steps (1)-(3) until the value of $\hat \beta$ converges. 
+:::
+
+<br>
+
+:::{.cooltip}
+Some resources that I might be interested in: 
+
+  * [A Nice Writeup](https://anilkeshwani.github.io/files/iterative-reweighted-least-squares-12.pdf) 
+  * [Wikipedia](https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares)
+  * [SE Thread on Convergence](https://stats.stackexchange.com/questions/36250/definition-and-convergence-of-iteratively-reweighted-least-squares) 
+  * [SE Thread on IRLS Confusions](https://stats.stackexchange.com/questions/521065/iteratively-reweighted-least-squares-weights-confusion) 
+:::
+
+# Inference for Binomial Propoertions and Contingency Tables 
+
+## The Binomial Distribution 
+
+We will use data from a study on the teratogenicity of anti-epilectic drugs (AEDs) to motivate modeling and inference for discrete data. The data come from 922 births in 5 Boston area hospitals during 1986 and 1993 and are described in Holmes et al. (2000). The teratogenicity of anticonvulsant drugs. *New England Journal of Medicine* 344: 1132-1138. 
+
+The study included 316 pregnant women taking anticonvulsants (intentionally over-sampled) and 606 pregnant control women and recorded whether the infants had any malformation. 
+
+:::{.bluetip}
+A teratogen is any agent that causes an abnormality following fetal exposure during pregnancy
+:::
+
+| Infant Status | N | Percent | 
+|---|---|---|
+|No major malformation | 895 | 97.1% | 
+|Major malformation | 27 | 2.9% | 
+
+The percent of infants with a major malformation is slightly higher than the US national rate of 2%. 
+
+Is this difference statistically significant? 
+
+What is the 95% confidence interval for the risk of having a major malformation based on this data? 
+
+### The Binomial Distribution 
+
+A binomially distributed random variable is the number of events resulting from $n$ independent Bernoulli trials, each with probability success $\pi$. 
+
+Let $Y_i=1$ indicate that infant $i$ has a major malformation and $Y_i = 0$ otherwise. 
+
+Each $Y_i$ comes from a Bernoulli distribution such that 
+
+$$
+\begin{aligned}
+Pr(Y_i = y_i) & = \pi^{y_i} (1-\pi)^{1-y_i} \\ 
+Pr(Y_i = 0) & = 1- \pi \\ 
+Pr(Y_i = 1) & = \pi.
+\end{aligned}
+$$
+
+Let $Y = \sum_{i=1}^n Y_i$. Then $Y$ is binomial distributed and its pmf is 
+
+$$
+Pr(Y = y) = { n \choose y } \pi^y (1-\pi)^{n-y}
+$$
+
+where $y = 0, ..., n.$
+
+Let's remind ourselves of the derivation of the mean and the variance for $Y$, a binomial distributed random variable 
+
+$$
+\begin{aligned}
+\E(Y_i) & = \sum_{y_i=0}^1 y_i Pr(Y_i = y_i) \\ 
+& = 0 \times Pr(Y_i = 0) + 1 \times Pr(Y_i = 1) \\ 
+& = \pi \\ 
+\E(Y) & = \E(Y_1) + ... + \E(Y_n) \\ 
+& = n \pi.
+\end{aligned}
+$$
+
+And the variance 
+
+$$
+\begin{aligned}
+\Var(Y_i) & = \E(Y_i - \E(Y_i))^2 \\ 
+& = (0-\pi)^2 \times Pr(Y_i = 0) + (1-\pi)^2 \times Pr(Y_i = 1) \\ 
+& = \pi^2 (1-\pi) + (1-\pi)^2 \pi \\ 
+& = \pi(1-\pi).
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\Var(Y) & = \Var(Y_1 + ... + Y_n) \\ 
+& = \Var(Y_1) + ... + \Var(Y_n) \\ 
+& = n \pi (1 - \pi).
+\end{aligned}
+$$
+
+Note that we make use of the independence assumption. Note also that the binomial variance is a function of the mean. 
+
+```{r}
+#| out.width: 100% 
+#| fig.width: 5.5
+#| fig.height: 10
+library(tidyverse)
+library(patchwork)
+
+plt1 <- tibble(
+  x = seq(0, 10),
+  y = dbinom(x = x, size = 10, 0.1) * 10000
+) |> 
+ggplot(aes(x = x, y = y)) + 
+geom_col(fill = "#f0932b", alpha = 0.6) + 
+theme_bw() + 
+ggtitle("10,000 Draws from a Binomial(10,0.1) Distribution") + 
+labs(y = "Frequency", x = expression(Y[i]))
+
+plt2 <- tibble(
+  x = seq(0, 10),
+  y = dbinom(x = x, size = 10, 0.5) * 10000
+) |> 
+ggplot(aes(x = x, y = y)) + 
+geom_col(fill = "#f0932b", alpha = 0.6) + 
+theme_bw() + 
+ggtitle("10,000 Draws from a Binomial(10,0.5) Distribution") + 
+labs(y = "Frequency", x = expression(Y[i]))
+
+plt3 <- tibble(
+  x = seq(0, 50),
+  y = dbinom(x = x, size = 922, 0.029) * 10000
+) |> 
+ggplot(aes(x = x, y = y)) + 
+geom_col(fill = "#f0932b", alpha = 0.6) + 
+theme_bw() + 
+ggtitle("10,000 Draws from a Binomial(022,0.029) Distribution") + 
+labs(y = "Frequency", x = expression(Y[i]))
+
+plt1 / plt2 / plt3
+```
+
+The central limit theorem states that standardized sums or averages of independent random variables are asymptotically normal (under light regularity conditions). 
+
+Thus asymptotically, 
+
+$$
+\frac{Y - \E(Y)}{s.e.(Y)} \sim \mathcal N(0, 1)
+$$
+
+and for $\hat \pi = Y/n$, 
+
+$$
+\begin{aligned}
+\frac{\hat \pi - \E[\hat \pi]}{s.e.(\hat \pi)} & \stackrel{\cdot}{\sim} \mathcal N(0,1) \quad \text{ where } \stackrel{\cdot}{\sim} \text{ indicates as } n \to \infty \\ 
+\E[\hat \pi] & = \E(\frac{1}{n} - \sum Y_i) = \frac{1}{n} \cdot n \pi = \pi \\ 
+\Var[\hat \pi] & = \Var\left(\frac{1}{n} \sum Y_i\right) = \frac{1}{n^2} \cdot n \pi (1-\pi) = \frac{\pi (1-\pi)}{n},
+\end{aligned}
+$$
+
+where $\hat \pi = \frac{\sum Y_i}{n}.$
+
+## Large Sample Inference: A Single Proportion 
+
+Consider testing whether the probability of major malformation in our study sample is equal to the national probability of $\pi_0 = 0.02$. 
+
+$$
+H_0 \colon \pi = \pi_0 \quad \text{versus} \quad H_A \colon \pi \neq \pi_0.
+$$
+
+Using a Wald test: 
+
+$$
+Z_W = \frac{\hat \pi - \pi_0}{\sqrt{\hat \pi (1 - \hat \pi) / n }} \stackrel \cdot \sim \mathcal N(0,1).
+$$
+
+Plugging in to compute the Z-statistic gives 
+
+$$
+Z_W = \frac{0.0293 − 0.02}{\sqrt{0.0293(1 − 0.0293)/922}} = 1.67.
+$$
+
+The associated two-tailed $p$-value is given by 
+
+$$
+p = 2 \times Pr(\mathbb Z \geq 1.67) = 0.0949
+$$ 
+
+where $\mathbb Z$ is a standard normal random variable.
+
+## Problems with Wald-based inference
+
+Suppose we observe $y = 0$ or $y = n$, which correspond to $\hat \pi = 0$ and $\hat \pi = 1$ scenarios.
+
+The probability of this happening is non-negligible when $n$ is small and/or when $\pi$ is close to zero or one. 
+
+In either case, the Wald statistic, 
+
+$$
+Z_W = \frac{\hat \pi - \pi_0} { \sqrt{\hat \pi ( 1 - \hat \pi ) / n }}
+$$
+
+has a zero in the denominator and is therefore undefined. 
+
+## A better test: the Score Statistic
+
+The score test averts this problem by using the null rather than the estimated
+standard error. 
+
+$$
+\begin{aligned}
+Z_S & = \frac{\hat \pi - \pi_0}{\sqrt{\pi_0 ( 1- \pi_0)/n}} \\ 
+& = \frac{0.0293 − 0.02}{\sqrt{0.02(1 − 0.02)/922}} = 2.02.
+\end{aligned}
+$$
+
+The associated two-tailed $p$-value is given by 
+
+$$
+p = 2 \times Pr(\mathbb Z \geq 2.02) = 0.0440
+$$
+
+where $\mathbb Z$ is a standard normal random variable. 
+
+The evidence against $H_0$ is slightly stronger using the more appropriate score test. 
+
+
+```{r}
+prop.test(27, 922, p = 0.02, correct = FALSE)
+```
+
+(For the purposes of this class, we'll want to specify `correct = FALSE` — in other settings one may want to perform the continuity correction available in `prop.test`, but we won't be using it in this class.)
+
+The $\chi^2$ value (`X-squared`) in the output above is $(Z_S)^2$, which is approximately 
+$\chi^2$ distributed under the null. The $p$-value from this $\chi^2$ test is the same as the one based on $Z_S$. 
+
+## Confidence Intervals
+
+:::{.cooltip}
+One way of describing the confidence interval for a parameter is the set of values which, when used as the null value in a hypothesis test on the observed sample, would lead to failure to reject. 
+:::
+
