@@ -1,0 +1,301 @@
+---
+title: Week 10
+---
+
+::: content-hidden
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\Pr}[0]{\mathrm{Pr}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+$$
+
+window.MathJax = {
+  loader: {load: ['[tex]/cancel']},
+  tex: {packages: {'[+]': ['cancel']}}
+};
+:::
+
+So far we've done one-sample tests for proportions, two-sample tests for
+proportions, contingency tables, and we've really allowed for at most looking at one
+binary outcome and one binary covariate. 
+
+Now we ask what if we want to build a regression model to look at a binary outcome
+with multiple predictors, or adjusted for multiple other covariates. 
+
+We'll work with the following lung surgery example: 
+
+Is there an association between time spent in the operating room and post-surgical outcomes? 
+
+We could choose from a number of possible outcome variables, including: 
+  * Hospital stay of >7 days 
+  * Number of major complications during the hospital stay 
+
+The first outcome is binary ($Y \in \{ 0, 1 \}$) and the second is a count variable ($Y \in \{ 0, 1, 2, ... \}$). 
+
+The scientific goal might be to characterize the relationship between such an outcome and a $p$-vector of covariatets, $\mathbf{x}$. 
+
+Why can't we just use linear regression? We could just specify a mean model where $\E[Y_i | \mathbf{x}_i] = \mathbf{x}_i' \beta$ and estimate $\beta$ via OLS and perform inference via the CLT (which tells us that $\hat \beta \stackrel{\cdot}{\sim} \mathcal N$? 
+
+OLS has nice properties under mild conditions: 
+  * if the mean model is correctly specified, $\hat \beta_{OLS}$ is unbiased 
+  * OLS is generally robust to the distribution of the error terms 
+  * OLS is BLUE if the error terms are homoscedastic. 
+
+The first issue one might run into is heteroscedasticity. If $Y_i$ is binary, then we know that it has to be 
+Bernoulli distributed, such that under the mean model specification, 
+
+$$Y_i | \mathbf{x}_i \sim \text{Bernoulli}(\mu_i), \quad \text{ where } \mu = P(Y = 1) = \E(Y)$$
+$$ \mu_i = \E[Y_i | \mathbf{x}_i = \mathbf{x}_i' \beta]. $$
+
+For the Bernoulli distribution, there is an implicit mean-variance relationship: 
+
+$$\Var[Y_i | \mathbf{x}_i] = \mu_i (1 - \mu_i)$$
+
+as long as $\mu_i \neq \mu \forall i$, study units will be heteroscedastic (i.e., have non-constant variance).
+
+As we've seen, heteroscedasticity isn't a problem that goes away with large samples. It doesn't go away 
+with the central limit theorem. 
+
+Ignoring hteroscedasticity results in invalid inference, but we've seen three ways to remedy the situation: 
+  * Transform the response variable
+  * Use OLS and base inference on a valid standard error 
+  * Use generalized least squares (GLS)
+
+GLS can be a good option in discrete cases that is often under-appreciated, but
+it does have some limitations that lead many away from using it. 
+
+Recall 
+$$\hat \beta_{GLS} = (\mathbf{X}'\mathbf{\Sigma}^{-1}\mathbf{X})^{-1} \mathbf{X}' \mathbf{\Sigma}^{-1} \mathbf{y}$$
+where if $\Var(Y_i | \mathbf{x}_i) = \mu_i (1-\mu_i)$, then 
+
+$$\Sigma = \text{diag}(\mu_1(1-\mu_1), ..., \mu_N(1-\mu_N))$$
+
+and $\hat \beta_{GLS}$ is BLUE. 
+
+Recall that in the typical OLS setting, the $\Sigma$ matrix is given by
+$\text{diag}(\sigma_1^2, ..., \sigma_N^2)$, but here we aren't in a setting
+where $Y = X \beta + \varepsilon$ and $\Var(\varepsilon) = \sigma^2$, but
+instead we're in this setting where the variance of $Y$ is informed by the
+Bernoulli distribution's variance conditional on how the covariates inform the 
+mean.
+
+Recall that for uncorrelated data $\hat \beta_{GLS}$ is the maximizer of a 
+weighted least squares criterion, i.e., $\sum{i=1}^n w_i (y_i - x_i' \beta)^2$ where
+$w_i = (\Var(Y_i | x_i))^{-1}$. 
+
+Thus we solve for $\beta$ in 
+
+$$ 0 = \frac{\partial}{\partial \beta } \sum{i=1}^n w_i (y_i - x_i' \beta)^2$$
+
+$$ 0 = \sum_{i=1}^n x_i w_i (y_i x_i' \beta)$$
+
+So when $w_i = (\mu_i (1- \mu_i))^{-1}$, the weighted least squared equations are 
+$$0 = \sum_{i=1}^n \frac{x_i}{\mu_i ( 1- \mu_i)} (y_i - \mu_i).$$
+
+In practice, we use the IRLS algorithm to estimate $\hat \beta_{GLS}$. 
+
+$\hat \beta_{GLS}$ is also the MLE when $Y_i \sim \text{Bernoulli}(\mu_i)$. The likelihood
+and log-likelihood are given by 
+
+$$\mathcal L(\beta | y) = \prod_{i=1}^n \mu_i^{y_i} (1-\mu_i)^{1-y_i},$$
+$$\ell(\beta | y) = \sum_{i=1}^n [y_i \log (\mu_i) + (1-y_i) \log (1-\mu_i)].$$
+
+To get the MLE, we take derivatives, set them equal to zero and solve. Following the algebra 
+trail, we find that 
+
+$$\frac{\partial}{\partial \beta} \ell (\beta | y ) = \sum_{i=1}^n \frac{x_i}{\mu_i (1-\mu_i)} (y_i - \mu_i) \stackrel{set}{=} 0.$$
+
+Thus the derivative of the log likelihood is equivalent to the weighted least squares equations, so $\hat \beta_{GLS}$ is the MLE. 
+
+Often it's fine to use this approach, but we'll see some shortcomings soon. 
+
+GLS can accomodate heteroscedasticity for binary outcomes. If the model is correctly specified, 
+GLS is optimal. 
+
+However, when modeling binary or count response data, the linear regression model doesn't respect the 
+fact that the outcome is bounded. The functional that is being modeled is bounded: 
+
+  * in binary outcome settings: $\E[Y_i | x_i] \in (0,1)$
+  * in count outcome settings: $\E[Y_i | x_i] \in (0,\infty)$,
+
+but our current specifications of the mean model doesn't impose any restrictions and
+only assumes $\E[Y_i|x_i] = x_i' \beta$. This means we could get predictions that are 
+outside the region of appropriate outcomes.
+
+Is this a big deal? Only sometimes. The GLS approach works quite well for
+modeling binary outcomes and the coefficients from linear models are quite interpretable. 
+So it's a trade-off between coefficient interpretability and this property about 
+restricting predictions to the specified set of possible outcomes. 
+
+# Generalized Linear Models
+
+Our goal is to develop statistical models to characterize the relationship between some response
+variable $Y$ and a vector of covariates $x$. 
+
+Statistical models consist of two components: 
+
+* A systematic component
+* A random component 
+
+When moving beyond linear regression analysis of continuous and response data, we need to be aware
+of two key challenges: 
+  * Sensible specification of the systematic component
+  * Proper accounting of any implicit mean-variance relationships arising from the random component. 
+
+<span class='vocab'>Definition of a Generalized Linear Model</span>
+
+A *generalized linear model* (GLM) specifies a parametric statistical model for the conditional
+distribution of a response $Y_i$ given a $p$-vector of covariates $x_i$. 
+
+Consistes of three elements: 
+
+  1. A probability distribution for the outcome, $Y_i \sim f_{Y}(y)$
+  2. A linear prediction equation, $x_i' \beta$ 
+  3. A link function, $g(\cdot)$. 
+
+The first of these elements is the random component, and elements 2 and 3 jointly specify the 
+systematic component. 
+
+In practice, we see a wide range of response variables with a wide range of associated (possible)
+distributions 
+
+| Response Type | Range | Possible Distribution | 
+| --- | --- | --- | 
+| Continuous | $(-\infty, \infty)$ | $\mathcal N(\mu, \sigma^2)$ | 
+| Binary | $\{0, 1\}$ | $\text{Bernoulli}(\pi)$ | 
+| Polytomous | $\{1, ..., K \}$ | $\text{Multinomial}(\pi_k)$ | 
+| Count | $\{0, 1, ..., n \}$ | $\text{Binomial}(n, \pi)$ | 
+| Count | $\{1, 2, ..., \}$ | $\text{Poisson}(\lambda)$ | 
+| Positive | $(0, \infty)$ | $\text{Gamma}(\alpha, \beta)$ | 
+
+For a given choice of probability distribution, a GLM specifies a model for the conditional mean: 
+
+$$ \mu_i = \E[Y_i | x_i] $$ 
+
+How do we specify a reasonable model for $\mu_i$ while ensuring that we respect the appropriate 
+range/scale of $\mu_i$? 
+
+Achieved by constructing a linear predictor $x_i' \beta$ and relating it to $\mu_i$ via a link 
+function $g(\cdot)$: 
+
+$$g(\mu_i) = x_i' \beta.$$ 
+
+We often specify $g(\cdot)$ such that $g^{-1}(x_i' \beta) = \mu$ respects the appropriate 
+bounds on $\mu_i$. 
+
+We'll sometimes use the shorthand $\eta_i = x_i' \beta$. 
+
+:::{.cooltip}
+How is it that the regular linear model is a trivial GLM?  Isn't it the case that we only make 
+distributional assumptions on $\varepsilon$ and not on $Y$? Yes, but because 
+a normal distribution plus a constant is still normally distributed (but this is not 
+true for other distributions, e.g., a Binomial or Bernoulli distribution). 
+
+In the linear model we assume $Y_i = X_i \beta + \epsilon_i$, so we could write 
+$Y \sim \mathcal N(X_i \beta, \sigma^2)$ giving us the distributional assumption on $Y$. 
+
+If we suppose that $X_i \sim \text{Bernoulli}(\pi)$, we can't model $X_i \beta + \varepsilon_i$ 
+as another Bernoulli distribution where $\varepsilon$ is Bernoulli distributed. 
+
+This is why we're going to have to write $Y_i \sim f_Y$ and $g(\mu_i) = X_i \beta$. 
+:::
+
+## Exponential Family
+
+GLMs form a class of statistical models for response variables whose distribution belongs to the *exponential dispersion family*
+
+These are the family of distributions with a pdf/pmf of the form: 
+
+$$f_Y(y; \theta, \phi) = \exp \left\{ \frac{y \theta - b(\theta)}{a(\phi)} + c(y, \phi) \right\},$$
+
+where $\theta$ is the *canonical parameter*, $\phi$ is the *dispersion parameter*, and $b(\theta)$ is the *cumulant function*. 
+
+We will see that $\theta$ is always a function of the conditional mean, $\mu_i$. 
+
+Note that the $c(y, \phi)$ should not depend on $\theta$. 
+
+### Bernoulli in the Exponential Notation 
+
+Let $Y \sim \text{Bernoulli}(\mu)$.
+
+A common first step is to apply a convenient transformation that is equivalent to 
+the identity function: $\exp(\log(\cdot))$.
+
+$$
+\begin{aligned}
+f_Y(y ; \mu ) & = \mu^y (1- \mu)^{1-y} \\ 
+& = \exp \{ y \log(\mu) + (1-y) \log (1-\mu) \} \\ 
+& = \exp \left\{ y \log \left( \frac{\mu}{1-\mu} \right)  + \log(1-\mu) \right\}
+\end{aligned}
+$$
+
+Let 
+
+$$
+\begin{aligned}
+\theta = \log\left( \frac{\mu}{1-\mu} \right) \quad \quad & b(\theta) = \log (1 + \exp \{ \theta \}) \\ 
+a(\phi) = 1 \quad \quad & c(y, \phi) = 0
+\end{aligned}
+$$
+
+Then 
+$$
+\begin{aligned}
+f_Y(y; \theta, \phi) & = \exp \{ y \theta - \log (1 + \exp \{ \theta \} ) \} \\ 
+& = \exp \left\{ \frac{y \theta - b(\theta) }{a(\phi)} + c(y, \phi) \right\}.
+\end{aligned}
+$$
+
+Many other common distributions are members of this faimly. The canonical parameter $\theta$ has 
+key relationships with both $\E(Y)$ and $\Var(Y)$. Typically varies across study units since $\E(Y_i) = \mu_i$. We also index $\theta$ by $i$, as in $\theta_i$. 
+
+The dispersion parameter $\phi$ has a key relationship with $\Var(Y)$. It may, but does not typically,
+vary across study units. Typically it is not unit-specific, so we just write $\phi$. In some
+settings, we may have $a(\cdot)$ vary with $i$, as in $$a_i(\phi)$. E.g., $a_i(\phi) = \phi / w_i$ 
+where $w_i$ is the prior weight. 
+
+When the dispersion parameter is known, some may say that this distribution is 
+a member of the *natural exponential family*.
+
+Consider the likelihood function for a single observation 
+
+$$\mathcal L(\theta_i, \phi ; y_i) = \exp \left\{ \frac{y_i \theta - b(\theta_i)}{a_i(\phi)} + c(y_i, \phi) \right\}.$$
+
+The log-likelihood is 
+
+$$\ell(\theta_i, \phi; y_i) = \frac{y_i \theta_i - b(\theta_i)}{a_i(\phi)} + c(y_i, \phi).$$
+
+The first partial derivative with respect to $\theta_i$ is the score function for $\theta_i$ and is 
+given by 
+
+$$\frac{\partial}{\partial \theta_i} \ell (\theta_i, \phi; y_i) = U(\theta_i) = \frac{y_i - b'(\theta_i)}{a_i(\phi)}.$$
+
+Note that we consider $\frac{\partial}{\partial \theta_i} \ell (\theta_i, \phi; y_i)$ for the purpose 
+of showing properties of exponential families (not for doing estimation).
+
+We know that (under some regularity conditions)
+
+$$
+\begin{aligned}
+\E[U(\theta_i)] & = 0 \\ 
+\Var[U(\theta_i)] & = \E[U(\theta_i)^2] = \E\left[ \frac{\partial U(\theta_i)}{\partial \theta_i} \right]
+\end{aligned}
+$$
+
+We will use these properties to get expressions for $\E(Y_i)$ and $\Var(Y_i)$ in terms of the exponential family parameters. 
+
+Since the score has mean zero, 
+
+$$\E(U(\theta_i)) = \E \left[ \frac{Y_i - b'(\theta_i)}{a_i(\phi)} \right] = 0 $$ 
+
+and, consequently, 
+
+$$\mu_i = \E[Y_i] = b'(\theta_i).$$
+

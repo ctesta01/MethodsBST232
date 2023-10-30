@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Methods (BST 232) Notes - 10&nbsp; Week 9</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../week8/week8.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-title">Week 9</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Methods (BST 232) Notes</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Methods (BST 232) Notes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week1/week1.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week2/week2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week3/week3.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week4/week4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week5/week5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week6/week6.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 6</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week7/week7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 7</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week8/week8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 8</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week9/week9.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 9</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#recap" id="toc-recap" class="nav-link active" data-scroll-target="#recap">Recap</a></li>
+  <li><a href="#analysis-of-r-by-c-tables" id="toc-analysis-of-r-by-c-tables" class="nav-link" data-scroll-target="#analysis-of-r-by-c-tables">Analysis of R-by-C tables</a>
+  <ul class="collapse">
+  <li><a href="#pearson-chi-square-test-statistic" id="toc-pearson-chi-square-test-statistic" class="nav-link" data-scroll-target="#pearson-chi-square-test-statistic">Pearson Chi-Square Test Statistic</a></li>
+  <li><a href="#pearson-chi-square-test-as-a-score-test-2-times-2-tables" id="toc-pearson-chi-square-test-as-a-score-test-2-times-2-tables" class="nav-link" data-scroll-target="#pearson-chi-square-test-as-a-score-test-2-times-2-tables">Pearson Chi-Square Test as a Score Test: <span class="math inline">\(2 \times 2\)</span> Tables</a></li>
+  <li><a href="#validity-of-pearson-chi-square-in-small-samples" id="toc-validity-of-pearson-chi-square-in-small-samples" class="nav-link" data-scroll-target="#validity-of-pearson-chi-square-in-small-samples">Validity of Pearson Chi-Square in Small Samples</a></li>
+  </ul></li>
+  <li><a href="#fishers-exact-test" id="toc-fishers-exact-test" class="nav-link" data-scroll-target="#fishers-exact-test">Fisher’s Exact Test</a>
+  <ul class="collapse">
+  <li><a href="#test-statistics-for-h_0-psi-1." id="toc-test-statistics-for-h_0-psi-1." class="nav-link" data-scroll-target="#test-statistics-for-h_0-psi-1.">Test Statistics for <span class="math inline">\(H_0 : \psi = 1\)</span>.</a></li>
+  <li><a href="#one-sided-p-value" id="toc-one-sided-p-value" class="nav-link" data-scroll-target="#one-sided-p-value">One-sided <span class="math inline">\(p\)</span>-value</a></li>
+  <li><a href="#two-sided-p-value" id="toc-two-sided-p-value" class="nav-link" data-scroll-target="#two-sided-p-value">Two-sided <span class="math inline">\(p\)</span>-value</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-title">Week 9</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="recap" class="level1">
+<h1>Recap</h1>
+<p>So far we’ve compared differences in probabilities on the absolute scale (i.e., via risk differences), and then we looked at relative measures (odds ratios, log odds ratios).</p>
+<p>Now we’ll look at contingency table methods.</p>
+</section>
+<section id="analysis-of-r-by-c-tables" class="level1">
+<h1>Analysis of R-by-C tables</h1>
+<section id="pearson-chi-square-test-statistic" class="level2">
+<h2 class="anchored" data-anchor-id="pearson-chi-square-test-statistic">Pearson Chi-Square Test Statistic</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Pht</th>
+<th>Cbz</th>
+<th>Pb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Yes</td>
+<td><span class="math inline">\(O_{11} = 9\)</span></td>
+<td><span class="math inline">\(O_{12} = 0\)</span></td>
+<td><span class="math inline">\(O_{13} = 5\)</span></td>
+</tr>
+<tr class="even">
+<td>No</td>
+<td><span class="math inline">\(O_{21} = 65\)</span></td>
+<td><span class="math inline">\(O_{22} = 46\)</span></td>
+<td><span class="math inline">\(O_{23} = 47\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Where the rows correspond to having digit hypoplasia and the columns are different drugs used in a study.</p>
+<p>We will denote <span class="math inline">\(O_{.1} = 74\)</span> to be the total in the first row, etc., and <span class="math inline">\(\hat \pi_{i.} = O_{i.}/O{..}\)</span>, <span class="math inline">\(\hat \pi_{.j} = O_{.j}/O_{..}\)</span>.</p>
+<p>$H_0 : $ There is no association between row (outcome) and column (exposure) variables.</p>
+<p>$H_A : $ There is an association between row and column.</p>
+<div class="cooltip">
+<p>Sometimes <span class="math inline">\(H_0\)</span> is also written as “There is independence between the row and column variables.”</p>
+</div>
+<p>The Pearson Chi-square test statistic is</p>
+<p><span class="math display">\[\chi_P^2  \sum_{i,j} \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \stackrel{H_0}\sim \chi_{(R-1) \times (C-1)}^2
+\]</span></p>
+<p>where <span class="math inline">\(E_{ij}\)</span> is the expected count in cell <span class="math inline">\(i,j\)</span> under the null, i.e.,</p>
+<p><span class="math display">\[E_{ij} = O_{..} \times \hat \pi_{i.} \times \hat \pi_{.j}.
+\]</span></p>
+<p>Because under the null of no association we should have that <span class="math inline">\(\pi_{ij} = \pi_{i.} \times \pi_{.j}.\)</span></p>
+</section>
+<section id="pearson-chi-square-test-as-a-score-test-2-times-2-tables" class="level2">
+<h2 class="anchored" data-anchor-id="pearson-chi-square-test-as-a-score-test-2-times-2-tables">Pearson Chi-Square Test as a Score Test: <span class="math inline">\(2 \times 2\)</span> Tables</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Major Malformation: Yes</th>
+<th>No</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AED Exposed: Yes</td>
+<td><span class="math inline">\(y_1 = 18\)</span></td>
+<td><span class="math inline">\(n_1 - y_1 = 298\)</span></td>
+<td><span class="math inline">\(n_1 = 316\)</span></td>
+</tr>
+<tr class="even">
+<td>No</td>
+<td><span class="math inline">\(y_0 = 9\)</span></td>
+<td><span class="math inline">\(n_0 - y_0 = 597\)</span></td>
+<td><span class="math inline">\(n_0 = 606\)</span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><span class="math inline">\(y = 27\)</span></td>
+<td><span class="math inline">\(n- y = 895\)</span></td>
+<td><span class="math inline">\(n = 922\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Compare the following:</p>
+<pre><code>chisq.test(xtabs(~aed+major, data=newborn.dat),correct=F)
+
+    Pearson’s Chi-squared test
+
+data: xtabs(~aed + major, data = newborn.dat)
+X-squared = 12.9564, df = 1, p-value = 0.0003188
+
+
+prop.test(y,n,alternative="two.sided",correct=F)
+
+    2-sample test for equality of proportions
+    without continuity correction
+
+data: y out of n
+X-squared = 12.9564, df = 1, p-value = 0.0003188
+alternative hypothesis: two.sided
+
+95 percent confidence interval:
+  -0.06941918 -0.01480190
+
+sample estimates:
+    prop 1     prop 2
+0.01485149 0.05696203</code></pre>
+</section>
+<section id="validity-of-pearson-chi-square-in-small-samples" class="level2">
+<h2 class="anchored" data-anchor-id="validity-of-pearson-chi-square-in-small-samples">Validity of Pearson Chi-Square in Small Samples</h2>
+<p>The Pearson chi-square test statistic is only asymptotically chi-square distributed. Inferences constructed using Pearson’s chi-square test statistic are usually considered valid when all of the <span class="math inline">\(R \times C\)</span> table have expected values greater than or equal to five (Fisher and van Belle, 1993, page 250).</p>
+<p>There are other rules of thumb on this:</p>
+<ul>
+<li>The test might still be valid if all of the expected values, except one, are five or greater (Fisher and van Belle, 1993, page 250).</li>
+<li>For Pearson chi-square test with more than one degree of freedom, many statisticians use the rule that a minimum expected value of one is acceptable as long as no more than 20% of cells have expected values less than 5 (Agresti, 2013, page 77).</li>
+</ul>
+<pre><code>chisq.test(xtabs(~nails + brand, data=monodrug.dat),correct=F)
+
+    Pearson’s Chi-squared test
+
+data: xtabs(~nails + brand, data = monodrug.dat)
+X-squared = 5.8289, df = 2, p-value = 0.05423
+
+Warning message:
+Chi-squared approximation may be incorrect in:
+chisq.test(xtabs(~nails + brand, data = monodrug.dat),
+correct = F)</code></pre>
+<p>R prints this warning if any of the cells has an observed value less than 5.</p>
+<p>An alternative is ot use an exact test that avoids the asymptotic approximation to the distribution of the Pearson statistic.</p>
+</section>
+</section>
+<section id="fishers-exact-test" class="level1">
+<h1>Fisher’s Exact Test</h1>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Major Malformation: Yes</th>
+<th>No</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Carb exposure: Yes</td>
+<td>3</td>
+<td>55</td>
+</tr>
+<tr class="even">
+<td>No</td>
+<td>9</td>
+<td>499</td>
+</tr>
+</tbody>
+</table>
+<p>The way we’ll be approaching this is to condition on the marginal totals, treating those as fixed and known.</p>
+<pre><code>xtabs(~MONOCBZ + major, data=monocbz.dat)
+      major
+MONOCBZ   0 1
+      0 499 9
+      1  55 3
+
+chisq.test(xtabs(~MONOCBZ + major, data=monocbz.dat),correct=F)
+
+    Pearson’s Chi-squared test
+
+data: xtabs(~MONOCBZ + major, data = monocbz.dat)
+X-squared = 2.9011, df = 1, p-value = 0.08852
+
+Warning message:
+Chi-squared approximation may be incorrect in:
+chisq.test(xtabs(~MONOCBZ + major, data = monocbz.dat),
+correct = F)</code></pre>
+<p>One can show (Agresti, CDA Section 3.5) that</p>
+<p><span class="math display">\[P(O_{11} = o_{11} | o_{1.}, o_{.1}, o_{..}, \psi) =
+\frac{
+  {o_{.1} \choose o_{11}} {o_{..} - o_{.1} \choose {o_{1.} - o_{11}} }\psi^{o_{11}}
+  }{
+    \sum_{\ell=0}^{o_{.1}} { o_{.1} \choose \ell} { o_{..} - o_{.1} \choose o_{1.} - \ell } \psi^{\ell}
+  }
+\]</span></p>
+<p>This is a known distribution (non-central hypergeoemtric), but it depends on the unknown <span class="math inline">\(\psi\)</span>, the odds-ratio.</p>
+<p>The null hypothesis of no association between row and column variables for a <span class="math inline">\(2\times 2\)</span> contingency table holds if and only if <span class="math inline">\(\psi = 1\)</span>.</p>
+<p>So under the null hypothesis <span class="math inline">\(H_0 : \psi = 1\)</span> there are no unknown parameters and <span class="math inline">\(O_{11} |o_{1.}, o_{.1}, o_{..}\)</span> follows a (central) hypergeometric distribution that we can use to calculate <span class="math inline">\(p\)</span>-values.</p>
+<p>Once we’ve conditioned on the marginals, knowing <span class="math inline">\(O_{11}\)</span> tells us that all the other cell counts in a <span class="math inline">\(2 \times 2\)</span> table. So testing whether the observed <span class="math inline">\(O_{11}\)</span> is extreme relative to its conditional distribution under the null is equivalent to testing whether any of the cell counts are extreme.</p>
+<p>We could also construct exact tests for <span class="math inline">\(H_0: \psi = 2.5\)</span> for example, using the non-central hypergeometric distribution.</p>
+<section id="test-statistics-for-h_0-psi-1." class="level2">
+<h2 class="anchored" data-anchor-id="test-statistics-for-h_0-psi-1.">Test Statistics for <span class="math inline">\(H_0 : \psi = 1\)</span>.</h2>
+<p>Under the null, <span class="math inline">\(H_0 : \psi = 1\)</span>, the target cell count <span class="math inline">\(O_{11}\)</span> follows the central hypergeometric distribution.</p>
+<p><span class="math display">\[
+\begin{aligned}
+Pr_C(O_{11} = o_{11} | \psi = 1) &amp; =
+\frac{\displaystyle
+  {o_{.1} \choose o_{11}} {o_{..} - o_{.1} \choose {o_{1.} - o_{11}}}
+  }{\displaystyle
+    \sum_{\ell=0}^{o_{.1}} { o_{.1} \choose \ell} { o_{..} - o_{.1} \choose o_{1.} - \ell }
+  } \\
+&amp; = \frac{\displaystyle
+  {o_{.1} \choose o_{11}} {o_{.2} \choose o_{12}}
+  }{\displaystyle
+    { o_{..} \choose o_{1.}}
+  },
+\end{aligned}
+  \]</span></p>
+<p>since <span class="math inline">\(\displaystyle \sum_{\ell = 0}^{o_{.1}} { o_{.1} \choose \ell} { o_{..} - o_{.1} \choose o_{1.} - \ell } = { o_{..} \choose o_{1.}}\)</span>.</p>
+</section>
+<section id="one-sided-p-value" class="level2">
+<h2 class="anchored" data-anchor-id="one-sided-p-value">One-sided <span class="math inline">\(p\)</span>-value</h2>
+<p>Suppose we want to test</p>
+<p><span class="math display">\[H_0 : \psi = 1, \quad \quad H_A : \psi &gt; 1. \]</span></p>
+<p>The exact (right-tail) <span class="math inline">\(p\)</span>-value is</p>
+<p><span class="math display">\[\begin{aligned}
+p &amp; = Pr(O_{11} \geq o_{11} \mid H_0 \colon \psi = 1)\\
+&amp; = \sum_{\ell = o_{11}^z } \frac{\displaystyle
+  {o_{.1} \choose \ell } {o_{.2} \choose o_{1.} - \ell }
+  }{\displaystyle
+    { o_{..} \choose o_{1.}}
+  }
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(z = \min (o_{.1, o_{1.}})\)</span>.</p>
+<p>Suppose we want to test</p>
+<p><span class="math inline">\(H_0 : \psi = 1, \quad \quad H_A : \psi &lt; 1\)</span>$</p>
+<p>The exact (left-tail) <span class="math inline">\(p\)</span>-value is</p>
+<p><span class="math display">\[\begin{aligned}
+p &amp; = Pr(O_{11} \leq o_{11} \mid H_0 : \psi = 1) \\
+&amp; = \sum_{\ell = z}^{o_{11}} \frac{\displaystyle
+  {o_{.1} \choose \ell } {o_{.2} \choose o_{1.} - \ell }
+  }{\displaystyle
+    { o_{..} \choose o_{1.}}
+  }
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(z = \max(0, o_{1.} + o_{.1} - o_{..})\)</span>.</p>
+</section>
+<section id="two-sided-p-value" class="level2">
+<h2 class="anchored" data-anchor-id="two-sided-p-value">Two-sided <span class="math inline">\(p\)</span>-value</h2>
+<p>Suppose we want to test <span class="math display">\[H_0 : \psi = 1$, \quad \quad H_A : \psi \neq 1\]</span></p>
+<p>The possible values for <span class="math inline">\(O_{11}\)</span> are</p>
+<p><span class="math display">\[\max (0, o_{1.} + o_{.1} - o_{..}) \leq o_{11} \leq \min(o_{1.}, o_{.1}),\]</span></p>
+<ol type="1">
+<li>Calculate the probabilities of all of these values,</li>
+</ol>
+<p><span class="math display">\[P_{\ell} = Pr(O_{11} = \ell \mid H_0 : \psi = \ell) \]</span></p>
+<ol start="2" type="1">
+<li>Sum the probabilities <span class="math inline">\(P_{\ell}\)</span> that are less than or equal to the observed probability <span class="math inline">\(P\)</span> in the first equation above.</li>
+</ol>
+<p><span class="math display">\[
+p = \sum_{\ell = z_1}^{z_2} P_\ell I(P_\ell \leq P) \]</span></p>
+<p>where <span class="math inline">\(z_1 = \max(0, o_{1.} + o_{.1} - o_{..})\)</span> and <span class="math inline">\(z_2 = \min(o_{1.}, o_{.1})\)</span>.</p>
+<p>In general if we have a <span class="math inline">\(2\times 2\)</span> table, we can compute the odds ratio as follows:</p>
+<table class="table">
+<caption>Generic <span class="math inline">\(2 \times 2\)</span> table</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>1</th>
+<th>0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>a</td>
+<td>b</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>c</td>
+<td>d</td>
+</tr>
+</tbody>
+</table>
+<p>Then the <span class="math inline">\(\mathrm{OR} = \frac{ad}{bc}\)</span>.</p>
+<pre><code># Function: SuppDists::dghyper(x, n, r, N, log=FALSE)
+# arguments: x is o_11 cell, n is o_{.1},
+# r is o_{1.}, N is total
+
+library(SuppDists)
+
+hyper.probs &lt;- dghyper(seq(0,12,1),12,58,566)
+
+cbind(seq(0,12,1), round(hyper.probs,4))
+
+    [,1]  [,2]
+[1,]   0 0.2696
+[2,]   1 0.3775
+[3,]   2 0.2377
+[4,]   3 0.0889
+[5,]   4 0.0220
+[6,]   5 0.0038
+[7,]   6 0.0005
+[8,]   7 0.0000
+[9,]   8 0.0000
+[10,]  9 0.0000
+[11,] 10 0.0000
+[12,] 11 0.0000
+[13,] 12 0.0000
+
+fisher.pvalue &lt;- sum(hyper.probs[4:13])
+fisher.pvalue
+[1] 0.1152</code></pre>
+<p>The function <code>fisher.test()</code> runs a Fisher’s exact test directly.</p>
+<pre><code>xtabs(~MONOCBZ + major, data=monocbz.dat)
+        major
+MONOCBZ   0 1
+      0 499 9
+      1 55  3
+
+fisher.test(xtabs(~MONOCBZ + major, data=monocbz.dat))
+      Fisher’s Exact Test for Count Data
+
+data: xtabs(~MONOCBZ + major, data = monocbz.dat)
+p-value = 0.1152
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  0.5101941 12.5603706
+sample estimates:
+odds ratio
+  3.015342</code></pre>
+<p>One can compute an exact CI for the OR by inverting Fisher’s exact test.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../week8/week8.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Week 8</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

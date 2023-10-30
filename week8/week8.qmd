@@ -11,9 +11,15 @@ $$
 
 \newcommand{\Var}[0]{\text{Var}}
 \newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\Pr}[0]{\mathrm{Pr}}
 \newcommand{\e}[0]{\epsilon}
 \newcommand{\t}[1]{\text{#1}}
 $$
+
+window.MathJax = {
+  loader: {load: ['[tex]/cancel']},
+  tex: {packages: {'[+]': ['cancel']}}
+};
 :::
 
 # Recap
@@ -337,6 +343,18 @@ $$
 
 has a zero in the denominator and is therefore undefined. 
 
+:::{.chilltip}
+Note that in the regression scenario, the 
+Wald statistic is $t$-distributed because the 
+$\hat \beta$ is normally distributed and 
+dividing it by its standard error yields
+a $t$-distribution. 
+
+Here, we're using large sample asymptotics
+(that the distribution of estimated proportions
+are normally distributed in a certain kind of limiting sense) to get a $Z$-score Wald statistic.
+:::
+
 ## A better test: the Score Statistic
 
 The score test averts this problem by using the null rather than the estimated
@@ -371,7 +389,348 @@ $\chi^2$ distributed under the null. The $p$-value from this $\chi^2$ test is th
 
 ## Confidence Intervals
 
-:::{.cooltip}
-One way of describing the confidence interval for a parameter is the set of values which, when used as the null value in a hypothesis test on the observed sample, would lead to failure to reject. 
+:::{.chilltip}
+One way of describing the confidence interval for a parameter is:
+
+*The set of values which, when used as the null value in a hypothesis test on the observed sample, would lead to failure to reject.*
 :::
 
+Suppose we have a 95% confidence interval for $\pi$, $(\pi_L, \pi_U)$, and were to do a hypothesis
+test in the observed sample using $\alpha = 0.05$ using as our null value anything in $(\pi_L, \pi_U)$,
+we would fail to reject.
+
+Recall that often we find CIs by inverting test statistics.
+
+Let $z_{1-\frac{\alpha}{2}}$ denote the $1 - \frac{\alpha}/2$ quantile of a standard normal random variable. 
+
+An approximate $100(1-\alpha)$% Wald confidence interval is found by inverting the Wald statistic. We will fail to reject in a Wald test with $\alpha = 0.05$ when 
+
+$$-z_{1-\frac{\alpha}{2}} \le \frac{\hat \pi - \pi}{s.e.(\hat \pi)} \le z_{1-\frac{\alpha}{2}} 
+$$
+
+$$-z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) \le \hat \pi - \pi \le z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) 
+$$
+
+$$-\hat\pi-z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) \le - \pi \le -\hat + \pi z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) 
+$$
+
+$$ \hat\pi+z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) \ge \pi \ge \hat \pi - z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) 
+$$
+
+$$ \hat\pi-z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) \le \pi \le \hat \pi + z_{1-\frac{\alpha}{2}}s.e.(\hat \pi) 
+$$
+
+The 95% confidence interval for the risk of having a major malformation is given by 
+
+$$(\hat \pi - 1.96 \times s.e.(\hat \pi), \hat \pi + 1.96 \times s.e.(\hat pi))
+$$ 
+
+$$(0.0293 - 1.96 \times 0.0056, 0.0293 + 1.96 \times 0.0056)
+$$
+
+$$
+(0.0184, 0.0402)
+$$
+
+We can conclude this sample is consistent with the 2% prevalence 
+reported in the general US population. 
+
+Note that if $y = 0$, the Wald interval will be (0,0) and if $y = n$ it will be (1,1). The Wald CI suffers from similar issues as the Wald test. 
+
+### Score Interval for a Single Proportion 
+
+A simple fix is to invert the score test instead to get a score CI. 
+
+We will fail to reject with the score test when 
+
+$$-z_{1-\alpha/2} \leq \frac{\hat \pi - \pi_0}{\sqrt{\pi_0 (1-\pi_0)/n}} \leq 
+z_{1-\alpha/2}
+$$
+
+The upper and lower CI limits are solutions for $\pi_0$ from the equations 
+
+$$(\hat \pi - \pi_0) / \sqrt{\pi_0(1-\pi_0)/n} = \pm z_{1-\alpha/2}
+$$
+which are quadratic in $\pi_0$. 
+
+The resulting $100(1-\alpha)$% score interval is (Wilson, 1927): 
+
+$$
+\begin{aligned}
+& \hspace{1in} \underbrace{\hat \pi \left( \frac{n}{n + z_{1+\alpha/2}^2} \right) + \frac{1}{2} \left( 
+\frac{z_{1+\alpha/2}^2}{n + z_{1+\alpha/2}^2}\right)}_{\text{the estimate part}} \pm z_{1+\alpha/2} 
+ \, \times \\ 
+& \sqrt{
+  \frac{1}{n + z_{1+\alpha/2}^2 } \left[ 
+    \hat \pi (1 - \hat \pi) \left( \frac{n}{n + z_{1+\alpha/2}^2} \right) + 
+    \left(\frac{1}{2}\right)\left(\frac{1}{2}\right) 
+    \left( \frac{z_{1+\alpha/2}^2}{n + z_{1+\alpha/2}^2} \right)
+  \right]
+}
+\end{aligned}
+$$
+
+The "estimate part" (midpoint) is a weighted average of $\hat \pi$ and 1/2. 
+
+The "variance part" involves a weighted average of $\hat \pi (1-\hat \pi)$ and (1/2)(1-1/2). 
+
+Thus the interval works with an estimator that shrinks the sample proportion back towards 1/2. 
+
+We can obtain the score CI in R from `prop.test()`
+
+```{verbatim, lang='r'}
+prop.test(27, 922, p=.02,correct=FALSE)
+
+    1-sample proportions test without continuity correction
+
+data: 27 out of 922, null probability 0.02
+X-squared = 4.0547, df = 1, p-value = 0.04405
+alternative hypothesis: true p is not equal to 0.02
+95 percent confidence interval:
+0.02020271 0.04227177
+sample estimates:
+         p
+0.02928416
+```
+
+## Exact Inference for Proportions 
+
+In the same study, investigators were interested in assessing whether exposure *in utero* to the specific
+AED carbamazepine is associated with an elevated rate of major malformation. 
+
+3 out of 58 study infants exposed to carbamazepine had a major malformation. 
+
+Is the risk for these infants compatible with the risk for the general US population (i.e., 2%)? 
+
+```{r}
+#| out.width: 100% 
+#| fig.width: 5.5
+#| fig.height: 3.5
+
+hist(rbinom(n = 10000, size = 58, 0.02))
+
+tibble(
+  x = seq(0, 10),
+  y = dbinom(x = x, size = 58, 0.02) * 10000
+) |> 
+ggplot(aes(x = x, y = y)) + 
+geom_col(fill = "#f0932b", alpha = 0.6) + 
+theme_bw() + 
+ggtitle("10,000 Draws from a Binomial(58,0.02) Distribution") + 
+labs(y = "Frequency", x = expression(Y[i]))
+```
+
+According to these data, what is an appropriate 95% confidence interval for the risk of having a major malformation for an infant receiving carbamazepine? 
+
+We don't have to rely on large sample approximation, the validity of which may be in question here. We can instead answer these questions using exact statistical inference by leveraging our assumption that the number of events follows a binomial distribution. 
+
+Say we want to test 
+
+$$
+H_0 \colon \pi = \pi_0 \quad \quad \text{vs} \quad \quad H_A \colon \pi < \pi_0
+$$
+
+Our test statistic is $Y = $ number of infants with major malformations out of $n = 58$ births. 
+
+Under the null hypothesis, $Y \sim \text{Binomial}(n, \pi_0)$, i.e.
+
+$$\mathrm{Pr}(Y = y \mid H_0 \colon \pi = \pi_0) = 
+{n \choose y } \pi_0^y (1-\pi_0)^{n-y}
+$$
+
+The $p$-value is the sum of the probabilities for events that are at least or more extreme (in the direction of the alternative hypothesis) than what we proposed, given that the null hypothesis $H_0 \colon \pi = \pi_0$ is true. 
+
+If you observe $Y = y$ successes, the exact $p$-value is 
+
+$$
+\begin{aligned}
+p & = \mathrm{Pr}(Y \le y \mid H_0 \colon \pi = \pi_0) \\ 
+& = \sum_{j = 0}^y {n \choose y} \pi_0^j (1-\pi_0)^{n-j}
+\end{aligned}
+$$
+
+:::{.bluetip}
+For our example, we would want to use a sum over all possible $Y$ values that are *greater* than what we've observed, rather than *less than*. 
+:::
+
+Say we want to test 
+$$H_0 \colon \pi = \pi_0 \quad \quad \text{vs} \quad \quad H_A \colon \pi > \pi_0
+$$
+
+The exact $p$-value is 
+
+$$
+\begin{aligned}
+p & = \mathrm{Pr}(Y \ge y \mid H_0 \colon \pi = \pi_0) \\ 
+& = \sum_{j=0}^y {n \choose y} \pi_0^j (1-\pi_0)^{n-j}
+\end{aligned}
+$$
+
+1. Calculate the probability of the observed result under $H_0$
+
+$$
+p = \mathrm{Pr}(Y = y \mid \pi = \pi_0) = {n \choose y} \pi_0^y (1-\pi_0)^{n-y}
+$$
+
+2. Calculate the probabilities of all other outcomes 
+
+$$p_j = \mathrm{Pr}(Y=y \mid \pi=\pi_0) = {n \choose j} \pi_0^j (1-\pi_0)^{n-j},
+$$
+for $j = 0,...,n.$
+
+3. Sum the probabilities $p_j$ in (2) that are less than or equal to the observed probability $p$ in (1),
+
+$$
+p = \sum_{j=0}^n p_j I(p_j \leq p), \quad \quad \text{where}
+$$
+
+$$I(p_j \leq p) = \left\{ \begin{array}{l} 1 \text{ if } p_j \leq p \\ 0 \text{ if } p_j > p \end{array}\right. .
+$$
+
+3 of the 58 infants exposed had a major malformation. Is the risk compatible with the US average? 
+
+The relevant probabilities are 
+
+```{r}
+tibble(
+  x = seq(0, 10),
+  y = dbinom(x = x, size = 58, 0.02)
+) |> 
+ggplot(aes(x = x, y = y, label = scales::number_format(accuracy = 0.001)(y))) + 
+geom_col(fill = "#f0932b", alpha = 0.6) + 
+geom_text(aes(y = y + .02)) + 
+theme_bw() + 
+scale_x_continuous(breaks = seq(0,10,by=2)) + 
+ggtitle("Probability Distribution for a Binomial(58,0.02) Distribution") + 
+labs(y = "Frequency", x = expression(Y[i]))
+```
+
+We just want to sum up the values in the following bars: 
+
+```{r}
+tibble(
+  x = seq(0, 10),
+  y = dbinom(x = x, size = 58, 0.02)
+) |> 
+ggplot(aes(x = x, y = y, fill = x > 3, label = scales::number_format(accuracy = 0.001)(y))) + 
+geom_col(alpha = 0.6) + 
+geom_text(aes(y = y + .02), size = 3) + 
+scale_fill_manual(values = c(`TRUE` = 'firebrick', `FALSE` = '#f0932b'),
+labels = c('excluded', 'included in p-value')) + 
+theme_bw() + 
+ggtitle("Probability Distribution for a Binomial(58,0.02) Distribution") + 
+scale_x_continuous(breaks = seq(0,10,by=2)) + 
+labs(y = "Frequency", x = expression(Y[i])) + 
+theme(legend.position = 'bottom')
+```
+
+```{verbatim, lang='r'}
+binom.test(3, 58, p = 0.02,
+
+        alternative = "two.sided",
+        conf.level = 0.95)
+
+    Exact binomial test
+
+data: 3 and 58
+number of successes = 3, number of trials = 58,
+p-value = 0.1101
+
+alternative hypothesis: true probability of success
+is not equal to 0.02
+
+95 percent confidence interval:
+0.01079648 0.14380463
+sample estimates:
+probability of success
+            0.05172414
+```
+
+We can check that this $p$-value given is the same 
+as 
+```{r, eval=FALSE}
+sum(dbinom(x = seq(0,10), size = 58, 0.02)[4:10])
+#> 0.1101484
+```
+
+Recall our definition of an exact test. 
+
+An exact test is when $\Pr(\text{Type I Error}) \leq \alpha$, while a conservative (exact) test is when $\Pr(\text{Type I Error}) < \alpha$. Remember that 
+$\Pr(\text{Type I Error}) = \Pr(\text{Rejecting } \, \, H_0)$. 
+
+When we say $\alpha = 0.05$, exact tests are typically conservative (i.e., the actual Type I error rate is less than the nominal Type I error rate). This is due to the discreteness of the binomial distribution. This is the binomial analogue to the permutation test we considered previously. 
+
+To illustrate, consider the carbamazepine example. 
+We did not reject for $y=3\,\, (p=0.110)$. Suppose we had observed $y = 4$. Then $p = 0.029$. Therefore, the rejection region $R$ for the test 
+
+$$
+H_0 \colon \pi = 0.02 \quad \quad \text{vs} \quad \quad H_A \colon \pi \neq 0.02
+$$
+
+when $n = 58$ is $R = \{ 4, 5, 6, ... \}$.
+
+By definition, then, the Type I error rate for the test is 
+
+$$P(\mathrm{Reject }\,\, H_0 \mid H_0) = P(Y \in \{ 4, 5, 6, ... \} \mid H_0 ) = 0.029
+$$
+
+Does this conservativeness increase or decrease as the sample size increases? 
+
+<!-- 
+Increase!
+-->
+
+## Clopper-Pearson Exact Confidence Intervals 
+
+Exact confidence intervals can be obtained by 
+inverting the exact test. 
+
+The "tail method" for forming confidence intervals
+requires each one sided p-value to exceed $\alpha / 2$. 
+
+The upper confidence limit, $\pi_U$ is obtained by solving 
+
+$$
+\begin{aligned}
+\alpha / 2 &= \Pr(Y \le y \mid \pi_0 = \pi_U, n) \\ 
+& = \sum_{j=0}^y {n \choose j} \pi_U^j (1-\pi_U)^{n-j}
+\end{aligned}
+$$
+
+That is, the upper limit is 
+
+$$
+\sup \{ \pi \mid \Pr(\text{Binom}(n, \pi) \leq y) > \alpha / 2 \}. 
+$$
+
+This is the largest value of $\pi$ such that if we used it as $\pi_0$ in a lower tailed $\alpha/2$ test, we'd fail to reject. 
+
+The lower confidence limit, $\pi_L$, is obtained by 
+solving 
+
+$$
+\begin{aligned}
+\alpha / 2 & = \Pr(Y \ge y \mid \pi_0 = \pi_L, n) \\ 
+& = \sum_{j=y}^n {n \choose j} \pi_L^j (1- \pi_L)^{n-j} 
+\end{aligned}
+$$
+
+That is, the lower limit is the 
+
+$$ \inf \{ \pi \mid \Pr(\text{Binom}(n,\pi) \ge y) > \alpha / 2 \}
+$$
+
+3/58 infants exposd to carbamazepine had a major malformation. The R function for computing the Clopper-Pearson interval is `Hmisc::binconf`
+
+```{r}
+suppressMessages(library(Hmisc))
+binconf(3, 58, method = 'exact')
+```
+
+Just like the exact test is conservative, the confidence interval is conservative. 
+It is guaranteed to have at least $100(1-\alpha)$ coverage, which leads to wider confidence intervals. 
+
+:::{.chilltip}
+Generally the Wald test doesn't perform well at all 
+for proportions. Not recommended in practice at all. Score test works well for moderately sized datasets. The score tests, one tends to see only for really small samples as they're more computationally intensive.
+:::

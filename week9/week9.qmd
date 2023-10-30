@@ -1,0 +1,328 @@
+---
+title: Week 9
+---
+
+::: content-hidden
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\Pr}[0]{\mathrm{Pr}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+$$
+
+window.MathJax = {
+  loader: {load: ['[tex]/cancel']},
+  tex: {packages: {'[+]': ['cancel']}}
+};
+:::
+
+# Recap 
+
+So far we've compared differences in probabilities on the absolute scale 
+(i.e., via risk differences), and then we looked at relative measures 
+(odds ratios, log odds ratios). 
+
+Now we'll look at contingency table methods. 
+
+# Analysis of R-by-C tables
+
+## Pearson Chi-Square Test Statistic
+
+|   | Pht | Cbz | Pb | 
+|---|---|---|---|
+|Yes| $O_{11} = 9$ | $O_{12} = 0$ | $O_{13} = 5$ | 
+|No| $O_{21} = 65$ | $O_{22} = 46$ | $O_{23} = 47$| 
+
+Where the rows correspond to having digit hypoplasia and the columns are
+different drugs used in a study. 
+
+We will denote $O_{.1} = 74$ to be the total in the first row, etc., and 
+$\hat \pi_{i.} = O_{i.}/O{..}$, $\hat \pi_{.j} = O_{.j}/O_{..}$. 
+
+$H_0 : $ There is no association between row (outcome) and column (exposure) variables.
+
+$H_A : $ There is an association between row and column.
+
+:::{.cooltip}
+Sometimes $H_0$ is also written as "There is independence between the row and column variables."
+:::
+
+The Pearson Chi-square test statistic is 
+
+$$\chi_P^2  \sum_{i,j} \frac{(O_{ij} - E_{ij})^2}{E_{ij}} \stackrel{H_0}\sim \chi_{(R-1) \times (C-1)}^2
+$$
+
+where $E_{ij}$ is the expected count in cell $i,j$ under the null, i.e., 
+
+$$E_{ij} = O_{..} \times \hat \pi_{i.} \times \hat \pi_{.j}.
+$$
+
+Because under the null of no association we should have that $\pi_{ij} = \pi_{i.} \times \pi_{.j}.$
+
+## Pearson Chi-Square Test as a Score Test: $2 \times 2$ Tables
+
+|      | Major Malformation: Yes | No |  | 
+| --- | --- | --- | --- | 
+| AED Exposed: Yes | $y_1 = 18$ | $n_1 - y_1 = 298$ | $n_1 = 316$ |
+| No | $y_0 = 9$ | $n_0 - y_0 = 597$ | $n_0 = 606$ |
+| | $y = 27$ | $n- y = 895$ | $n = 922$ | 
+
+Compare the following:
+
+```
+chisq.test(xtabs(~aed+major, data=newborn.dat),correct=F)
+
+    Pearson’s Chi-squared test
+
+data: xtabs(~aed + major, data = newborn.dat)
+X-squared = 12.9564, df = 1, p-value = 0.0003188
+
+
+prop.test(y,n,alternative="two.sided",correct=F)
+
+    2-sample test for equality of proportions
+    without continuity correction
+
+data: y out of n
+X-squared = 12.9564, df = 1, p-value = 0.0003188
+alternative hypothesis: two.sided
+
+95 percent confidence interval:
+  -0.06941918 -0.01480190
+
+sample estimates:
+    prop 1     prop 2
+0.01485149 0.05696203
+```
+
+## Validity of Pearson Chi-Square in Small Samples
+
+The Pearson chi-square test statistic is only asymptotically chi-square distributed. Inferences constructed using Pearson's chi-square test statistic are usually considered valid when all of the $R \times C$ table have expected values greater than or equal to five (Fisher and van Belle, 1993, page 250). 
+
+There are other rules of thumb on this: 
+
+  * The test might still be valid if all of the expected values, except one, are five or greater (Fisher and van Belle, 1993, page 250).
+  * For Pearson chi-square test with more than one degree of freedom, many statisticians use the rule that a minimum expected value of one is acceptable as long as no more than 20% of cells have expected values less than 5 (Agresti, 2013, page 77). 
+
+```
+chisq.test(xtabs(~nails + brand, data=monodrug.dat),correct=F)
+
+    Pearson’s Chi-squared test
+
+data: xtabs(~nails + brand, data = monodrug.dat)
+X-squared = 5.8289, df = 2, p-value = 0.05423
+
+Warning message:
+Chi-squared approximation may be incorrect in:
+chisq.test(xtabs(~nails + brand, data = monodrug.dat),
+correct = F)
+```
+
+R prints this warning if any of the cells has an observed value less than 5. 
+
+An alternative is ot use an exact test that avoids the asymptotic approximation to the distribution of the Pearson statistic. 
+
+# Fisher's Exact Test
+
+|       | Major Malformation: Yes | No | 
+| --- | --- | --- | 
+| Carb exposure: Yes | 3 | 55 | 
+| No | 9 | 499 | 
+
+The way we'll be approaching this is to condition on the marginal totals, 
+treating those as fixed and known. 
+
+```
+xtabs(~MONOCBZ + major, data=monocbz.dat)
+      major
+MONOCBZ   0 1
+      0 499 9
+      1  55 3
+
+chisq.test(xtabs(~MONOCBZ + major, data=monocbz.dat),correct=F)
+
+    Pearson’s Chi-squared test
+
+data: xtabs(~MONOCBZ + major, data = monocbz.dat)
+X-squared = 2.9011, df = 1, p-value = 0.08852
+
+Warning message:
+Chi-squared approximation may be incorrect in:
+chisq.test(xtabs(~MONOCBZ + major, data = monocbz.dat),
+correct = F)
+```
+
+One can show (Agresti, CDA Section 3.5) that 
+
+$$P(O_{11} = o_{11} | o_{1.}, o_{.1}, o_{..}, \psi) = 
+\frac{
+  {o_{.1} \choose o_{11}} {o_{..} - o_{.1} \choose {o_{1.} - o_{11}} }\psi^{o_{11}}
+  }{
+    \sum_{\ell=0}^{o_{.1}} { o_{.1} \choose \ell} { o_{..} - o_{.1} \choose o_{1.} - \ell } \psi^{\ell}
+  }
+$$ 
+
+This is a known distribution (non-central hypergeoemtric), but it depends on the unknown $\psi$, the odds-ratio. 
+
+The null hypothesis of no association between row and column variables for a $2\times 2$ contingency table holds if and only if $\psi = 1$. 
+
+So under the null hypothesis $H_0 : \psi = 1$ there are no unknown parameters
+and $O_{11} |o_{1.}, o_{.1}, o_{..}$ follows a (central) hypergeometric distribution that we can use to calculate $p$-values. 
+
+Once we've conditioned on the marginals, knowing $O_{11}$ tells us that all the other cell counts in a $2 \times 2$ table. So testing whether the observed $O_{11}$ is extreme relative to its conditional distribution under the null is equivalent to testing whether any of the cell counts are extreme. 
+
+We could also construct exact tests for $H_0: \psi = 2.5$ for example, using the non-central hypergeometric distribution. 
+
+## Test Statistics for $H_0 : \psi = 1$. 
+
+Under the null, $H_0 : \psi = 1$, the target cell count $O_{11}$ follows the 
+central hypergeometric distribution. 
+
+$$
+\begin{aligned}
+Pr_C(O_{11} = o_{11} | \psi = 1) & = 
+\frac{\displaystyle
+  {o_{.1} \choose o_{11}} {o_{..} - o_{.1} \choose {o_{1.} - o_{11}}}
+  }{\displaystyle
+    \sum_{\ell=0}^{o_{.1}} { o_{.1} \choose \ell} { o_{..} - o_{.1} \choose o_{1.} - \ell }
+  } \\ 
+& = \frac{\displaystyle
+  {o_{.1} \choose o_{11}} {o_{.2} \choose o_{12}}
+  }{\displaystyle
+    { o_{..} \choose o_{1.}}
+  },
+\end{aligned}
+  $$
+
+since $\displaystyle \sum_{\ell = 0}^{o_{.1}} { o_{.1} \choose \ell} { o_{..} - o_{.1} \choose o_{1.} - \ell } = { o_{..} \choose o_{1.}}$. 
+
+## One-sided $p$-value 
+
+Suppose we want to test 
+
+$$H_0 : \psi = 1, \quad \quad H_A : \psi > 1. $$
+
+The exact (right-tail) $p$-value is 
+
+$$\begin{aligned}
+p & = Pr(O_{11} \geq o_{11} \mid H_0 \colon \psi = 1)\\
+& = \sum_{\ell = o_{11}^z } \frac{\displaystyle
+  {o_{.1} \choose \ell } {o_{.2} \choose o_{1.} - \ell }
+  }{\displaystyle
+    { o_{..} \choose o_{1.}}
+  }
+\end{aligned}
+$$
+
+where $z = \min (o_{.1, o_{1.}})$. 
+
+Suppose we want to test 
+
+$H_0 : \psi = 1, \quad \quad H_A : \psi < 1$$
+
+The exact (left-tail) $p$-value is 
+
+$$\begin{aligned} 
+p & = Pr(O_{11} \leq o_{11} \mid H_0 : \psi = 1) \\ 
+& = \sum_{\ell = z}^{o_{11}} \frac{\displaystyle
+  {o_{.1} \choose \ell } {o_{.2} \choose o_{1.} - \ell }
+  }{\displaystyle
+    { o_{..} \choose o_{1.}}
+  }
+\end{aligned}
+$$
+
+where $z = \max(0, o_{1.} + o_{.1} - o_{..})$. 
+
+## Two-sided $p$-value 
+
+Suppose we want to test 
+$$H_0 : \psi = 1$, \quad \quad H_A : \psi \neq 1$$
+
+The possible values for $O_{11}$ are 
+
+$$\max (0, o_{1.} + o_{.1} - o_{..}) \leq o_{11} \leq \min(o_{1.}, o_{.1}),$$
+
+1. Calculate the probabilities of all of these values, 
+
+$$P_{\ell} = Pr(O_{11} = \ell \mid H_0 : \psi = \ell) $$
+
+2. Sum the probabilities $P_{\ell}$ that are less than or equal to the observed probability $P$ in the first equation above. 
+
+$$
+p = \sum_{\ell = z_1}^{z_2} P_\ell I(P_\ell \leq P) $$ 
+
+where $z_1 = \max(0, o_{1.} + o_{.1} - o_{..})$ and 
+$z_2 = \min(o_{1.}, o_{.1})$. 
+
+In general if we have a $2\times 2$ table, we can compute the odds 
+ratio as follows: 
+
+|  | 1 | 0 | 
+|---| ---| --- |
+|1 | a | b | 
+| 0 | c | d | 
+: Generic $2 \times 2$ table {tbl-colwidths="[25,25]"}
+
+Then the $\mathrm{OR} = \frac{ad}{bc}$. 
+
+```
+# Function: SuppDists::dghyper(x, n, r, N, log=FALSE)
+# arguments: x is o_11 cell, n is o_{.1},
+# r is o_{1.}, N is total
+
+library(SuppDists)
+
+hyper.probs <- dghyper(seq(0,12,1),12,58,566)
+
+cbind(seq(0,12,1), round(hyper.probs,4))
+
+    [,1]  [,2]
+[1,]   0 0.2696
+[2,]   1 0.3775
+[3,]   2 0.2377
+[4,]   3 0.0889
+[5,]   4 0.0220
+[6,]   5 0.0038
+[7,]   6 0.0005
+[8,]   7 0.0000
+[9,]   8 0.0000
+[10,]  9 0.0000
+[11,] 10 0.0000
+[12,] 11 0.0000
+[13,] 12 0.0000
+
+fisher.pvalue <- sum(hyper.probs[4:13])
+fisher.pvalue
+[1] 0.1152
+```
+
+The function `fisher.test()` runs a Fisher's exact test directly. 
+
+```
+xtabs(~MONOCBZ + major, data=monocbz.dat)
+        major
+MONOCBZ   0 1
+      0 499 9
+      1 55  3
+
+fisher.test(xtabs(~MONOCBZ + major, data=monocbz.dat))
+      Fisher’s Exact Test for Count Data
+
+data: xtabs(~MONOCBZ + major, data = monocbz.dat)
+p-value = 0.1152
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  0.5101941 12.5603706
+sample estimates:
+odds ratio
+  3.015342
+```
+
+One can compute an exact CI for the OR by inverting Fisher’s exact test.
