@@ -299,3 +299,286 @@ and, consequently,
 
 $$\mu_i = \E[Y_i] = b'(\theta_i).$$
 
+# Recap of Likelihood Theory 
+
+The MLE of $\theta$, denoted $\hat \theta_{MLE}$ is obtained by solving the score equations with 
+respect to $\theta$: 
+
+$$U(\theta | y) = \frac{\partial}{\partial \theta} \ell (\theta | y) = 0$$ 
+
+Under some regularity conditions, 
+
+$$\hat \theta_{MLE} \sim \text{MVN}_p (\theta, \mathcal I_n(\theta)^{-1})$$
+
+where $\mathcal I_n(\theta)$ is the Fisher information matrix with 
+
+$$\mathcal I_n(\theta)_{j,k} = -\E \left[ \frac{\partial^2 \ell (\theta | y)}{\partial \theta_j \partial \theta_k \right]$$
+
+We can estimate $\Var(\hat \theta_{MLE}) \approx \mathcal I_n(\theta)^{-1}$ by plugging in $\hat \theta_{MLE}$. 
+
+The Wald test is measuring the distance between the MLE and the null value. 
+
+$$(\hat \theta_{1,MLE} - \theta_{1,0})^{T} \widehat{\Var}(\hat \theta_{1,MLE})^{-1} (\hat \theta_{1,MLE} - \theta_{1,0}) \stackrel{d}{\longrightarrow} \chi_q^2 $$ 
+
+The Score test finds the first derivative of the log likelihood at the null value. If this 
+derivative is large, then that means that this null value is far away from the MLE. 
+
+$$U(\hat \theta_{0,MLE} | y)' \mathcal I_n(\hat \theta_{0,MLE})^{-1} U(\hat \theta_{0, MLE} | y)  \stackrel{d}{\longrightarrow} \chi_q^2 $$ 
+
+The Likelihood ratio test 
+
+$$2 \left( \ell(\hat \theta_{MLE} | y) - \ell(\hat \theta_{0,MLE}|y) \right)  \stackrel{d}{\longrightarrow} \chi_q^2 $$ 
+
+Asymptotically, these should all give the same results, but in small data settings these may differ. 
+
+The Fisher information is essentially the negative second derivative of the likelihood function.
+Since the variance of $\hat \theta_{MLE}$ can be estimated by $\approx \mathcal I_n(\theta)^{-1}$, 
+if the likelihood function is a very steep (downward) parabola, its second derivative will have
+large magnitude, and its inverse will thus be small. 
+
+## Exponential Family Log-Likelihood and Score 
+
+Consider the likelihood function for a single observation 
+
+$$\mathcal L(\theta_i, \phi; y) = \exp \{ \frac{y_i \theta_i - b(\theta_i)}{a_i(\phi)} + c(y_i, \phi) \}$$
+
+$$\frac{partial}{\partial \theta_i} \ell(\theta_i, \phi; y_i) = U(\theta_i) = \frac{y_i - b'(\theta_i)}{a_i(\phi)}$$
+
+From previously, 
+
+$$\E[U(\theta_i)] = 0$$
+
+$$\Var[U(\theta_i)] = \E[U(\theta_i)^2] = -\E \left[ \frac{\partial U(\theta_i)}{\partial \theta_i} \right]$$
+
+Since this score has mean zero, 
+
+$$\E(U(\theta_i)) = \E(\frac{Y_i - b'(\theta_i)}{a_i(\phi)}) = 0$$
+
+and hence 
+
+$$\mu_i = \E[Y_i] = b'(\theta_i).$$
+
+## Variance in Exponential Families 
+
+The second partial derivative is 
+
+$$\frac{\partial^2}{\partial \theta_i^2} \ell(\theta_i, \phi; y) = - \frac{b''(\theta_i)}{a_i(\phi)}$$
+
+Using the above properties, it follows that 
+
+$$\Var(U(\theta_i)) = \Var\left[ \frac{Y_i - b'(\theta_i)}{a_i(\phi)} \right] = \frac{b''(\theta_i)}{a_i(\phi)}$$
+
+so that 
+
+$$\Var[Y_i] = b''(\theta_i)a_i(\phi)$$
+
+The variance of $Y_i$ is therefore a function of both $\theta_i$ and $\phi$. 
+
+Note that the canonical parameter is a function of $\mu_i$
+
+$$\mu_i = b'(\theta_i) \Rightarrow \theta_i = b'^{-1}(\mu_i) = \theta(\mu_i)$$
+
+so that we can write 
+
+$$\Var[Y_i] = b''(\theta_i)a_i(\phi) = b''(\theta(\mu_i))a_i(\phi)$$
+
+The function $V(\mu_i) = b''(\theta(\mu_i))$ is called the <span class='vocab'>variance function</span>.
+
+The specific form indicates the nature of the (if any) mean-variance relationship. 
+
+### Bernoulli Example 
+
+Let $Y \sim \text{Bernoulli}(\mu)$. 
+
+$$\theta = \log \left( \frac{\mu}{1-\mu} \right), \quad \quad \text{ the logit of } \mu$$ 
+
+$$a(\phi) = 1$$
+
+$$b(\theta) = \log(1 + \exp \theta)$$
+
+$$\E[Y] = b'(\theta) = \frac{\exp \theta }{1 + \exp \theta} = \mu, \quad \quad \text{ the expit of } \theta$$ 
+
+$$\Var[Y] = b''(\theta)a(\phi) = \frac{\exp \theta}{(1 + \exp \theta)^2} = \mu(1 - \mu) = V(\mu)$$
+
+# The Systematic Component 
+
+The systematic component is the specification of how the distribution $Y \sim f_Y(y; \theta, \phi)$
+(where $f_Y$ is an exponential family distribution) depends on the covariates $x_i$. 
+
+In GLMs we model the conditional mean $\mu_i = \E[Y_i | x_i].$
+
+This provides a connection between $x_i$ and the distribution of $Y_i$ via the canonical parameter
+$\theta_i$ and the cumulant function $b(\theta_i)$. 
+
+$$f_Y(y) \longrightarrow \theta_i \longrightarrow \mu_i \longrightarrow x_i'\beta \quad \text{(a.k.a. }\eta_i)$$
+
+Typically we link the linear predictor of the distribution of $Y$ via a transformation of $\mu_i$, $g(\cdot)$, so that 
+
+$$g(\mu_i) = x_i'\beta$$
+
+Traditionally this is broken into two parts: 
+
+  1. the linear predictor, $\eta_i = x_i' \beta$ 
+  2. the link function $g(\mu_i) = \eta_i$
+
+Sometimes you'll find the 'predictor component' of the model called the 'systematic component', as in 
+McCullough and Nelder (1989). In practice, one cannot consider one without the other since 
+the relationship between $\mu_i$ and $x_i$ are jointly determined by $\beta$ and $g(\cdot)$. 
+
+Constructing the linear predictor for a GLM follows the same process one uses for linear regression. 
+
+Given a set of covariates $x_i$, there are two decisions.
+
+  * which covariates to include?
+  * how to include them in the model? 
+
+For the most part, decisions to include covariates should be driven by scientific considerations
+
+  * is the goal estimation or prediction? 
+  * is there a primary exposure of interest? 
+  * are any of the covariates effect modifiers? confounders? 
+
+We will see that there are some differences (from multiple linear regression) when it comes to identification of confounders. 
+
+In the GLM framework, we'll want to note that the inverse of the link function 
+provides the specification of the model on the scale of $\mu_i$
+
+$$\mu_i = g^{-1}(x_i' \beta)$$
+
+so we often choose $g()$ such that $g^{-1}(x_i' \beta)$ respects any bounds on $\mu_i$. 
+
+We interpret the link function as specifying a transformation of the conditional mean, $\mu_i$. 
+
+We are not specifying a transformation of the response $Y_i$. 
+
+We are writing $g(\E(Y_i|x_i))$, **not** $\E(g(Y_i) | x_i) = x_i'\beta$. 
+
+Recall that the mean and the canonical parameter are linked via the derivative of the 
+cumulant function.
+
+$$\E[Y_i] = \mu_i = b'(\theta_i)$$
+
+An important link function is the canonical link: 
+
+$$g(\mu_i) = \theta(\mu_i) = b'^{-1}(\mu_i),$$
+
+i.e., the function that results by viewing the canonical parameter $\theta_i$ as a function of $\mu_i$. 
+
+We'll see later that this choice results in some mathematical convenience. 
+
+| | Linear regression | Logistic regression | Poisson regression | 
+|---|---|---|---|
+|Outcome type | Continuous | Binary | Count | 
+|Link | Identity | Logit| | Log | 
+|Systematic component | $\mu_i = x_i'\beta$ | $\log(\mu_i / (1-\mu_i) = x_i' \beta)$ or $\mu_i = \exp(x_i'\beta)/(1+\exp (x_i'\beta))$ | $\log(\mu_i) = x_i'\beta$ or $\mu_i = \exp(x_i' \beta)$ | 
+|Inv. link | Identity | Expit | Exponential | 
+
+### Choosing $g()$ 
+
+Common link functions include: 
+
+* identity 
+* log 
+* logit, $g(\mu_i) = \log \left( \frac{\mu_i}{1-\mu_i} \right)$
+* [probit](https://en.wikipedia.org/wiki/Probit)
+* complementary log-log $g(\mu_i) = \log ( - \log(1-\mu_i))$
+
+We typically choose a $g()$ via consideration of two issues: 
+
+  1. Respect the range of values that $\mu_i$ can take 
+  2. Impact on the interpretability of $\beta$ 
+
+# Frequentist Estimation and Inference
+
+Given an i.i.d. sample of size $n$, the log-likelihood is 
+
+$$\ell(\beta, \phi; y) = \sum_{i=1}^n \left[ \frac{y_i \theta_i - b(\theta_i)}{a_i(\phi)} + c(y_i, \phi)\right]$$
+
+## Estimation 
+
+There are $(p+2)$ unknown parameters: $(\beta, \phi)$. 
+
+To obtain the MLE we need to solve the score equations: 
+
+$$U(\beta, \phi | y) = \left( \frac{\partial \ell}{\parital \beta_0}, ..., \frac{\partial \ell}{\partial \beta_p}, \frac{\partial \ell}{\partial \phi} \right)' = 0$$
+
+This is a system of $p+2$ equations. The contribution to the score for $\phi$ is the $i^{\mathrm{th}}$ unit is 
+$$\frac{\partial \ell}{\partial \phi} = - \frac{a_i'(\phi)}{a_i(\phi)^2}(y_i \theta_i - b(\theta_i)) + c'(y_i, \phi)$$
+
+We can use the chain rule to obtain a convenient expression for the $i^{\mathrm{th}}$ contribution to the score function for $\beta_j$: 
+
+$$\frac{\partial \ell}{\partial \beta_j} = \frac{\partial \ell}{\partial \theta_i} \times \frac{\partial \theta_i}{\partial \mu_i} \times \frac{\partial \mu_i}{\partial \eta_i} \times \frac{\partial \eta_i}{\partial \beta_j}$$
+
+Note the following results: 
+
+$$\frac{\partial \ell}{\partial \theta_i} = \frac{y_i - b'(\theta_i)}{a_i(\phi)} = \frac{y_i-\mu_i}{a_i(\phi)}$$
+
+$$\frac{\partial \theta_i}{\partial \mu_i} = \left( \frac{\partial \mu_i}{\partial \theta_i} \right)^{-1} = (b''(\theta_i))^{-1} = (V(\mu_i))^{-1}$$
+
+$$\frac{\partial \eta_i}{\partial \beta_j} = x_{ij}$$
+
+The score function for $\beta_j$ can therefore be written as 
+$$\partial \ell}{\partial \beta_j} = \sum_{i=1}^n \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i)a_i(\phi)} (y_i - \mu_i)$$ 
+
+Suppose $a_i(\phi) = \phi / w_i$. The score equations become 
+
+$$\frac{\partial \ell}{\partial \phi} = \sum_{i=1}^n - \frac{w_i ( y_i \theta_i - b(\theta_i))}{\phi^2} + c' (y_i, \phi) = 0$$ 
+
+$$\frac{\partial \ell}{\partial \beta_j} = \sum_{i=1}^n w_i \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i)} (y_i - \mu_i) = 0$$
+
+Notice that the $(p+1)$ score equations for $\beta$ do not depend on $\phi$. 
+
+Consequently, obtaining the MLE of $\beta$ doesn't require knowledge of $\phi$. 
+
+$\phi$ isn't required to be known or estimated (if unknown).
+
+For exmaple, in linear regression, we don't need $\sigma^2$ (or $\hat \sigma^2$) to 
+obtain 
+$$\hat \beta_{MLE} = (X^T X)^{-1} X^T Y$$ 
+
+Inference does require an estimate of $\phi$. 
+
+## Asymptotic Sampling Distribution 
+
+Subject to appropriate regularity conditions, 
+
+$$
+\begin{bmatrix}
+\hat \beta_{MLE} \\ 
+\hat \phi_{MLE}
+\end{bmatrix} \stackrel{\cdot}{\sim}
+\text{MVN} \left( 
+  \begin{bmatrix}
+  \beta \\ 
+  \phi
+  \end{bmatrix},
+\mathcal I_n(\beta, \phi)^{-1}
+\right)
+$$
+
+Now we can compute the components of $\mathcal I_n(\beta, \phi):$
+
+$$\begin{aligned}
+\frac{\partial^2 \ell(\beta, \phi; y_i)}{\partial \beta_j \partial \beta_k} & = 
+\frac{\partial}{\partial \beta_k} \overbrace{\left\{ \frac{\partial \mu_i}{\partial \eta_i} 
+\frac{x_{ij}}{V(\mu_i)a_i(\phi)} (y_i - \mu_i)
+\right\}}^{\text{score for } \beta_j} \\ 
+& = (y_i-\mu_i) \frac{\partial}{\partial \beta_k} \left\{ \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i) a_i(\phi)} \right\} - \left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{x_{ij} x_{ik}}{V(\mu_i)a_i(\phi)}
+\end{aligned}$$
+
+And hence
+
+$$-\E \left[ \frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k} \right] = \sum_{i=1}^n \left( 
+  \frac{\partial \mu_i}{\partial \eta_i}
+  \right)^2 
+  \frac{x_{ij}x_{ik}}{V(\mu_i)a_i(\phi)}
+$$
+
+
+$$ \begin{aligned}
+\frac{\partial^2 \ell(\beta, \phi; y_i)}{\partial \phi \partial \phi} & = 
+\frac{\partial}{\partial \phi} \overbrace{\left\{ 
+  - \frac{a_i'(\phi)}{a_i(\phi)^2} (y_i \theta_i - b(\theta_i)) + c'(y_i, \phi)
+\right\}}^{\text{score for } \phi}  \\ 
+& = - \left\{ \frac{a_i(\phi)^2 a_i'\right\}
+\end{aligned} $$

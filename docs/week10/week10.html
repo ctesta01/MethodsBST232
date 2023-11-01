@@ -164,6 +164,23 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#bernoulli-in-the-exponential-notation" id="toc-bernoulli-in-the-exponential-notation" class="nav-link" data-scroll-target="#bernoulli-in-the-exponential-notation">Bernoulli in the Exponential Notation</a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#recap-of-likelihood-theory" id="toc-recap-of-likelihood-theory" class="nav-link" data-scroll-target="#recap-of-likelihood-theory">Recap of Likelihood Theory</a>
+  <ul class="collapse">
+  <li><a href="#exponential-family-log-likelihood-and-score" id="toc-exponential-family-log-likelihood-and-score" class="nav-link" data-scroll-target="#exponential-family-log-likelihood-and-score">Exponential Family Log-Likelihood and Score</a></li>
+  <li><a href="#variance-in-exponential-families" id="toc-variance-in-exponential-families" class="nav-link" data-scroll-target="#variance-in-exponential-families">Variance in Exponential Families</a>
+  <ul class="collapse">
+  <li><a href="#bernoulli-example" id="toc-bernoulli-example" class="nav-link" data-scroll-target="#bernoulli-example">Bernoulli Example</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#the-systematic-component" id="toc-the-systematic-component" class="nav-link" data-scroll-target="#the-systematic-component">The Systematic Component</a>
+  <ul class="collapse">
+  <li><a href="#choosing-g" id="toc-choosing-g" class="nav-link" data-scroll-target="#choosing-g">Choosing <span class="math inline">\(g()\)</span></a></li>
+  </ul></li>
+  <li><a href="#frequentist-estimation-and-inference" id="toc-frequentist-estimation-and-inference" class="nav-link" data-scroll-target="#frequentist-estimation-and-inference">Frequentist Estimation and Inference</a>
+  <ul class="collapse">
+  <li><a href="#estimation" id="toc-estimation" class="nav-link" data-scroll-target="#estimation">Estimation</a></li>
+  <li><a href="#asymptotic-sampling-distribution" id="toc-asymptotic-sampling-distribution" class="nav-link" data-scroll-target="#asymptotic-sampling-distribution">Asymptotic Sampling Distribution</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -355,9 +372,221 @@ f_Y(y; \theta, \phi) &amp; = \exp \{ y \theta - \log (1 + \exp \{ \theta \} ) \}
 <p><span class="math display">\[\mathbb E(U(\theta_i)) = \mathbb E\left[ \frac{Y_i - b'(\theta_i)}{a_i(\phi)} \right] = 0 \]</span></p>
 <p>and, consequently,</p>
 <p><span class="math display">\[\mu_i = \mathbb E[Y_i] = b'(\theta_i).\]</span></p>
-
-
 </section>
+</section>
+</section>
+<section id="recap-of-likelihood-theory" class="level1">
+<h1>Recap of Likelihood Theory</h1>
+<p>The MLE of <span class="math inline">\(\theta\)</span>, denoted <span class="math inline">\(\hat \theta_{MLE}\)</span> is obtained by solving the score equations with respect to <span class="math inline">\(\theta\)</span>:</p>
+<p><span class="math display">\[U(\theta | y) = \frac{\partial}{\partial \theta} \ell (\theta | y) = 0\]</span></p>
+<p>Under some regularity conditions,</p>
+<p><span class="math display">\[\hat \theta_{MLE} \sim \text{MVN}_p (\theta, \mathcal I_n(\theta)^{-1})\]</span></p>
+<p>where <span class="math inline">\(\mathcal I_n(\theta)\)</span> is the Fisher information matrix with</p>
+<p><span class="math display">\[\mathcal I_n(\theta)_{j,k} = -\mathbb E\left[ \frac{\partial^2 \ell (\theta | y)}{\partial \theta_j \partial \theta_k \right]\]</span></p>
+<p>We can estimate <span class="math inline">\(\text{Var}(\hat \theta_{MLE}) \approx \mathcal I_n(\theta)^{-1}\)</span> by plugging in <span class="math inline">\(\hat \theta_{MLE}\)</span>.</p>
+<p>The Wald test is measuring the distance between the MLE and the null value.</p>
+<p><span class="math display">\[(\hat \theta_{1,MLE} - \theta_{1,0})^{T} \widehat{\text{Var}}(\hat \theta_{1,MLE})^{-1} (\hat \theta_{1,MLE} - \theta_{1,0}) \stackrel{d}{\longrightarrow} \chi_q^2 \]</span></p>
+<p>The Score test finds the first derivative of the log likelihood at the null value. If this derivative is large, then that means that this null value is far away from the MLE.</p>
+<p><span class="math display">\[U(\hat \theta_{0,MLE} | y)' \mathcal I_n(\hat \theta_{0,MLE})^{-1} U(\hat \theta_{0, MLE} | y)  \stackrel{d}{\longrightarrow} \chi_q^2 \]</span></p>
+<p>The Likelihood ratio test</p>
+<p><span class="math display">\[2 \left( \ell(\hat \theta_{MLE} | y) - \ell(\hat \theta_{0,MLE}|y) \right)  \stackrel{d}{\longrightarrow} \chi_q^2 \]</span></p>
+<p>Asymptotically, these should all give the same results, but in small data settings these may differ.</p>
+<p>The Fisher information is essentially the negative second derivative of the likelihood function. Since the variance of <span class="math inline">\(\hat \theta_{MLE}\)</span> can be estimated by <span class="math inline">\(\approx \mathcal I_n(\theta)^{-1}\)</span>, if the likelihood function is a very steep (downward) parabola, its second derivative will have large magnitude, and its inverse will thus be small.</p>
+<section id="exponential-family-log-likelihood-and-score" class="level2">
+<h2 class="anchored" data-anchor-id="exponential-family-log-likelihood-and-score">Exponential Family Log-Likelihood and Score</h2>
+<p>Consider the likelihood function for a single observation</p>
+<p><span class="math display">\[\mathcal L(\theta_i, \phi; y) = \exp \{ \frac{y_i \theta_i - b(\theta_i)}{a_i(\phi)} + c(y_i, \phi) \}\]</span></p>
+<p><span class="math display">\[\frac{partial}{\partial \theta_i} \ell(\theta_i, \phi; y_i) = U(\theta_i) = \frac{y_i - b'(\theta_i)}{a_i(\phi)}\]</span></p>
+<p>From previously,</p>
+<p><span class="math display">\[\mathbb E[U(\theta_i)] = 0\]</span></p>
+<p><span class="math display">\[\text{Var}[U(\theta_i)] = \mathbb E[U(\theta_i)^2] = -\mathbb E\left[ \frac{\partial U(\theta_i)}{\partial \theta_i} \right]\]</span></p>
+<p>Since this score has mean zero,</p>
+<p><span class="math display">\[\mathbb E(U(\theta_i)) = \mathbb E(\frac{Y_i - b'(\theta_i)}{a_i(\phi)}) = 0\]</span></p>
+<p>and hence</p>
+<p><span class="math display">\[\mu_i = \mathbb E[Y_i] = b'(\theta_i).\]</span></p>
+</section>
+<section id="variance-in-exponential-families" class="level2">
+<h2 class="anchored" data-anchor-id="variance-in-exponential-families">Variance in Exponential Families</h2>
+<p>The second partial derivative is</p>
+<p><span class="math display">\[\frac{\partial^2}{\partial \theta_i^2} \ell(\theta_i, \phi; y) = - \frac{b''(\theta_i)}{a_i(\phi)}\]</span></p>
+<p>Using the above properties, it follows that</p>
+<p><span class="math display">\[\text{Var}(U(\theta_i)) = \text{Var}\left[ \frac{Y_i - b'(\theta_i)}{a_i(\phi)} \right] = \frac{b''(\theta_i)}{a_i(\phi)}\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[\text{Var}[Y_i] = b''(\theta_i)a_i(\phi)\]</span></p>
+<p>The variance of <span class="math inline">\(Y_i\)</span> is therefore a function of both <span class="math inline">\(\theta_i\)</span> and <span class="math inline">\(\phi\)</span>.</p>
+<p>Note that the canonical parameter is a function of <span class="math inline">\(\mu_i\)</span></p>
+<p><span class="math display">\[\mu_i = b'(\theta_i) \Rightarrow \theta_i = b'^{-1}(\mu_i) = \theta(\mu_i)\]</span></p>
+<p>so that we can write</p>
+<p><span class="math display">\[\text{Var}[Y_i] = b''(\theta_i)a_i(\phi) = b''(\theta(\mu_i))a_i(\phi)\]</span></p>
+<p>The function <span class="math inline">\(V(\mu_i) = b''(\theta(\mu_i))\)</span> is called the <span class="vocab">variance function</span>.</p>
+<p>The specific form indicates the nature of the (if any) mean-variance relationship.</p>
+<section id="bernoulli-example" class="level3">
+<h3 class="anchored" data-anchor-id="bernoulli-example">Bernoulli Example</h3>
+<p>Let <span class="math inline">\(Y \sim \text{Bernoulli}(\mu)\)</span>.</p>
+<p><span class="math display">\[\theta = \log \left( \frac{\mu}{1-\mu} \right), \quad \quad \text{ the logit of } \mu\]</span></p>
+<p><span class="math display">\[a(\phi) = 1\]</span></p>
+<p><span class="math display">\[b(\theta) = \log(1 + \exp \theta)\]</span></p>
+<p><span class="math display">\[\mathbb E[Y] = b'(\theta) = \frac{\exp \theta }{1 + \exp \theta} = \mu, \quad \quad \text{ the expit of } \theta\]</span></p>
+<p><span class="math display">\[\text{Var}[Y] = b''(\theta)a(\phi) = \frac{\exp \theta}{(1 + \exp \theta)^2} = \mu(1 - \mu) = V(\mu)\]</span></p>
+</section>
+</section>
+</section>
+<section id="the-systematic-component" class="level1">
+<h1>The Systematic Component</h1>
+<p>The systematic component is the specification of how the distribution <span class="math inline">\(Y \sim f_Y(y; \theta, \phi)\)</span> (where <span class="math inline">\(f_Y\)</span> is an exponential family distribution) depends on the covariates <span class="math inline">\(x_i\)</span>.</p>
+<p>In GLMs we model the conditional mean <span class="math inline">\(\mu_i = \mathbb E[Y_i | x_i].\)</span></p>
+<p>This provides a connection between <span class="math inline">\(x_i\)</span> and the distribution of <span class="math inline">\(Y_i\)</span> via the canonical parameter <span class="math inline">\(\theta_i\)</span> and the cumulant function <span class="math inline">\(b(\theta_i)\)</span>.</p>
+<p><span class="math display">\[f_Y(y) \longrightarrow \theta_i \longrightarrow \mu_i \longrightarrow x_i'\beta \quad \text{(a.k.a. }\eta_i)\]</span></p>
+<p>Typically we link the linear predictor of the distribution of <span class="math inline">\(Y\)</span> via a transformation of <span class="math inline">\(\mu_i\)</span>, <span class="math inline">\(g(\cdot)\)</span>, so that</p>
+<p><span class="math display">\[g(\mu_i) = x_i'\beta\]</span></p>
+<p>Traditionally this is broken into two parts:</p>
+<ol type="1">
+<li>the linear predictor, <span class="math inline">\(\eta_i = x_i' \beta\)</span></li>
+<li>the link function <span class="math inline">\(g(\mu_i) = \eta_i\)</span></li>
+</ol>
+<p>Sometimes you’ll find the ‘predictor component’ of the model called the ‘systematic component’, as in McCullough and Nelder (1989). In practice, one cannot consider one without the other since the relationship between <span class="math inline">\(\mu_i\)</span> and <span class="math inline">\(x_i\)</span> are jointly determined by <span class="math inline">\(\beta\)</span> and <span class="math inline">\(g(\cdot)\)</span>.</p>
+<p>Constructing the linear predictor for a GLM follows the same process one uses for linear regression.</p>
+<p>Given a set of covariates <span class="math inline">\(x_i\)</span>, there are two decisions.</p>
+<ul>
+<li>which covariates to include?</li>
+<li>how to include them in the model?</li>
+</ul>
+<p>For the most part, decisions to include covariates should be driven by scientific considerations</p>
+<ul>
+<li>is the goal estimation or prediction?</li>
+<li>is there a primary exposure of interest?</li>
+<li>are any of the covariates effect modifiers? confounders?</li>
+</ul>
+<p>We will see that there are some differences (from multiple linear regression) when it comes to identification of confounders.</p>
+<p>In the GLM framework, we’ll want to note that the inverse of the link function provides the specification of the model on the scale of <span class="math inline">\(\mu_i\)</span></p>
+<p><span class="math display">\[\mu_i = g^{-1}(x_i' \beta)\]</span></p>
+<p>so we often choose <span class="math inline">\(g()\)</span> such that <span class="math inline">\(g^{-1}(x_i' \beta)\)</span> respects any bounds on <span class="math inline">\(\mu_i\)</span>.</p>
+<p>We interpret the link function as specifying a transformation of the conditional mean, <span class="math inline">\(\mu_i\)</span>.</p>
+<p>We are not specifying a transformation of the response <span class="math inline">\(Y_i\)</span>.</p>
+<p>We are writing <span class="math inline">\(g(\mathbb E(Y_i|x_i))\)</span>, <strong>not</strong> <span class="math inline">\(\mathbb E(g(Y_i) | x_i) = x_i'\beta\)</span>.</p>
+<p>Recall that the mean and the canonical parameter are linked via the derivative of the cumulant function.</p>
+<p><span class="math display">\[\mathbb E[Y_i] = \mu_i = b'(\theta_i)\]</span></p>
+<p>An important link function is the canonical link:</p>
+<p><span class="math display">\[g(\mu_i) = \theta(\mu_i) = b'^{-1}(\mu_i),\]</span></p>
+<p>i.e., the function that results by viewing the canonical parameter <span class="math inline">\(\theta_i\)</span> as a function of <span class="math inline">\(\mu_i\)</span>.</p>
+<p>We’ll see later that this choice results in some mathematical convenience.</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Linear regression</th>
+<th>Logistic regression</th>
+<th>Poisson regression</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Outcome type</td>
+<td>Continuous</td>
+<td>Binary</td>
+<td>Count</td>
+</tr>
+<tr class="even">
+<td>Link</td>
+<td>Identity</td>
+<td>Logit</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Systematic component</td>
+<td><span class="math inline">\(\mu_i = x_i'\beta\)</span></td>
+<td><span class="math inline">\(\log(\mu_i / (1-\mu_i) = x_i' \beta)\)</span> or <span class="math inline">\(\mu_i = \exp(x_i'\beta)/(1+\exp (x_i'\beta))\)</span></td>
+<td><span class="math inline">\(\log(\mu_i) = x_i'\beta\)</span> or <span class="math inline">\(\mu_i = \exp(x_i' \beta)\)</span></td>
+</tr>
+<tr class="even">
+<td>Inv. link</td>
+<td>Identity</td>
+<td>Expit</td>
+<td>Exponential</td>
+</tr>
+</tbody>
+</table>
+<section id="choosing-g" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-g">Choosing <span class="math inline">\(g()\)</span></h3>
+<p>Common link functions include:</p>
+<ul>
+<li>identity</li>
+<li>log</li>
+<li>logit, <span class="math inline">\(g(\mu_i) = \log \left( \frac{\mu_i}{1-\mu_i} \right)\)</span></li>
+<li><a href="https://en.wikipedia.org/wiki/Probit">probit</a></li>
+<li>complementary log-log <span class="math inline">\(g(\mu_i) = \log ( - \log(1-\mu_i))\)</span></li>
+</ul>
+<p>We typically choose a <span class="math inline">\(g()\)</span> via consideration of two issues:</p>
+<ol type="1">
+<li>Respect the range of values that <span class="math inline">\(\mu_i\)</span> can take</li>
+<li>Impact on the interpretability of <span class="math inline">\(\beta\)</span></li>
+</ol>
+</section>
+</section>
+<section id="frequentist-estimation-and-inference" class="level1">
+<h1>Frequentist Estimation and Inference</h1>
+<p>Given an i.i.d. sample of size <span class="math inline">\(n\)</span>, the log-likelihood is</p>
+<p><span class="math display">\[\ell(\beta, \phi; y) = \sum_{i=1}^n \left[ \frac{y_i \theta_i - b(\theta_i)}{a_i(\phi)} + c(y_i, \phi)\right]\]</span></p>
+<section id="estimation" class="level2">
+<h2 class="anchored" data-anchor-id="estimation">Estimation</h2>
+<p>There are <span class="math inline">\((p+2)\)</span> unknown parameters: <span class="math inline">\((\beta, \phi)\)</span>.</p>
+<p>To obtain the MLE we need to solve the score equations:</p>
+<p><span class="math display">\[U(\beta, \phi | y) = \left( \frac{\partial \ell}{\parital \beta_0}, ..., \frac{\partial \ell}{\partial \beta_p}, \frac{\partial \ell}{\partial \phi} \right)' = 0\]</span></p>
+<p>This is a system of <span class="math inline">\(p+2\)</span> equations. The contribution to the score for <span class="math inline">\(\phi\)</span> is the <span class="math inline">\(i^{\mathrm{th}}\)</span> unit is <span class="math display">\[\frac{\partial \ell}{\partial \phi} = - \frac{a_i'(\phi)}{a_i(\phi)^2}(y_i \theta_i - b(\theta_i)) + c'(y_i, \phi)\]</span></p>
+<p>We can use the chain rule to obtain a convenient expression for the <span class="math inline">\(i^{\mathrm{th}}\)</span> contribution to the score function for <span class="math inline">\(\beta_j\)</span>:</p>
+<p><span class="math display">\[\frac{\partial \ell}{\partial \beta_j} = \frac{\partial \ell}{\partial \theta_i} \times \frac{\partial \theta_i}{\partial \mu_i} \times \frac{\partial \mu_i}{\partial \eta_i} \times \frac{\partial \eta_i}{\partial \beta_j}\]</span></p>
+<p>Note the following results:</p>
+<p><span class="math display">\[\frac{\partial \ell}{\partial \theta_i} = \frac{y_i - b'(\theta_i)}{a_i(\phi)} = \frac{y_i-\mu_i}{a_i(\phi)}\]</span></p>
+<p><span class="math display">\[\frac{\partial \theta_i}{\partial \mu_i} = \left( \frac{\partial \mu_i}{\partial \theta_i} \right)^{-1} = (b''(\theta_i))^{-1} = (V(\mu_i))^{-1}\]</span></p>
+<p><span class="math display">\[\frac{\partial \eta_i}{\partial \beta_j} = x_{ij}\]</span></p>
+<p>The score function for <span class="math inline">\(\beta_j\)</span> can therefore be written as <span class="math display">\[\partial \ell}{\partial \beta_j} = \sum_{i=1}^n \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i)a_i(\phi)} (y_i - \mu_i)\]</span></p>
+<p>Suppose <span class="math inline">\(a_i(\phi) = \phi / w_i\)</span>. The score equations become</p>
+<p><span class="math display">\[\frac{\partial \ell}{\partial \phi} = \sum_{i=1}^n - \frac{w_i ( y_i \theta_i - b(\theta_i))}{\phi^2} + c' (y_i, \phi) = 0\]</span></p>
+<p><span class="math display">\[\frac{\partial \ell}{\partial \beta_j} = \sum_{i=1}^n w_i \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i)} (y_i - \mu_i) = 0\]</span></p>
+<p>Notice that the <span class="math inline">\((p+1)\)</span> score equations for <span class="math inline">\(\beta\)</span> do not depend on <span class="math inline">\(\phi\)</span>.</p>
+<p>Consequently, obtaining the MLE of <span class="math inline">\(\beta\)</span> doesn’t require knowledge of <span class="math inline">\(\phi\)</span>.</p>
+<p><span class="math inline">\(\phi\)</span> isn’t required to be known or estimated (if unknown).</p>
+<p>For exmaple, in linear regression, we don’t need <span class="math inline">\(\sigma^2\)</span> (or <span class="math inline">\(\hat \sigma^2\)</span>) to obtain <span class="math display">\[\hat \beta_{MLE} = (X^T X)^{-1} X^T Y\]</span></p>
+<p>Inference does require an estimate of <span class="math inline">\(\phi\)</span>.</p>
+</section>
+<section id="asymptotic-sampling-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="asymptotic-sampling-distribution">Asymptotic Sampling Distribution</h2>
+<p>Subject to appropriate regularity conditions,</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+\hat \beta_{MLE} \\
+\hat \phi_{MLE}
+\end{bmatrix} \stackrel{\cdot}{\sim}
+\text{MVN} \left(
+  \begin{bmatrix}
+  \beta \\
+  \phi
+  \end{bmatrix},
+\mathcal I_n(\beta, \phi)^{-1}
+\right)
+\]</span></p>
+<p>Now we can compute the components of <span class="math inline">\(\mathcal I_n(\beta, \phi):\)</span></p>
+<p><span class="math display">\[\begin{aligned}
+\frac{\partial^2 \ell(\beta, \phi; y_i)}{\partial \beta_j \partial \beta_k} &amp; =
+\frac{\partial}{\partial \beta_k} \overbrace{\left\{ \frac{\partial \mu_i}{\partial \eta_i}
+\frac{x_{ij}}{V(\mu_i)a_i(\phi)} (y_i - \mu_i)
+\right\}}^{\text{score for } \beta_j} \\
+&amp; = (y_i-\mu_i) \frac{\partial}{\partial \beta_k} \left\{ \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i) a_i(\phi)} \right\} - \left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{x_{ij} x_{ik}}{V(\mu_i)a_i(\phi)}
+\end{aligned}\]</span></p>
+<p>And hence</p>
+<p><span class="math display">\[-\mathbb E\left[ \frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k} \right] = \sum_{i=1}^n \left(
+  \frac{\partial \mu_i}{\partial \eta_i}
+  \right)^2
+  \frac{x_{ij}x_{ik}}{V(\mu_i)a_i(\phi)}
+\]</span></p>
+
+
 </section>
 </section>
 
