@@ -181,6 +181,17 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#estimation" id="toc-estimation" class="nav-link" data-scroll-target="#estimation">Estimation</a></li>
   <li><a href="#asymptotic-sampling-distribution" id="toc-asymptotic-sampling-distribution" class="nav-link" data-scroll-target="#asymptotic-sampling-distribution">Asymptotic Sampling Distribution</a></li>
   </ul></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab</a>
+  <ul class="collapse">
+  <li><a href="#the-score" id="toc-the-score" class="nav-link" data-scroll-target="#the-score">The Score</a></li>
+  <li><a href="#wald-test" id="toc-wald-test" class="nav-link" data-scroll-target="#wald-test">Wald Test</a></li>
+  <li><a href="#score-test" id="toc-score-test" class="nav-link" data-scroll-target="#score-test">Score Test</a></li>
+  <li><a href="#likelihood-ratio-test" id="toc-likelihood-ratio-test" class="nav-link" data-scroll-target="#likelihood-ratio-test">Likelihood Ratio Test</a>
+  <ul class="collapse">
+  <li><a href="#inference-on-a-single-proportion" id="toc-inference-on-a-single-proportion" class="nav-link" data-scroll-target="#inference-on-a-single-proportion">Inference on a single proportion</a></li>
+  </ul></li>
+  <li><a href="#asymptotic-inference" id="toc-asymptotic-inference" class="nav-link" data-scroll-target="#asymptotic-inference">Asymptotic Inference</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -585,6 +596,102 @@ f_Y(y; \theta, \phi) &amp; = \exp \{ y \theta - \log (1 + \exp \{ \theta \} ) \}
   \right)^2
   \frac{x_{ij}x_{ik}}{V(\mu_i)a_i(\phi)}
 \]</span></p>
+<p><span class="math display">\[ \begin{aligned}
+\frac{\partial^2 \ell(\beta, \phi; y_i)}{\partial \phi \partial \phi} &amp; =
+\frac{\partial}{\partial \phi} \overbrace{\left\{
+  - \frac{a_i'(\phi)}{a_i(\phi)^2} (y_i \theta_i - b(\theta_i)) + c'(y_i, \phi)
+\right\}}^{\text{score for } \phi}  \\
+&amp; = - \left\{ \frac{a_i(\phi)^2 a_i'\right\}
+\end{aligned} \]</span></p>
+</section>
+</section>
+<section id="lab" class="level1">
+<h1>Lab</h1>
+<p>Throughout this course, we’ve discussed “asymptotic” properties of estimators, including consistency <span class="math inline">\((\hat \theta \stackrel{p}{\to} \theta)\)</span>. We’ve also discussed asymptotic tests — for example, F-tests which converge to a <span class="math inline">\(\chi^2\)</span> distribution in large samples. However, previous discussions have been limited to models involving normally distributed rnadom variables.</p>
+<p>Asymptotic likelihood theory provides a framework by which we can construct estimators with optimal properties for arbitrary distributions, as well as asymptotic tests based on those estimators. Consider an analysis of a random sample such that</p>
+<p><span class="math display">\[Y_1, ..., Y_n \stackrel{iid}{\sim} f(y_i \mid \theta)\]</span></p>
+<p>and we are interested in drawing inference <span class="math inline">\(\theta\)</span> (which may be a vector of parameters). Let <span class="math inline">\(\mathbf{Y} = (Y_1, ..., Y_n)\)</span>. Then we can define several components of a likelihood model:</p>
+<p>The likelihood:</p>
+<p><span class="math display">\[\mathcal L(\theta \mid \mathbf{Y}) = f(y \mid \theta) = \prod_{i=1}^n f(y_i \mid \theta)\]</span></p>
+<p>Log-likelihood:</p>
+<p><span class="math display">\[\ell(\theta \mid y) = \log \mathcal L(\theta \mid y) = \sum_{i=1}^n \log f(y_i \mid \theta)\]</span></p>
+<p>Score:</p>
+<p><span class="math display">\[U(\theta \mid y) = \frac{\partial}{\partial \theta} \ell (\theta \mid y) = \left( \frac{\partial}{\partial \theta_1} \ell(\theta \mid y), ..., \frac{\partial}{\partial \theta_1} \ell(\theta \mid y) \right)\]</span></p>
+<section id="the-score" class="level2">
+<h2 class="anchored" data-anchor-id="the-score">The Score</h2>
+<p>Information Matrix</p>
+<p><span class="math display">\[\mathcal I(\theta) = \mathbb E( U(\theta | y) \otimes U(\theta \mid y)^T) \]</span></p>
+<p>Since <span class="math inline">\(\mathbb E[U(\theta \mid y)]^2 = 0\)</span>.</p>
+<p>This is the variance of the score. Under regularity conditions, the <span class="math inline">\((i,j)\)</span>th entry is equal to <span class="math display">\[- \mathbb E( \frac{\partial^2}{\partial \theta_i \partial \theta_j} \ell ( \theta \mid y)).\]</span></p>
+<p>As we’ve seen previously, the MLE is the solution to <span class="math inline">\(U(\theta \mid y) = 0\)</span>.</p>
+<p>The nice property of this estimator is that, for distributions with reasonably well-behaved likelihood functions, <span class="math inline">\(\hat \theta_{MLE}\)</span> is consistent and asymptotically normal (CAN). Therefore</p>
+<p><span class="math display">\[\sqrt{n} (\hat \theta_{MLE} - \theta) \stackrel{\mathcal D}{\to} \mathcal N(0, \mathcal I(\theta)^{-1}).\]</span></p>
+<p>This identity is from where “asymptotic tests” come from — no matter the true distribution of <span class="math inline">\(\mathbf Y\)</span>, <span class="math inline">\(\hat \theta_{MLE}\)</span> will be asymptotically normal (or <span class="math inline">\(\chi^2\)</span> if we square the estimator). There are three different ways, denoted in the figure below, to construct asymptotic tests of <span class="math inline">\(H_0 : \theta = \theta_0\)</span> — each is obtained by using the above identity in a different way.</p>
+<p><img src="images/asymptotic_tests.png" class="img-fluid"></p>
+</section>
+<section id="wald-test" class="level2">
+<h2 class="anchored" data-anchor-id="wald-test">Wald Test</h2>
+<p>Directly evaluates whether <span class="math inline">\(\hat \theta_{MLE}\)</span> is consistent with <span class="math inline">\(H_0 : \theta = \theta_0\)</span>.</p>
+<p><span class="math display">\[W_n = (\hat \theta_{MLE} - \hat \theta_0)^T \mathcal I(\hat \theta_{MLE}) (\hat \theta_{MLE} - \theta_0) \approx \chi^2(p)\]</span></p>
+<p>Note that if <span class="math inline">\(\theta\)</span> is one dimensional this simplifies to</p>
+<p><span class="math display">\[W_n = (\hat \theta_{MLE} - \theta_0) \mathcal I(\hat \theta_{MLE})^{1/2} \approx \mathcal N(0,1)\]</span></p>
+<ul>
+<li>Advantages: Simple to compute, easy to construct confidence interval</li>
+<li>Disadvantages: requires MLE, approximation not as accurate in small samples</li>
+</ul>
+</section>
+<section id="score-test" class="level2">
+<h2 class="anchored" data-anchor-id="score-test">Score Test</h2>
+<p>Asks “how consistent is the observed data with the null hypothesis?” and answers this by considering the gradient of the log-likelihood at the value specified by <span class="math inline">\(H_0\)</span> (should be close to 0).</p>
+<p><span class="math display">\[S_n = U(\theta_0 \mid y)^{T} \mathcal I(\theta_0)^{-1} U(\theta_0 \mid y) \approx \chi^2(p)\]</span></p>
+<p>Note thta if <span class="math inline">\(\theta\)</span> is 1-dimensional, we can simplify this expression to</p>
+<p><span class="math display">\[S_n = U(\theta_0 \mid y) \mathcal I(\theta_0)^{-1/2} \approx \mathcal N(0, 1)\]</span></p>
+<ul>
+<li>Advantages: Do not need to compute MLE, more computationally efficient.</li>
+<li>Disadvatage: Hard to construct confidence intervals since inverting this equation is difficult.</li>
+</ul>
+<p>Note to remember: For all of the above, if our null hypothesis is a function of multiple parameters, we can construct a <span class="math inline">\(C\)</span> matrix and test <span class="math inline">\(C \theta\)</span> just as we did for the linear model in the first half of the course.</p>
+</section>
+<section id="likelihood-ratio-test" class="level2">
+<h2 class="anchored" data-anchor-id="likelihood-ratio-test">Likelihood Ratio Test</h2>
+<p>Considers the relative likelihood of the “best fitting model” under no restrictions to the model under <span class="math inline">\(H_0\)</span>.</p>
+<p><span class="math display">\[Q_n = 2 \left( \ell(\hat\theta_{MLE} - \ell(\theta_0) \right) \approx \chi^2(p)\]</span></p>
+<ul>
+<li>Advantages: No derivatives needed, most accurate approximation</li>
+<li>Disdvantage: Requires both MLE and knowledge of log-likelihood under <span class="math inline">\(H_0\)</span>.</li>
+</ul>
+<section id="inference-on-a-single-proportion" class="level3">
+<h3 class="anchored" data-anchor-id="inference-on-a-single-proportion">Inference on a single proportion</h3>
+<p>Suppose we have data on the number of independent successes in a population of <span class="math inline">\(n\)</span> study units. This gives rise to the model</p>
+<p><span class="math display">\[Y \sim \text{Binom}(n, \pi)\]</span></p>
+<p>Suppose our goal is to estimate <span class="math inline">\(\pi\)</span> and test the null hypothesis <span class="math inline">\(H_0 : \pi = \pi_0\)</span>. There are two ways to do this: we can either conduct an asymptotic <span class="math inline">\(\chi^2\)</span> test using one of the three previously discussed options, or we can perform an “exact” test by comparing observed values against the Binomial distribution directly.</p>
+</section>
+</section>
+<section id="asymptotic-inference" class="level2">
+<h2 class="anchored" data-anchor-id="asymptotic-inference">Asymptotic Inference</h2>
+<p>For any test we use, we’ll need the components of the likelihood. Recall that the pmf of the Binomial distribution is</p>
+<p><span class="math display">\[{n \choose y} \pi^y (1-\pi)^{n-y}\]</span></p>
+<p>Start by writing out the log-likelihood, score, and information for this model. Note that the information matrix will only be a single value since we only have one parameter <span class="math inline">\(\pi\)</span> and that we will only have one observation <span class="math inline">\(Y\)</span>.</p>
+<p><span class="math display">\[\begin{aligned}
+\ell(\pi \mid y) &amp; = \log \left( {n \choose y} \pi^y (1-\pi)^{n-y} \right) \\
+&amp; = \log({n \choose y}) + y \log \pi + (n - y) \log (1-\pi) \\
+&amp; \propto y \log( \pi / (1-\pi)) + n \log (1-\pi).\end{aligned} \]</span></p>
+<p>$$U(y) = y() ( \frac{1-- (-)}{ )</p>
+<p> (y) = $$</p>
+<p>$$I() = -</p>
+<p>Find the MLE of <span class="math inline">\(\pi\)</span>.</p>
+<p><span class="math display">\[\begin{aligned}
+\frac{n \pi(1-2\pi)}{\pi^2(1-\pi)^2} + \frac{n \pi }{\pi (1-\pi)^2} &amp; =
+\frac{n - 2n \pi + n \pi}{\pi (1-\pi)^2} \\
+&amp; = \frac{n}{\pi (1-\pi)}
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[U(\pi) = 0 \Rightarrow \frac{y}{n(1-\pi)} = \frac{n}{1-\pi} ...\]</span></p>
+<p>Derive the Wald statistic using the definition.</p>
+<p>Now invert this test statistic to obtain a <span class="math inline">\(1-\alpha\)</span> percentile Wald-style confidence interval.</p>
+<p>What potential issue might arise when using a Wald test statistic?</p>
+<p>Derive the Score test statistic using the definition.</p>
+<p>Prove that inverting this test statistic to obtain a <span class="math inline">\(1-\alpha\)</span> percentile Score-style confidence interval yields …</p>
 
 
 </section>
