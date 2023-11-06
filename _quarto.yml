@@ -17,6 +17,7 @@ book:
     - week8/week8.qmd
     - week9/week9.qmd
     - week10/week10.qmd
+    - week11/week11.qmd
 
 format:
   html:

@@ -1,0 +1,230 @@
+---
+title: Week 11
+---
+
+::: content-hidden
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\Pr}[0]{\mathrm{Pr}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+\newcommand{\bmat}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+$$
+
+window.MathJax = {
+  loader: {load: ['[tex]/cancel']},
+  tex: {packages: {'[+]': ['cancel']}}
+};
+:::
+
+Recap: 
+
+The score function for $\beta_j$ in a GLM can be written as 
+
+$$\frac{\partial \ell}{\partial \beta_j} = \sum_{i=1}^n \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i)a_i(\phi)} (y_i - \mu_i)$$
+
+Which depends on the distribution $Y_i$ solely through $\E[Y_i] = \mu_i$ and
+$\Var[Y_i] = V(\mu_i)a_i(\phi)$. 
+
+Notice that the $(p+1)$ score equations for $\beta$ do not depend on 
+$\phi$. Consequently, obtaining the MLE of $\beta$ doesn't require knowledge of 
+$\phi$. 
+
+Inference does require an estimate of $\phi$. 
+
+# Asymptotic Sampling Distribution 
+
+Subject to appropriate regularity conditions, 
+
+$$\bmat{\hat \beta_{MLE} \\ \hat \phi_{MLE}} \sim \text{MVN} \left( 
+    \bmat{\beta \\ \phi}, \mathcal I_n (\beta, \phi)^{-1}
+    \right).$$
+
+Now we compute the components of $\mathcal I_n(\beta, \phi):$ 
+
+$$\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k} = \frac{\partial}{\partial \beta_k} \underbrace{\left\{ \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i) a_i(\phi)} (y_i - \mu_i) \right\}}_{\text{score for } \beta_j}.$$
+
+$$ = (y_i - \mu_i) \frac{\partial}{\partial \beta_k} \left\{ \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i) a_i(\phi)} \right\} - \left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{x_{ij} x_{ik}}{V(\mu_i) a_i(\phi)}.$$
+
+Hence 
+$$-\E\left[\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k} \right] = 
+\sum_{i=1}^n \left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{x_{ij}x_{ik}}{V(\mu_i) a_i(\phi)}.$$
+
+$$
+\begin{aligned}
+\frac{\partial^2 \ell}{\partial \beta_j \partial \phi} & = 
+\frac{\partial}{\partial \phi} \left\{ 
+    \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i)a_i(\phi)} (y_i - \mu_i)
+\right\} \\ 
+& = - \frac{a_i'(\phi) \partial \mu_i x_{ij}}{a_i(\phi)^2 \partial \eta_i V(\mu_i)} (y_i - \mu_i) 
+\end{aligned}
+$$
+
+Thus 
+
+$$-E \left[ \frac{\partial^2 \ell}{\partial \beta_j \partial \phi} \right] = 0$$
+
+$$\begin{aligned}\frac{\partial^2 \ell}{\partial \phi \partial \phi} & = \frac{\partial}{\partial \phi} 
+\left\{ 
+    - \frac{a_i'(\phi)}{a_i(\phi)^2} (y_i\theta_i - b(\theta_i)) + c'(y_i, \phi)
+\right\} \\ 
+& = - \left\{ \frac{a_i(\phi)^2 a_i''(\phi) - 2a_i(\phi) a_i'(\phi)^2}{a_i(\phi)^4}\right\} [y_i \theta_i - b(\theta_i)] + c''(y_i, \phi) \\ 
+& = -K(\phi)[y_i\theta_i - b(\theta_i)] + c''(y_i, \phi)
+\end{aligned}$$
+
+and thus 
+$$-\E\left[ \frac{\partial^2 \ell}{\partial \phi \partial \phi} \right] = 
+\sum_{i=1}^n K(\phi)[b'(\theta_i)\theta_i - b(\theta_i)] - \E[c''(Y_i, \phi)].$$
+
+## Form of the Fisher Matrix 
+
+We can write the expected information matrix in block-diagonal form: 
+
+$$\mathcal I_n(\beta, \phi) = \bmat{
+    \mathcal I_{\beta \beta} & 0 \\ 
+    0 & \mathcal I_{\phi \phi}
+}.$$
+
+The inverse of the information matrix is the asymptotic variance
+
+$$\Var[\hat \beta_{MLE}, \hat \phi_{MLE}] = \mathcal I_n(\beta, \phi)^{-1} = 
+\bmat{\mathcal I^{-1}_{\beta \beta} & 0 \\ 0 & \mathcal I_{\phi \phi}^{-1}}.$$
+
+
+The block diagonal structure of $\Var[\hat \beta_{MLE}, \hat \phi_{MLE}]$ implies
+that for GLMs, valid characterization of the uncertainty in $\hat \beta_{MLE}$ does
+not require the propagation of uncertainty in the estimate of $\phi$. 
+
+For example, for linear regression on Normally distributed outcomes, we plug in an 
+estimate of $\sigma^2$ into 
+$$\Var[\hat \beta_{MLE}] = \sigma^2 (X^T X)^{-1}$$
+without worrying about uncertainty in estimation of $\sigma^2$. 
+
+For GLMs, therefore, estimation of $\Var(\hat \beta_{MLE})$ proceeds by plugging in the values of $(\hat \beta_{MLE}, \hat \phi)$ into $\mathcal I_{\beta \beta}^{-1}$, i.e., 
+$$\widehat{\Var}[\hat \beta_{MLE}] = \hat{\mathcal{I}}_{\beta \beta}^{-1}$$
+where $\hat \phi$ is *any* consistent estimator of $\phi$. 
+
+### Matrix notation 
+
+Recall that the $(j,k)^{\text{th}}$ element of $\mathcal I_{\beta \beta}$ has the form 
+
+$$(\mathcal I_{\beta \beta})_{jk} = \sum_{i=1}^n \underbrace{\left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{1}{V(\mu_i) a_i(\phi)}}_{\coloneqq W_i} x_{ij}x_{jk},$$
+
+so we can write 
+
+$$(\mathcal I_{\beta \beta})_{jk} = \sum_{i=1}^n W_i x_{ij}x_{jk}.$$
+
+$W_i$ sort of looks like the inverse of the variance of $Y_i$. 
+
+We can therefore write: 
+
+$$\mathcal I_{\beta \beta} = X'WX \quad \text{ and } \quad \Var(\hat \beta_{MLE}) = \mathcal I_{\beta \beta}^{-1} = (X'WX)^{-1},$$
+
+where $W = \text{diag}(W_1, ..., W_n)$ and $X$ is the design matrix.
+
+Note that $(X'WX)^{-1}$ looks a lot  like $\Var(\hat \beta_{GLS})$, just instead
+of $W$ we used $\Sigma^{-1}$. 
+
+# Hypothesis Testing
+
+For the linear predictor $x_i' \beta$, suppose we partition $\beta = (\beta_1, \beta_2)$ and we are interested in testing: 
+
+$$H_0 : \beta_1 = \beta_{1,0} \quad \text{vs.} \quad H_a : \beta_1 \neq \beta_{1,0}$$
+
+The length of $\beta_1$ is $q \leq (p+1)$ and $\beta_2$ is left arbitrary. 
+
+In most settings $\beta_{1,0} = 0$ which represents some form of 'no effect' 
+
+Following our review of asymptotic theory, there are three common hypothesis testing 
+frameworks: Wald, score, and likelihood ratio testing.
+
+## Wald Test
+
+Let $\hat \beta_{MLE} = (\hat \beta_{1,MLE}, \hat \beta_{MLE})$. 
+
+Under $H_0$
+
+$$(\hat \beta_{1,MLE} - \beta_{1,0})' \widehat{\Var}[\hat \beta_{1,MLE}]^{-1}(\hat\beta_{1,MLE} - \beta_{1,0}) \longrightarrow_d \chi^2_q$$
+
+where $\widehat{\Var}[\hat \beta_{1,MLE}]$ is the $q\times q$ sub-matrix of 
+$\mathcal{I}_{\beta\beta}^{-1}$ corresponding to $\beta_1$, evaluated at 
+$\left( \hat \beta_{MLE}, \hat \phi_{MLE} \right).$
+
+This is the multivariate analog of $((\text{Est} - \text{Null})/\text{SE})^2$.
+
+The Wald test is just looking at how far our estimate of $\beta$ is from the 
+null and seeing if that distance is large relative to the uncertainty in our 
+estimate. 
+
+
+## Score Test 
+
+Let $\hat \beta_{0,MLE} = (\beta_{1,0}, \hat \beta_{2,MLE})$ and $\hat \phi_{0,MLE}$
+denote the MLEs under $H_0$. 
+
+Under $H_0$, 
+
+$$U(\hat \beta_{0,MLE}, \hat \phi_{0,MLE}; y)' \mathcal I_n(\hat \beta_{0,MLE}; \hat \phi_{0, MLE})^{-1} U(\hat \beta_{0,MLE}, \hat \phi_{0,MLE}; y) \longrightarrow_d \chi^2_q.$$
+
+## Likelihood Ratio Test 
+
+Obtain unrestricted MLEs: $(\hat \beta_{MLE}, \hat \phi_{MLE})$, and obtain MLEs under 
+$H_0:$ $(\hat \beta_{0, MLE}, \hat \phi_{0,MLE})$. 
+
+Under $H_0$,
+
+$$2(\ell(\hat \beta_{MLE}, \hat \phi_{MLE}; y) - \ell(\hat \beta_{0,MLE}, \hat \phi_{0, MLE} ; y)) \longrightarrow_d \chi^2_q.$$
+
+# Estimating $\beta$: Newton-Raphson Algorithm
+
+We saw that the score equation for $\beta_j$ is 
+
+$$\frac{\partial \ell}{\partial \beta_j} = \sum_{i=1}^n \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i) a_i(\phi)} (y_i - \mu_i) = 0$$
+
+Estimation of $\beta$ requires solving $(p+1)$ of these equations simultaneously. This is tricky because $\beta$ appears in several places 
+(implicitly anywhere a $\mu$ appears). 
+
+No closed form solution in general is available (though there is one
+for linear settings), so we need an iterative method. A commonly used 
+general purpose optimization routine is the Newton-Raphson algorithm. 
+
+General idea of Newton-Raphson and Fisher Scoring 
+
+General idea of Newton-Raphson 
+
+1. Approximate log-likelihood via 2nd order Taylor series 
+2. Take derivative of approximate log likelihood, set equal to zero, and solve
+3. Leads to updates of the form 
+
+$$\beta^{(r+1)} = \beta^{(r)} - \left[ \mathcal{I}_{\beta \beta}^{(r)}\right]^{-1} U^{(r)}_{\beta}$$
+
+Fisher scoring is an adaptation of the Newton-Raphson algorithm that uses
+the expected information, $\mathcal I_{\beta \beta}$, rather than observed
+information $\mathcal I_{\beta \beta}$ for the update. 
+
+There's a close relationship between Fisher scoring and IRLS. Often this is exploited for computation in software packages, many of which use IRLS 
+by default (including R's `glm()`). 
+
+The idea: 
+
+Define 
+
+$$Z_i = \overbrace{g(\mu_i) + (Y_i - \mu_i)g'(\mu_i)}^{\text{First order Taylor approx of }g(Y_i)}$$ 
+
+to be an "adjusted response variable" to show that 
+
+$$\Var(Z_i) = (W_i)^{-1}, \text{ where }W_i = \left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{1}{V(\mu_i)a_i(\phi)}$$
+
+Then note that 
+
+$$\E[Z_i] = x_i'\beta$$
+
+so we can consider a linear model for $Z$ to estimate $\beta$, i.e., 
+using the GLS estimator $\hat \beta_{GLS} = (X'WX)^{-1} X'WZ$. 
+

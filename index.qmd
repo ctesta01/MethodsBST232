@@ -25,6 +25,7 @@ able to learn how to make in $\LaTeX$.
 knitr::include_graphics('week1/standalone_figures/scientific_process/scientific_process.svg')
 knitr::include_graphics('week2/standalone_figures/pr_density_of_linear_model/pr_density_of_linear_model.svg')
 knitr::include_graphics('week3/standalone_figures/residual_decompositions/residual_decomposition.svg')
+knitr::include_graphics('week6/standalone_figures/3d_lasso/3d_lasso.svg')
 ```
 
 :::{.cooltip}
