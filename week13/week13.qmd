@@ -1,0 +1,394 @@
+---
+title: Week 13
+---
+
+::: content-hidden
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\Pr}[0]{\mathrm{Pr}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+\newcommand{\bmat}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newcommand{\logit}[0]{\text{logit}}
+\newcommand{\expit}[0]{\text{expit}}
+$$
+
+window.MathJax = {
+  loader: {load: ['[tex]/cancel']},
+  tex: {packages: {'[+]': ['cancel']}}
+};
+:::
+
+# Binary Response Data: Case-Control Studies
+
+Outline: 
+
+  - Power in standard study designs
+  - Case-control studies
+  - Real data analysis: esophageal cancer risk factors
+
+## Study Design 
+
+So far, we've considered estimation and inference based on an independent sample 
+size of size $n$, $\{ (X_i, Y_i) : i = 1, ..., n \}$ and the 
+likelihood: 
+
+$$\mathcal L = \prod_{i=1}^n P(Y_i | X_i)$$
+
+We parametrize $P(Y|X)$ in terms of a regression model, $\mu = \E[Y|X,\beta]$. 
+
+We want to learn about the regression coefficients, $\beta$. 
+
+We've often implicitly assumed our data come from cross-sectional sampling where
+one chooses individuals completely at random and we observe their outcomes and/or
+covariates. 
+
+In a cross-sectional sample, $(Y, X)$ are jointly random, so that 
+the likelihood is: 
+
+$$\mathcal L_{\text{joint}} = \prod_{i=1}^n P(Y_i, X_i)$$
+$$ = \prod_{i=1}^n P(Y_i | X_i) P(X_i)$$
+
+However, we generally assume that the marginal covariate distribution, $P(X_i)$ 
+does not involve $\beta$. Thus we can base estimation/inference on 
+
+$$\mathcal L = \prod_{i=1}^n P(Y_i|X_i)$$
+
+This is because 
+
+$$\log \mathcal L = \sum_i \log P(Y_i | X_i) + \sum_i \log P(X_i).$$
+
+If $P(X_i)$ doesn't involve any $\beta$ terms, then when we go to 
+maximize/optimize against $\mathcal L$ with respect to $\beta$, the 
+$P(X_i)$ terms will fall out. 
+
+In binary outcome settings, we often need a surprisingly large
+sample size to have reasonable power. 
+Recall that $\text{Power} = P(\text{Reject } H_0 | H_0 \text{ false})$. 
+
+Power analyses are commonly used in the design of studies to determine how large
+$n$ should be in order to allow reasonable power to detect the anticipated effect 
+size. 
+
+For some very simple analytic approaches (e.g., $t$-tests), there are closed
+form formulas for power under a given sample and effect size. 
+
+Here we will conduct a power analysis using a simulation approach to both: 
+1) demonstrate that random sampling designs often lead to low power with (rare)
+binary outcomes, and 2) give a sense of how to do power analyses using 
+simulations.
+
+We conduct a simulation study to assess power to detect an association between 
+a binary outcome and a binary exposure, conditional on several other 
+variables. 
+
+We'll look at power in a range of scenarios: 
+
+  * Effect sizes (conditional ORs): 1.5, 2.0, and 3.0 (all considered large)
+  * Random samples of size: 3,000 to 8,000
+  * For each scenario (combination of OR and $n$), we
+    1. Simulate many datasets with the given specs 
+    2. Fit the model to each simulated dataset 
+    3. Compute the percent of datasets for which the null is rejected.
+
+We're going to assume that incidence in the population is about 5%. 
+
+<!-- 
+Odds = Pr/(1-Pr) -> 
+Odds - Pr OR = Pr 
+Odds = Pr + Pr OR 
+Odds = Pr(1 + OR)
+Odds/(1+OR) = Pr 
+
+So if incidence is .05 then the odds are: 
+baseline odds: 0.05263158
+
+Odds ratio -> 
+1.5  : 0.07894737
+2.0  : 0.1052632
+3.0  : 0.1578947
+      (Odds)
+
+Back-transforming: 
+1.5 -> 0.07317073
+2.0 -> 0.09523813 
+3.0 -> 0.1363636
+--> 
+
+```{r}
+#| eval: false 
+#| 
+library(tidyverse) 
+
+ORs <- c(1.5, 2.0, 3.0)
+
+n <- seq(3000, 8000, length.out = 8)
+
+pct_to_odds <- function(pct) { pct / (1 - pct) }
+odds_to_pct <- function(o) { o / (1+o) }
+N_iters <- 100
+
+power_outcomes <- list()
+
+for (or in ORs) {
+  for (sample_size in n) { 
+    for (iteration in 1:N_iters) {
+      # simulate data
+      sample_size_exposed <- round(sample_size / 50)
+      sample_size_unexposed <- round(sample_size / 50 * 49)
+
+      df <- data.frame(
+        Y = c(
+          rbinom(n = sample_size_unexposed, size = 1, prob = .05),
+          rbinom(n = sample_size_exposed, size = 1, prob = odds_to_pct(pct_to_odds(.05) * or))),
+        X = c(rep('cat1', sample_size_unexposed), rep('cat2', sample_size_exposed))
+      )
+
+      # fit model 
+      model <- glm(Y ~ X, family = binomial(), data = df)
+
+      # assess significance 
+      reject_H0 <- broom::tidy(model)[[2,'p.value']] < 0.05
+
+      # store outcomes
+      power_outcomes[[length(power_outcomes) + 1]] <- c(
+        OR = or, sample_size = sample_size, significant = reject_H0
+      )
+    }
+  }
+}
+
+power_outcomes <- dplyr::bind_rows(power_outcomes)
+
+power_outcomes_summary <- power_outcomes |> 
+  group_by(sample_size, OR) |> 
+  summarize(pct_significant = sum(significant)/n())
+
+ggplot(power_outcomes_summary, 
+  aes(x = sample_size, y = pct_significant, color = factor(OR), shape = factor(OR))) + 
+geom_point() + 
+geom_line()
+```
+
+A key reason why power is so low is because the outcome is somewhat rare (5%). 
+
+We get few events, leading to large standard errors, and therefore low power. 
+
+Repeated simulations increasing the incidence (fixing $n=4000$), achieved 
+by manipulating $\beta_0$, here we pick $\beta_0$ values yielding incidences
+from $0.05$ to $0.25$. 
+
+Considering varying incidence rates: 
+
+```{r}
+library(gt)
+pwr_df <- tibble::tribble(
+  ~`Odds Ratio`, ~`0.05`, ~`0.10`, ~`0.15`, ~`0.20`, ~`0.25`,
+      1.5    ,  18.6 ,  24.5 ,  29.3 ,  30.8 ,  32.8 , 
+      2.0    ,  42.9 ,  57.2 ,  65.3 ,  69.1 ,  70.5 
+)
+
+gt(pwr_df) |> 
+  tab_header(
+    title = md("**Relationship of Incidence, Odds Ratios, and Statistical Power**")
+  ) |> 
+  tab_spanner(
+    columns = c(2:6), 
+    label = "Incidence Rate"
+  )  
+```
+
+<!-- 
+| Odds Ratio | .05  | 0.10 | 0.15 | 0.20 | 0.25 |
+| ---------- | ---- | ---- | ---- | ---- | ---- |
+| 1.5        | 18.6 | 24.5 | 29.3 | 30.8 | 32.8 |
+| 2.0        | 42.9 | 57.2 | 65.3 | 69.1 | 70.5 |
+--> 
+
+It's also important if the exposure is relatively rare. That combination of
+rare exposure and rare outcome is particularly damaging to power. 
+
+
+As incidence increases, power increases. But of course, we cannot
+and usually should not increase incidence in the population. However, 
+we can manipulate the relative number of cases and non-cases that we observe
+in the data. I.e., we artificially inflate the *observed incidence*. For example, 
+this can be done via a case-control design, sometimes called "outcome dependent sampling."
+
+The problem is that the sample is no longer representative of the target population.
+But this non-randomness is by design, under the control of researchers. Such 
+designs can be referred to as biased sampling schemes and we can use statistical techniques to account for the non-random sampling.
+
+In a case-control study, we initially stratify the population by outcome status, we know $Y = 0/1$ for everyone a priori. 
+
+We proceed by sampling, at random, to get $n_1$ cases (i.e., for whom $Y = 1$)
+and $n_0$ non-cases or controls (i.e., for whom $Y = 0$). 
+
+For all $n = n_0 + n_1$ sampled individuals, 'observe' the value of their 
+covariates.  It's crucial that $X$ is random and not $Y$.
+
+The appropriate likelihood is 
+
+$$\mathcal L_R = \prod_{i=1}^n P(X_i | Y_i)$$ 
+
+$$ = \prod_{i=1}^{n_0} P(X_i | Y_i = 0) \prod_{i=n_0+1}^{n} P(X_i | Y_i=1)$$
+
+This is often referred to as a *retrospective likelihood*. However, the scientific
+goal is typically to learn about the prospective associations. I.e., $P(Y|X)$ 
+
+How do we learn about prospective associations from the retrospective likelihood?
+
+As we've noted, case-control sampling is non-random with respect to the 
+target population. We formalize this by introducing a random variable $S$, which
+is an indicator of selection by the sampling scheme. 
+
+$$ S = \left\{ \begin{array}{ll} 1 \quad & \text{ selected} \\ 0 & \text{ not selected.} \end{array} \right.$$
+
+$S$ is a binary random variable with some probability $P(S = 1)$. 
+
+Cross-sectional sampling is where selection is independent of $(Y,X)$, and 
+$P(S = 1)$ is constant. If we're going to sample $n$ people out of a population
+of size $N$, then $P(S_i = 1) = n/N$.
+
+In case-control sampling, selection depends on outcome status $Y$ and we could
+write $P(S=1 \mid Y = y)$. 
+
+Applying Bayes' rule, we can write the retrospective likelihood as 
+
+$$\mathcal L_R = \prod_{i=1}^n P(X_i | Y_i) = \prod_{i=1}^n P(X_i | Y_i, S_i = 1)$$
+$$ = \prod_{i=1}^n P(Y_i | X_i, S_i) \frac{P(X_i | S_i = 1)}{P(Y_i | S_i = 1)}$$
+
+For now, let's focus on the $P(Y | X, S = 1)$ term.  This looks similar to 
+our quantity of interest, $P(Y|X)$, and is something we can learn about from the 
+case-control data. 
+
+Let's assume that the true model of the prospective associations in the target population
+of interest is given by 
+
+$$\logit P(Y=1 \mid X)  = X' \beta.$$
+
+We can derive an expression for $P(Y=1 \mid X, S=1)$ in terms of the true 
+prospective association parameters of interest, $\beta$. 
+
+Applying Bayes' rule and noting that selection depends solely on $Y$: 
+
+$$\begin{aligned}
+P(Y = 1 \mid X , S = 1) & = \frac{P(S = 1 \mid X, Y = 1) P(Y = 1 \mid X)}{P(S = 1 \mid X)} \\ 
+& = \frac{P(S = 1 \mid X, Y = 1) P(Y = 1 \mid X)}{\sum_{y=0}^1 P(S = 1 \mid X, Y = y) P(Y= y | X)} \\ 
+& = \frac{P(S = 1 \mid Y = 1) P(Y = 1 \mid X)}{\sum_{y=0}^1 P(S = 1 \mid Y = y) P(Y= y | X)} \\ 
+& = \frac{\pi_1 P(Y = 1 \mid X)}{\sum_{y=0}^1 \pi_y P(Y= y | X)}, \\ 
+\end{aligned}$$
+
+where $\pi_y = P(S = 1 \mid Y = y)$ (and $\pi_1 = \pi_{y = 1}$).
+
+So
+
+$$P(Y = 1 \mid X, S = 1) = \frac{\pi_1 P(Y=1 \mid X)}{
+  \pi_1 P(Y=1 \mid X) + \pi_0 P(Y=0 \mid X).
+}$$
+
+If we divide the numerator and denominator by $\pi_0 \times P(Y=0 \mid X)$,
+
+$$\begin{aligned}
+P(Y=1 \mid X, S = 1) & = \frac{\frac{\pi_1}{\pi_0} \overbrace{\frac{P(Y = 1|X)}{P(Y=0|X)}}^{\text{odds of outcome}}}{
+ \frac{\pi_1}{\pi_0}  \frac{P(Y = 1|X)}{P(Y=0|X)} + \underbrace{\frac{\pi_0}{\pi_0} \frac{P(Y = 0|X)}{P(Y=0|X)}}_{=1}
+} \\ 
+& = \frac{
+  \frac{\pi_1}{\pi_0} \exp \{ X' \beta \}
+}{
+  1 + \frac{\pi_1}{\pi_0} \exp \{ X' \beta \}
+} \\ 
+& = \frac{
+  \exp \{ \log \left( \frac{\pi_1}{\pi_0} \right) + X' \beta \}
+}{
+  1 + \exp \{  \log \left( \frac{\pi_1}{\pi_0} \right) + X' \beta \}
+} \\ 
+& = \frac{
+  \exp \{ \beta_0^* + \beta_1 X_1 + ... + \beta_p X_p \}
+}{
+  1 + \exp \{ \beta_0^* + \beta_1 X_1 + ... + \beta_p X_p \}
+} \\ 
+& = \expit(X' \beta^*)
+\end{aligned}
+$$
+
+where $\beta_0^* = \beta_0 + \log\left( \frac{\pi_1}{\pi_0} \right)$
+and the only difference between $\beta$ and $\beta^*$ is in the intercept term.
+
+We see that $P(Y=1\mid X, S=1)$ has the same functional form as the desired logistic 
+regression model, with only the intercept differing. 
+
+If the true $P(Y=1 \mid X)$ is given by a logistic regression, then so is $P(Y=1 \mid X, S = 1)$. 
+
+The odds ratio relationships between $X$ and $Y$ are preserved despite the 
+selection process. 
+
+The intercept for the two logistic models are different, but usually we aren't concerned about estimating/interpreting the intercept. 
+
+Recall the retrospective likelihood is 
+
+$$\mathcal L_R = \prod_{i=1}^n P(X_i | Y_i) = \prod_{i=1}^n P(Y_i | X_i, S_i = 1) \frac{P(X_i | S_i = 1)}{P(Y_i|S_i=1)}$$
+
+where we now know the form of $P(Y_i \mid X_i, S_i = 1)$. 
+
+Do we need to worry about the $\frac{P(X_i | S_i=1)}{P(Y_i|S_i=1)}$ term? Or can 
+we proceed with estimation of $\beta$ ignoring that term? 
+
+In theory, no, we cannot ignore this term.
+
+Consider that $P(Y=0 \mid S=1)$ and $P(Y=1 \mid S = 1)$ are fixed by design. This
+imposes constraints on $P(Y\mid X, S = 1)$ and thereby also on $\beta$, i.e., 
+
+$$P(Y = 1 \mid S = 1) = \int_{\mathcal X} P(Y = 1 \mid X = x, S = 1) P(X = x) \mathrm d x.$$
+
+This indicates that to obtain an estimate of $\beta$ via 
+
+$$\mathcal L^* = \prod_{i=1}^n P(Y_i \mid X_i, S_i = 1),$$
+
+one must maximize over a constrained parameter space. E.g., using
+a constrained optimization procedure such as Lagrange multipliers. 
+
+However, Prentice and Pyke (1979) showed that it turns out that 
+the constrained MLE is the same as the unconstrained MLE, and the 
+asymptotic variance is also the same. 
+
+So we can ignore the constraints imposed by the sampling scheme and 
+we can proceed fitting the logistic regression as usual in case-control 
+studies. These results only hold for logistic regression, i.e., 
+binomial regression with the logit link.
+
+It has also been shown that ordinal likelihood ratio tests are 
+valid in case-control studies (Scott and Wild 1989).
+
+Caveats: 
+  
+  * We cannot draw conclusions about $\beta_0$ without additional information. 
+  * Cannot perform prediction without additional information. 
+  * Cannot learn about other contrasts such as the relative risk
+  without additional information. 
+
+Further, one must also be aware of a number of non-statistical issues such as 
+issues associated with observational studies, appropriate selection of controls, 
+and recall bias. 
+
+Recall bias refers to the bias that people often don't do a good job reporting 
+(recalling) exposures that they were exposed to in the past, especially if it's 
+been a long time since the exposure (whatever "long time" means depends on context).
+
+## Esophageal cancer example 
+
+Consider data from a case-control study on the association between alcohol and 
+tobacco consumption and risk of esophageal cancer conducted in France in the 1970s. 
+Data are available directly in R's `datasets` package. 
+
+In the sample, 200, 1,175 individuals are cases. 17% of the sample had esophageal
+cancer. Overall incidence in the U.S. is around 5 per 100,000. 
+
+The data also contain information on 3 covariates categorized in: age in years, 
+tobacco consumption in gm/day, and alcohol consumption in gm/day. 

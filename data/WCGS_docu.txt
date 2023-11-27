@@ -1,0 +1,29 @@
+Western Collaborative Group Study Data
+=========================================================================
+
+This data file contains data on 3,154 participants of the WCGS, a population-based study that collected follow-up data on a group of employed men from 10 Californian companies, aged 39-59 years old, regarding the onset of coronary heart disease (CHD). Scientific interest of the study focused on several possible risk factors including lifestyle factors, such as smoking; physiological measurements, such as blood pressure and cholesterol; and certain behavioral characteristics. In the third category, particular attention was paid to behavior type, defined as follows:
+ * Type B: behavior is more relaxed and noncompetitive
+ * Type A: behavior is characterized by aggressiveness and competitiveness
+After recruitment, from 1960-61, participants were monitored for around 9 years, although a few were lost-to-follow-up. Occurrence of CHD was determined by expert diagnosis and usually due to some form of heart attack (myocardial infarction; MI). With the except of the variables related to the CHD response (chd, type and time), all variables in the dataset were measured at the time of recruitment into the study.
+
+Note, the text book 'Statistics in Epidemiology' by Nicholas Jewell uses these data as a case study and a reference that you might find useful is:
+Rosenman R, Brand J, Jenkins C, Friedman M, Straus R, Wurm W. Coronary heart disease is the Western Collaborative Group Study: Final follow-up experience of 8 1/2 years. Journal of the American Medical Association. 233:872-877.
+
+
+To load and inspect the data in R use the following commands:
+load("WCGS_data.dat")
+summary(wcgs)
+
+The variables are (in column order):
+
+ 1 age     age, years
+ 2 ht      height, in
+ 3 wt      weight, lbs
+ 4 sbp     systolic blood pressure, mmHg
+ 5 dbp     diastolic blood pressure, mmHg
+ 6 chol    cholesterol, mg/dL
+ 7 ncigs   number of cigarettes smoked per day
+ 8 behave  behavior type 0/1 = B/A
+ 9 chd     occurrence of a CHD event during follow-up
+10 type    type of CHD event 0/1/2/3 = no event/symptomatic MI/unrecognized MI/angina pectoris
+11 time    time post-recruitment of the CHD event, days

@@ -1,0 +1,27 @@
+# References {.unnumbered}
+
+1. Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani. Introduction to Statistical Learning [Internet]. [cited 2023 Nov 8]. Available from: <https://trevorhastie.github.io/ISLR/>
+
+2. Allen Akinkunle. The Bias-Variance Decomposition Demystified [Internet]. [cited 2023 Nov 8]. Available from: <https://allenkunle.me/bias-variance-decomposition>
+
+3. Efron B, Tibshirani RJ. An Introduction to the Bootstrap. CRC Press; 1994. 453 p. 
+
+4. Julian J Faraway. Routledge & CRC Press. [cited 2023 Nov 8]. Linear Models with R. Available from: <https://www.routledge.com/Linear-Models-with-R/Faraway/p/book/9781439887332>
+
+5. Trevor Hastie, Junyang Qian, Kenneth Tay. An Introduction to `glmnet` [Internet]. [cited 2023 Nov 8]. Available from: <https://glmnet.stanford.edu/articles/glmnet.html>
+
+6. Frank Harrell. Regression Modeling Strategies: With Applications to Linear Models, Logistic and Ordinal Regression, and Survival Analysis [Internet]. Cham: Springer International Publishing; 2015 [cited 2023 Nov 8]. (Springer Series in Statistics). Available from: <https://link.springer.com/10.1007/978-3-319-19425-7>
+
+7. Eric Vittinghoff, David V. Glidden, Stephen C. Shiboski, Charles E. McCulloch. Regression Methods in Biostatistics. [cited 2023 Nov 8]. Regression Methods in Biostatistics: Linear, Logistic, Survival, and Repeated Measures Models. Available from: <https://regression.ucsf.edu/regression-methods-biostatistics-linear-logistic-survival-and-repeated-measures-models>
+
+8. Agresti A, Coull BA. Approximate Is Better than “Exact” for Interval Estimation of Binomial Proportions. The American Statistician. 1998;52(2):119–26. <https://www.jstor.org/stable/2685469>
+
+9. Ernst MD. Permutation Methods: A Basis for Exact Inference. Statistical Science. 2004 Nov;19(4):676–85. <https://www.jstor.org/stable/4144438>
+
+10. Agresti A. Categorical Data Analysis. John Wiley & Sons; 2012. 756 p. 
+
+11. Shmueli G. To Explain or to Predict? Statist Sci [Internet]. 2010 Aug 1 [cited 2023 Aug 28];25(3). Available from: <https://projecteuclid.org/journals/statistical-science/volume-25/issue-3/To-Explain-or-to-Predict/10.1214/10-STS330.full>
+
+12. Pierce DA, Schafer DW. Residuals in Generalized Linear Models. Journal of the American Statistical Association. 1986;81(396):977–86. 
+
+13. Kutner MH, Neter J. Applied Linear Regression Models. McGraw-Hill/Irwin; 2004. 728 p. 

@@ -1,0 +1,795 @@
+---
+title: Week 12
+---
+
+::: content-hidden
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\Pr}[0]{\mathrm{Pr}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+\newcommand{\bmat}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newcommand{\logit}[0]{\text{logit}}
+\newcommand{\expit}[0]{\text{expit}}
+$$
+
+window.MathJax = {
+  loader: {load: ['[tex]/cancel']},
+  tex: {packages: {'[+]': ['cancel']}}
+};
+:::
+
+## Continuing on Link Functions
+
+### Linear (identity) link function
+
+When we use the identity link function with binary outcomes, we call 
+this a <span class='vocab'>linear probability model</span>.
+
+$$ \mu_i = \beta_0 + \beta_1 x_i $$
+
+The contrast modeled is the *risk difference* (RD).
+
+$\beta_0$ is the probability of response when $x = 0$; 
+$\beta_1$ is the change in probability of response when $x$ differs
+by 1 unit. 
+
+We've noted before that this doesn't respect the $[0,1]$ bounds on 
+the response probability. 
+
+We could also write $\beta_1 = \mu[x^\star + 1] - \mu[x^\star]$.
+
+### Log link function 
+
+Suppose we choose the log link. The systematic component of the model is 
+
+$$\log(\mu_i) = \beta_0 + \beta_1 x_i$$
+
+We interpret $\beta_0$ as the log of the probability of response when 
+$x = 0$. $\exp(\beta_0)$ is the probability of response when $x=0$. 
+
+We interpret $\beta_1$ as the change in the log of the probability of response, 
+comparing two populations whose values of $x$ differs by 1 unit. 
+
+$\exp(\beta_1)$ is the ratio of the probability of response when comparing 
+$x^\star + 1$ to $x^\star$. 
+
+$$\beta_1 = \log(\mu[x^\star + 1]) - \log(\mu[x^\star]) = \log(\frac{\mu[x^\star + 1]}{\mu[x^\star]}),$$
+$$\exp(\beta_1) = \frac{\mu[x^\star + 1]}{\mu[x^\star]}.$$
+
+The contrast we're modeling here is the *risk ratio*. 
+
+The log link doesn't necessarily respect the fact that the true response
+probability has an upper bound of 1. We can see this by considering
+the inverse of the link function: 
+$$\mu_i = \exp\{ \beta_0 + \beta_1 x_i \}$$
+which takes values on $(0, \infty)$.
+
+
+### Logit link function 
+
+The logit link is the canonical link function for binary outcomes, and the 
+GLM for Bernoulli outcomes using the logit link is known as logistic regression. 
+The systematic component is: 
+
+$$\text{logit}(\mu_i) = \log \left( \frac{\mu_i}{1-\mu_i} \right) = \beta_0 + \beta_1 x_i. $$
+
+The functional
+$$\frac{\mu_i}{1-\mu_i} = \frac{P(Y_i = 1 \mid x_i)}{P(Y_i = 0 \mid x_i)}$$
+
+is the odds of response. 
+
+We interpret $\beta_0$ as the log of the odds of response when $x = 0$. 
+$\exp(\beta_0)$ is the odds of response when $x = 0$. 
+
+$$\beta_1 = \log\left( \frac{\mu[x^\star + 1]}{1-\mu[x^\star+1]}\right) - \log \left( \frac{\mu[x^\star]}{1 - \mu[x^\star]} \right).$$
+
+$$\beta_1 = \log \left( \frac{\text{odds}(x^\star+1)}{\text{odds}(x^\star)} \right)$$
+
+We typically report $\exp(\beta_1)$, which is the ratio of the odds when $x = x^\star + 1$ 
+to when $x = x^\star$. 
+
+The inverse of the logit link function is called the expit function: 
+
+$$\mu_i = \frac{\exp \{ \beta_0 + \beta_1 x_i \} }{1 + \exp \{ \beta_0 + \beta_1 x_i \} }.$$
+
+### Inverse CDFs as link functions for binary outcomes 
+
+The logit function (the link for logistic regression) is the inverse CDF of the 
+standard logistic distribution. 
+
+The CDF (of any distribution) provides a mapping from th support of the random variable 
+to the $(0,1)$ interval. 
+
+$$\mathbb{F}_X(\cdot) : (-\infty, \infty) \to (0,1)$$
+
+It's relatively common to use inverse CDFs as link functions. 
+
+$$\mathbb{F}^{-1}_X(\cdot) : (0,1) \to (-\infty, \infty)$$
+
+$g(\cdot) \equiv \mathbb F^{-1}(\cdot)$ maps $\mu \in (0,1)$ to $\eta \in (-\infty, \infty)$. 
+
+### Probit Link Function 
+
+$$\text{probit}(\mu_i) = \Phi^{-1}(\mu_i) = \beta_0 + \beta_1 x_i$$
+
+where $\Phi(\cdot)$ is the CDF of the standard normal distribution. 
+
+Interpret $\beta_0$ as the probit of probability of response when $x = 0$. 
+
+Interpret $\beta_1$ as the change in the probit of the probability of response,
+comparing two populations whose values of $x$ differs by 1 unit. 
+
+Interpretation is tricky: 
+
+  * Contrast is in terms of the inverse CDF of a standard normal distribution.
+  * There is no easy way of relating this contrast to more intuitive measures. 
+
+$\beta_1$ can be viewed as changes in $z$-scores in the response 
+probability. 
+
+### Complementary log-log 
+
+$$\log(-\log(1-\mu_i)) = \beta_0 + \beta_1 x_i$$
+
+Inverse CDF of the extreme value (or log-Weibull) distribution. 
+
+As with the probit function, there isn't any intuitive way of interpreting
+regression parameters based on this link function. 
+
+Has the distinction that it is asymmetric. 
+
+### Comparing Links 
+
+![](images/comparing_links1.png)
+
+Models using logit and probit links should give very similar predictions. 
+
+Shown by Amemiya (1981) there is an approximate relationship between the coefficients
+from models using the logit and probit links: 
+
+$$\beta_1^{\text{logit}} \approx 1.6 \beta_1^{\text{probit}}$$
+
+Amemiya (1981) also shows that when $\mu \in (0.3,0.7)$, there is an 
+approximate relationship between the coefficients from models using the logit 
+and linear links: 
+
+$$\beta_1^{\text{logit}} \approx \frac{\beta_1^{\text{\linear}}}{4}.$$
+
+This might come from a relatively simple Taylor expansion of the expit function.
+
+![](images/comparing_links2.png)
+
+When working with rare outcomes, the log, logit, and complementary log-log links
+give us pretty much the same things. When working with more common outcomes, 
+the different links give us quite different outcomes. 
+
+From the figures, differences across these link functions manifest primarily 
+in the tails when probability of response is small or large. 
+
+Also the logit and probit functions are almost linearly related. 
+
+For small values of $\mu_i$, the complementary log-log, logit, and log functions are 
+close to each other. 
+
+* Equally good for rare events 
+* For $\mu_i \leq 0.1$ 
+$$\log \left( \frac{\mu_i}{1-\mu_i} \right) \approx \log(\mu_i) $$
+
+* log link has the best interpretation 
+* OR and RR are close numerically
+
+What people often do is fit logistic regression, estimate an odds ratio, 
+and then say because the OR is a rare outcome, it's also approximately a rate ratio/relative
+risks. Why not just fit the log-link model? It may be computationally challenging/tricky. 
+
+# Modeling Wester Collaborative Group Study (WCGS)
+
+Returning to the WCGS, the dataset has a number of covariates that we might 
+consider including in a model for CHD risk: 
+
+  * behavior pattern, age, height, weight, SBP, DBP, cholesterol, number
+  of cigarettes smoked per day 
+
+How do we approach making decisions about what to include in the model? 
+
+  * Depends on the objective (association vs. prediction)
+  * As usual, we'll focus more on associational models here 
+
+We discussed model selection based on *a priori* knowledge previously. 
+
+One strategy is to fit and report the following three models: 
+
+  1. An unadjusted or minimally adjusted model (i.e., including only the variable
+  of interest)
+
+  2. A model that includes 'core' confounders
+
+   * Clear indication from scientific knowledge and/or the literature
+   * Consensus among investigators
+
+  3. A model that includes 'core' confounders plus any 'potential' confounders.
+
+   * Indication is less certain.
+
+Then we would report analysis 2 as the main analysis, reporting analysis 1 and 3 as
+sensitivity analyses. 
+
+```{r}
+load(here::here("data/WCGS_data.dat"))
+wcgs$smoker <- dplyr::if_else(wcgs$ncigs > 0, TRUE, FALSE)
+
+fit0 <- glm(chd ~ behave, family = binomial(), data = wcgs)
+
+jtools::summ(fit0, confint = T, digits = 3, exp = T, model.fit = F, model.info = F)
+```
+
+Add core adjustment variables: 
+
+```{r}
+library(equatiomatic) # for extract_eq
+# see https://datalorax.github.io/equatiomatic/ 
+
+fit1 <- glm(chd ~ behave + age + wt + sbp + chol + smoker, family = binomial(), data = wcgs)
+
+extract_eq(fit1)
+
+jtools::summ(fit1, confint = T, digits = 3, exp = T, model.fit = F, model.info = F)
+```
+
+We think the $\chi^2$ reported in the model.fit statistics is the global $\chi^2$ 
+statistic for a likelihood ratio test, but we should double-check. 
+
+The coefficients' z-values and $p$-values are related to univariate Wald tests. 
+
+
+```{r}
+# now including height and dystolic blood pressure
+fit2 <- glm(chd ~ behave + age + wt + sbp + chol + smoker + ht + dbp, family = binomial(), data = wcgs)
+
+jtools::summ(fit2, confint = T, digits = 3, exp = T, model.fit = F, model.info = F)
+```
+
+```{r}
+jtools::export_summs(fit0, fit1, fit2, exp = T, error_format = "[{conf.low}, {conf.high}]",
+  error_pos = 'right', model.names = c('Unadjusted', 'Core', 'Full'), statistics = 'AIC')
+```
+
+Interpretation of $\widehat{OR} = \exp(\beta_{\text{behave}}) = 1.99$ from 
+the core model: 
+
+  * Odds of CHD in Type A men are 1.99 times those of Type B men
+  * Odds of CHD are $(1.99 - 1) \times 100 = 99\%$ greater for
+  Type A vs. B. 
+
+:::{.hottip}
+Before we said that more than a ~10% change in a variable
+coefficient in going from an unadjusted to an adjusted 
+model in a linear model setting is one heuristic for 
+considering a variable as a potential confounder. 
+
+That heuristic no longer works in the GLM setting with 
+non-identity links.
+:::
+
+```{r}
+# sometimes called a forest plot:
+jtools::plot_summs(fit0, fit1, fit2, exp = T, 
+  error_pos = 'right', model.names = c('Unadjusted', 'Core', 'Full'))
+```
+
+```{r}
+#| layout-ncol: 2
+
+library(ggplot2)
+
+ggplot(data.frame(x = residuals(fit2)), aes(x = x)) + 
+geom_histogram() + 
+xlab("Deviance residuals")
+
+ggplot(data.frame(x = predict(fit2), y = residuals(fit2)), aes(x,y)) + 
+geom_point() + 
+xlab("Fitted values") + 
+ylab("Deviance residuals")
+```
+
+It's hard to make much of the residuals... Recall that the deviance residuals
+are the preferred residuals in GLM settings.
+
+So far, we've only considered the logit link function: 
+
+$$g(\mu_i) = \log \left( \frac{\mu_i}{1-\mu_i} \right) = x_i' \beta$$
+
+By far this is the most common link function used for GLMs of binary data. 
+
+  * It's guaranteed that fitted values are in (0,1)
+  * Reasonable interpretation of constrats in terms of odds ratios 
+   * When the event is rare, OR $\approx$ RR 
+  * We have the ability to synthesize case-control data as if it had been 
+  collected prospectively 
+
+What about other link functions? 
+
+Potential choices include: 
+
+| Link                  | Function                              |
+| --------------------- | ------------------------------------- |
+| Linear                | $g(\mu_i) = \mu_i$                    |
+| Log                   | $g(\mu_i) = \log(\mu_i)$              |
+| Probit                | $g(\mu_i) = \text{probit}(\mu_i)$     |
+| Complementary Log-log | $g(\mu_i) = \log\{ - \log(1-\mu_i)\}$ |
+
+For the goal of characterizing the association between behavior type and risk of 
+CHD, interpretabililty is crucial. 
+
+  * Thus we will examine the linear and log links, which give more interpretable
+  coefficient estimates
+  * If the goal were prediction, we'd be more likely to entertain the probit and 
+  complementary log-log links. 
+
+In `R` we use the `family=` argument to change the link. Other components of the GLM 
+that are functions of the link are appropriately adjusted. 
+
+First, consider changing the link in the unadjusted analysis: 
+
+```{r}
+linearF0 <- glm(chd ~ behave, family = binomial(link = 'identity'), data = wcgs)
+
+jtools::export_summs(linearF0,  error_format = "[{conf.low}, {conf.high}]",
+  error_pos = 'right', model.names = c('Risk Differences'), statistics = 'AIC')
+```
+
+The main difference between using `link = 'identity'` vs. without inside the 
+`binomial()` is that it's changing the variance to use the binomial variance. 
+
+<!-- It's also not `GLS`, because it's still performing Newton-Raphson. --> 
+Note for thought: Think more about how this is not GLS: is it because it's using 
+Newton Raphson (?)
+
+```{r}
+logF0 <- glm(chd ~ behave, family = binomial(link = 'log'), data = wcgs)
+
+jtools::export_summs(linearF0,  error_format = "[{conf.low}, {conf.high}]",
+  error_pos = 'right', model.names = c('Relative Risks'), statistics = 'AIC')
+```
+
+Interpretation of $\widehat{RR} = \exp(\hat \beta_{\text{behave}}) = 2.21$:
+
+  * The risk of CHD in Type A men is 2.21 times that of Type B men 
+  * The risk of CHD is $(2.21 - 1) \times 100 = 121\%$ larger in Type A than 
+  Type B men 
+
+```{r}
+library(gt)
+fv_tab <- data.frame('model' = c('Logit', 'Identity', 'Log'),
+  rbind(summary(fit0$fitted),
+  summary(linearF0$fitted), summary(logF0$fitted)))
+
+gt(fv_tab) |> 
+  tab_header(title = md("**Comparison of Fitted Values**"),
+  subtitle = md("Across logit, identity, and log link models")) |> 
+  tab_options(table.align='left')
+```
+
+The fitted values are the same from the unadjusted logit, identity, and log link models 
+because these are *saturated models*. 
+
+A <span style='vocab'>saturated model</span> is a model that estimates a separate parameter 
+for all unique values of $x_i$. 
+
+There are numerous equivalent ways to define saturated models, so you may encounter other 
+(equivalent) definitions elsewhere. 
+
+A model with a single binary predictor is saturated because there are two possible values of 
+$x_i$ and two parameters $(\beta_0, \beta_1)$. 
+
+Because saturated models contain a separate parameter corresponding to each 
+possible level of $\E[Y_i \mid x_i] = \mu_i$, they can perfectly fit the 
+expected value in each $x$ group. 
+
+I.e., $\hat{\E}[Y_i \mid x_i = x^\star]$ will be the sample mean of units with 
+$x = x^\star$. 
+
+Saturated models will thus give the same fitted values, $\hat \mu_i$, regardless of the 
+link function. 
+
+# Errors with Alternative Links
+
+```{r}
+#| error: true
+linearF1 <- glm(chd ~ behave + age + wt + sbp + smoker, family = binomial(link = 'identity'),
+  data = wcgs)
+```
+
+
+Changing the link function from the default can cause IRLS to have trouble
+finding starting values. 
+
+For example, if we try to fit `glm(chd ~ behave + age + wt + sbp + chol + smoker, family = binomial(link='identity'), data = wcgs)`, we will get an error. 
+
+The problem is that it can't find a set of starting coefficients where 
+all of the predicted values are in the $(0,1)$ range. 
+
+One option is to pass your own starting values in: 
+
+  * `start` for the regression coefficients $\beta$, 
+  * `etastart` for the linear predictors $\{ \eta_1, ..., \eta_n \}$
+  * `mustart` for the fitted values `$\{ \mu_1, ..., \mu_n \}$
+
+What people often do is to use the output from another model that didn't fail. 
+One option is to fit the logistic regression, get the fitted values from that model,
+and then specify those as the starting fitted values for any of these models using 
+alternative link functions.
+
+If at any point during the IRLS algorithm, one of the fitted values is outside $(0,1)$,
+then $\Var(Y_i) = \mu_i ( 1 - \mu_i)$ will be negative. This makes it likely that 
+the model will either error or be unlikely to converge.
+
+An alternative computational option in the identity link setting is to use OLS 
+with an appropriate variance estimator to account for the heteroscedasticity 
+induced by the mean-variance relationship. 
+
+  * Huber-White variance estimator 
+  * Bootstrap variance estimator 
+
+In R: 
+
+  * Use the `lm()` function 
+  * Use the `robustCI()` function
+
+We might also get similar errors about not finding valid starting values using a
+log link in a binomial outcome regression. 
+
+```{r}
+#| error: true
+fit1 <- glm(chd ~ behave + age + wt + sbp + chol + smoker, family = binomial(), data = wcgs)
+
+logF1 <- glm(chd ~ behave + age + wt + sbp + chol + smoker,
+  family = binomial(link = 'log'), mustart = fitted(fit1), data = wcgs)
+```
+
+If we use the log-link, we get a relative risk. 
+The interpretation of $\exp(\hat \beta_{\text{behave}}) = 1.78$ is that it is the 
+relative risk for Type A men is 78% higher than for Type B men, conditional on 
+age, weight, SBP, cholesterol, and smoking.
+
+:::{.chilltip}
+When one has a rare outcome, it's less likely one would have a fitted value 
+greater than one. As a result, using a log link prevents the main concern, which 
+is predicted probabilities below 0. 
+:::
+
+# Confounding and Collapsibility 
+
+For a continuous response variable, consider two models that could be used 
+to assess the $Y - X$ association: 
+
+$$\E[Y \mid X, Z] = \beta_0^c + \beta_X^c X + \beta_Z^c Z \label{eqn:1} \tag{1}$$
+$$\E[Y \mid X] = \beta_0^m + \beta_X^m X \label{eqn:2} \tag{2} $$
+
+In model $\ref{eqn:1}$, $\beta_X^c$ is a conditinoal parameter, where
+contrasts condition on the value of $Z$. 
+
+In model $\ref{eqn:2}$, $\beta_X^m$ is a marginal parameter, and 
+contrasts using it do not condition on anything. 
+
+The relationship between the two parameters is clarified as follows: 
+
+$$\E[Y\mid X ] = \E_Z[\E_Y[Y \mid X,Z] \mid X ] \tiny{\tag{ Law of iterated expectations}}$$
+$$ = \E_Z[\beta_0^c + \beta_X^c X + \beta_Z^c Z ] $$
+$$ = \beta_0^c + \beta_X^c X + \beta_Z^c \E_Z[Z \mid X] $$
+
+So the marginal contrast equals: 
+
+$$\beta_X^m = \E[Y \mid X = (x+1)] - \E[Y \mid X = x]$$
+$$ = \beta_X^c + \beta_Z^c \underbrace{\{ \E[Z \mid X = (x+1) - \E[Z \mid X = x]] \}}_{\text{slope from a linear regression of } Z \sim X } $$
+
+Considering the model $\E[Z \mid X] = \gamma_0 + \gamma_X X$,
+
+$$\beta_X^m = \beta_X^c + \beta_Z^c \gamma_X.$$
+
+The marginal contrast is the conditional plus a bias term. 
+
+The bias term ($\beta_Z^c \gamma_X$) is non-zero if both 
+
+  * $\beta_Z^c \neq 0$, i.e., $Z$ is related to $Y$ and 
+  * $\gamma_X \neq 0$ i.e., $Z$ is related to $X$, 
+  * i.e., $Z$ is a confounder. 
+
+If $Z$ is a confounder and we don't adjust for it, the marginal association 
+we estimate will be biased. 
+
+<!-- $$
+\begin{aligned}
+test & \\ 
+test & \; \; blah & \quad \quad \quad \quad {\small\text{(Law of Iterated Expectations)}} \\ 
+\end{aligned}
+$$ --> 
+
+The direction of the bias depends on the interplay between $\beta_Z^c$ 
+
+If $Z$ isn't a confounder, then one or both of $\{ \beta_Z^c, \gamma_X \}$ are
+zero, so the bias term is zero and
+$$\beta_X^m = \beta_X^c.$$
+
+So the marginal and conditional parameters are equivalent when the variables
+conditioned on are not confounders. 
+
+This is a result of the <span class='vocab'>collapsibility</span> of parameters 
+from a linear regression (or any GLM using the identity link). 
+
+:::{.cooltip}
+Collapsibility is a broader concept that often deals with multi-way tables, 
+but for our purposes, when we refer to collapsibility, we'll be referring 
+to this property: that if we condition on a variable that's not a confounder,
+we don't change the association parameter that we're interested in. 
+:::
+
+If $Z$ is not a confounder, conditioning on it won't do any harm since doing so does not change the quantity we're estimating. 
+
+We call $Z$ a precision variable if it is associated with $Y$ but not $X$. 
+
+If $Z$ is a precision variable, the standard error of $\beta_X^c$ will be smaller
+than the standard error of $\beta_X^m$. 
+
+If $Z$ explains a substantial amount of variability in $Y$ then the conditional 
+model SSE will be smaller, so $\hat \sigma^2$ will also generally be smaller for the conditional model. 
+
+Because linear regression parameters are collapsible and including precision variables in the model leads to smaller uncertainties, it's generally good practice to condition
+on precision variables. 
+
+Is the same true for logistic regression? 
+
+# Non-Collapsibility in Logistic Regression
+
+For a binary outcome, consider two models: 
+
+$$\text{logit} \E[Y \mid X, Z] = \beta_0^c + \beta_X^c X + \beta_Z^c Z \label{eqn:3} \tag{3}$$
+$$\text{logit} \E[Y \mid X] = \beta_0^m + \beta_X^m X \label{eqn:4} \tag{4}$$
+
+The conditional odds ratio for a binary $X$ is 
+
+$$\theta_X^c = \exp (\beta_X^c) = \frac{\E[Y \mid X = 1, Z]}{1 - \E[Y \mid X = 1, Z]} 
+\bigg / \frac{\E[Y \mid X = 0, Z]}{1 - \E[Y \mid X = 0, Z]} $$ 
+
+The marginal odds ratio for $X$ is 
+
+$$\theta_X^m = \exp (\beta_X^m) = \frac{\E[Y \mid X = 1]}{1 - \E[Y \mid X = 1]} 
+\bigg / \frac{\E[Y \mid X = 0]}{1 - \E[Y \mid X = 0]}.$$ 
+
+Analagous to what we did for linear regression, we'd like to try to write the marginal 
+OR as a function of the conditional. 
+
+Recall that to do this, we
+
+  1. Derived an expression for the marginal expectation $\E[Y \mid X]$ in 
+  terms of the conditional model parameters. 
+  2. Plugged in for $\E[Y \mid X]$ in the marginal model contrast 
+
+$$
+\begin{aligned}
+\E[Y \mid X] & = \E_Z[\E_Y[Y \mid X, Z] \mid X] \\ 
+& = \E_Z\left[ \frac{\exp\{ \beta_0^c + \beta_X^c X + \beta_Z^c Z \} }{1 + \exp\{ 
+  \beta_0^c + \beta_X^c X + \beta_Z^c Z
+\}} \bigg\vert X \right] \\ 
+& = \int_Z \left( \frac{\exp\{ \beta_0^c + \beta_X^c X + \beta_Z^c Z \} }{1 + \exp\{ 
+  \beta_0^c + \beta_X^c X + \beta_Z^c Z
+\}} \right) f_{Z|X}(Z = z \mid X) \partial z \\ 
+%  & = \int_Z \left( \frac{\theta_X^c \exp\{ \beta_0^c+ \beta_Z^c Z \} }{1 + \theta_X^c \exp\{ 
+%  \beta_0^c + \beta_Z^c Z
+% \}} \right) f_{Z|X}(Z = z \mid X) \partial z. 
+\end{aligned}
+$$
+
+If we consider plugging this expression for $\E[Y\mid X]$ into 
+
+$$\theta_X^m = \exp (\beta_X^m) = \frac{\E[Y \mid X = 1]}{1 - \E[Y \mid X = 1]} 
+\bigg / \frac{\E[Y \mid X = 0]}{1 - \E[Y \mid X = 0]},$$ 
+
+we can see that the relationship between the conditional OR $\theta_X^m$ and
+marginal OR $\theta_X^m$ is not straightforward. 
+
+There is no simple, closed-form expression for $\theta_X^m$ as a function of 
+$\theta_X^c$. Unlike in linear regression, they are not linearly related. 
+
+However, given $\theta_X^c$ we can calculate $\theta_X^m$ numerically. 
+
+To do so, from the expression for $\E[Y \mid X]$ we need to specify: 
+
+  * values for all the parameters in the conditional model, $f_{Z|X}(Z = z \mid X)$. 
+
+For the purposes of this exercise, we'll consider binary $X$ and $Z$ that are 
+related via logistic regression
+
+$$\text{logit} \E[Z \mid X] = \gamma_0 + \gamma_X X.$$
+
+Notationally, let $\phi_{XZ} = \exp(\gamma_X)$ denote the $Z \sim X$ odds ratio. 
+
+We consider a range of values of
+
+  * The conditional odds ratio for $X$, $\theta_X^c$,
+  * The conditional odds ratio for $Z$, $\theta_Z^c$, 
+  * The $X/Z$ odds ratio, $\phi_{XZ}$
+
+and for each scenario we compute $\theta_X^m$ and the percent difference: 
+
+$$\frac{\theta_X^m - \theta_X^c}{\theta_X^c} \times 100.$$
+
+
+# Lab 
+
+Quick review of GLMs. 
+
+The exponential dispersion family can be written as 
+
+$$f(y \mid \theta, \phi) = \exp \left\{ \frac{y \theta - b(\theta)}{a(\phi)}  + c(y, \phi)\right\}$$
+
+where $\theta$ is the canonical parameter and $\phi$ is the dispersion parameter. We also showed in class that 
+
+$$\E[Y_i] = \mu_i = b'(\theta_i)$$
+$$\Var[Y_i] = b''(\theta_i) a_i(\phi)$$
+
+We refer to $b''(\theta_i)$ as the variance function and sometimes we 
+write it as $V(\mu_i) = b''(\theta_i) = b''(b'^{-1}(\mu_i)),$
+i.e., $V$ can be some function of $\mu$. Then 
+we fit a GLM by assuming the model $g(\mu_i) = \eta_i = X_i'\beta$. 
+
+## Comparison of Approaches
+
+Often linear models are motivated by the following minimization problem: 
+
+$$\min_{\beta} || \mathbf{y} - \mathbf{X} \beta ||_2^2$$
+
+Assuming that $\E[Y] = X \beta$. 
+
+A more statistically driven approach is to assume that 
+
+$$Y\mid X \sim \mathcal N(X \beta, \sigma^2),$$
+
+and we want to $\max_{\beta, \sigma^2} f_N(y, X, \beta) \approx e^{-\frac{(y-X\beta)^2}}.$
+
+It is a happy coincidence that in both the ML and statistically driven 
+approach, we derive that $\hat \beta = (X^T X)^{-1} X^T y$, "our favorite equation."
+
+### Consider a Binomial Problem
+
+Consider the problem where we have a binary random variable $Y \sim \text{Bernoulli}(\mu)$ with pdf 
+
+$$f_Y(y) = \mu^y(1-\mu)^{1-y}.$$
+
+In this case, we assume that 
+$$Y \mid X \sim \text{Bernoulli}(\E (Y|X)),$$
+
+and $\E[Y|X] = \text{P}(Y = 1)$, therefore $0 \leq \E[Y|X] \leq 1$. 
+
+There are several ways to enforce this bounding. Let $\phi : \R \to [0,1]$.
+
+  1. One way could be to model $\E(\phi(Y) | X)$, but this has two problems: 
+  interpretation, and more importantly, we're not necessarily interested
+  in the distribution of $\phi(Y)$. 
+
+  2. Another option is to transform the $X$ values so that $\E(Y | X) = \phi(X) \beta$. 
+
+  3. The last way is to write $\E(Y) = \phi(X \hat \beta)$. Another way to write 
+  this is to let $g = \phi^{-1}$ and write $g(\E(Y|X)) = X \hat \beta.$ 
+
+We have two constraints on $g$: it has to convert values from $\R$ to $[0,1]$
+as well as has nice interpretability. 
+
+|            | Respects Constraints | Interpretable |
+| ---------- | -------------------- | ------------- |
+| $g(y) = y$ | No                   | Very          |
+| probit     | Yes                  | Not very      |
+|            |                      |               |
+
+(a). Show that this distribution belongs to the exponential 
+dispersion family and find expressions for $\theta$, 
+$b(\theta)$, $a(\phi)$, and $c(y, \phi)$.
+
+$$
+\begin{aligned}
+f_Y(y) & = \mu^y (1 - \mu)^{1-y} \\
+& = \exp \{ \log \{ \mu^y (1-\mu)^{1-y} \} \} \\ 
+& = \exp \{ y \log(\mu) + (1-\mu) \log(1-\mu) \} \\
+& = \exp \{ y \log \left( \frac{\mu}{1-\mu} + \log(1-\mu) \right) \} \\ 
+& = \exp \{ y \theta - \log(1 + \exp(\theta)) \},
+\end{aligned}
+$$
+
+where $\theta = \log \left( \frac{\mu}{1-\mu} \right)$, 
+$b(\theta) = \log(1 + \exp(\theta))$, $a(\phi) = 1$, and $c(y,\phi) = 0$. 
+
+$\theta$ is often a nice candidate for the link function. 
+
+:::{.cooltip}
+The exponential dispersion family is a generalization of what's called 
+the natural exponential family. 
+:::
+
+Recall that $\text{expit}(X \hat \beta) = \frac{e^{X\beta}}{1-e^{X\hat\beta}}$.
+
+Consider the simple logistic regression model for a binary outcome $y_i$ 
+and a single covariate $x_i$
+
+$$\text{\logit}(\mu_i) = \beta_0 + \beta_1 x_i \tag{1} $$
+
+where $\mu_i = P(Y_i = 1 | X_i = x_i) = \E(Y_i | X_i = x_i)$ and 
+$\logit(\mu_i) = \log \left( \frac{\mu_i}{1-\mu_i} \right)$.
+Since we've already shown the Bernoulli distribution falls within the exponential
+dispersion family, it should be clear that model (1) is a GLM with
+the $\logit$ link function. 
+
+$\beta_0$ is the log odds of the outcome $Y$ for subjects with $x_i = 0$. 
+
+$$\log \left( \frac{\mu_i}{1-\mu_i} \right) = \logit(\mu_i) = \beta_0 + \beta_1(0) = \beta_0$$
+
+$\beta_1$ 
+
+:::{.chilltip}
+Advice for interpreting $\beta_0$ and $\beta_1$ for some random 
+GLM on an exam: 
+
+Look at the difference between an observation with $x^\star$ and $x^\star + 1$. 
+
+$$\log \left( \frac{\mu_i / (1-\mu_i)}{\mu_j/(1-\mu_j)} \right) = 
+\logit(\mu_i) - \logit(\mu_j) = \beta_0 + \beta_1(x + 1) - \beta_0 - \beta_1x = \beta_1$$
+:::
+
+Now suppose we have collected $n$ independent observations. Show that the 
+log-likelihood based on model (1) is 
+
+$$\ell(\beta_0, \beta_1 | y) = \sum_{i=1}^n \{ y_i (\beta_0 + \beta_1 x_i) - \log(1 + \exp(\beta_0 + \beta_1 x_i)) \}.$$
+
+Answer: 
+
+$$L(\theta) = \prod \exp \{ y_i \theta_i - \log (1 + \exp \theta_i) \}$$
+
+Therefore 
+
+$$\ell(\theta | y) = \sum y_i \theta_i - \log (1 + \exp \theta_i)$$
+$$\ell(\beta_0, \beta_1, y) = \sum y_i ( \beta_0 + \beta_1 x_i) - \log (1 + \exp(\beta_0 + \beta_1 x_i))$$
+
+Obtain the score equations $U(\beta_0)$ and $U(\beta_1)$. 
+
+$$
+\begin{aligned}
+U(\beta_0) = \frac{\partial \ell}{\partial \beta_0} & = \sum_{i=1}^n \left\{ 
+  y_i - \frac{\exp(\beta_0 + \beta_1 x_i)}{1 + \exp(\beta_0 + \beta_1 x_i)}
+  \right\} \\ 
+  & = \sum (y_i - \mu_i) \stackrel{\text{set}}{=} 0
+  \end{aligned}
+  $$
+
+$$
+\begin{aligned}
+U(\beta_1) = \frac{\partial \ell}{\partial \beta_1} & = \sum_{i=1}^n \left\{ 
+  y_i x_i - \frac{x_i \exp(\beta_0 + \beta_1 x_i)}{1 + \exp(\beta_0 + \beta_1 x_i)}
+  \right\} \\ 
+  & = \sum x_i (y_i - \mu_i) \stackrel{\text{set}}{=} 0
+  \end{aligned}
+$$ 
+
+
+Show that the Fisher Information Matrix $\mathcal I(\beta)$ takes
+the following form: 
+
+$$\mathcal I(\beta) = \pmatrix{
+\sum \mu_i (1- \mu_i) & \sum x_i \mu_i ( 1- \mu_i) \\ 
+\sum x_i \mu_i (1-\mu_i) & \sum x_i^2 \mu_i(1-\mu_i)
+}.$$
+
+Where $\mu_i = \expit(\beta_0 + \beta_1 x_i)$ and $\expit(x) = \frac{\exp(x)}{1 + \exp(x)}$
+
+The Fisher Information Matrix is like the Hessian of the log-likelihood. 
+
+The higher the curvature, the lower the variance. 
+
+Appendix: 
+
+(Fill out soon...)

@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -30,6 +93,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../week12/week12.html" rel="next">
 <link href="../week10/week10.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -153,6 +217,16 @@ ul.task-list li input[type="checkbox"] {
   <a href="../week11/week11.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Week 11</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../week12/week12.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 12</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -176,6 +250,16 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#likelihood-ratio-test" id="toc-likelihood-ratio-test" class="nav-link" data-scroll-target="#likelihood-ratio-test">Likelihood Ratio Test</a></li>
   </ul></li>
   <li><a href="#estimating-beta-newton-raphson-algorithm" id="toc-estimating-beta-newton-raphson-algorithm" class="nav-link" data-scroll-target="#estimating-beta-newton-raphson-algorithm">Estimating <span class="math inline">\(\beta\)</span>: Newton-Raphson Algorithm</a></li>
+  <li><a href="#fitting-glms-in-r" id="toc-fitting-glms-in-r" class="nav-link" data-scroll-target="#fitting-glms-in-r">Fitting GLMs in R</a></li>
+  <li><a href="#residuals" id="toc-residuals" class="nav-link" data-scroll-target="#residuals">Residuals</a></li>
+  <li><a href="#intro-to-western-collaborative-group-study" id="toc-intro-to-western-collaborative-group-study" class="nav-link" data-scroll-target="#intro-to-western-collaborative-group-study">Intro to Western Collaborative Group Study</a>
+  <ul class="collapse">
+  <li><a href="#types-of-contrasts" id="toc-types-of-contrasts" class="nav-link" data-scroll-target="#types-of-contrasts">Types of Contrasts</a>
+  <ul class="collapse">
+  <li><a href="#log-likelihood-for-glms-with-binary-outcomes" id="toc-log-likelihood-for-glms-with-binary-outcomes" class="nav-link" data-scroll-target="#log-likelihood-for-glms-with-binary-outcomes">Log-likelihood for GLMs with binary outcomes</a></li>
+  </ul></li>
+  <li><a href="#score-and-information-for-glms-with-binary-outcomes" id="toc-score-and-information-for-glms-with-binary-outcomes" class="nav-link" data-scroll-target="#score-and-information-for-glms-with-binary-outcomes">Score and information for GLMs with Binary outcomes</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -298,8 +382,138 @@ ul.task-list li input[type="checkbox"] {
 <p><span class="math display">\[\frac{\partial \ell}{\partial \beta_j} = \sum_{i=1}^n \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{V(\mu_i) a_i(\phi)} (y_i - \mu_i) = 0\]</span></p>
 <p>Estimation of <span class="math inline">\(\beta\)</span> requires solving <span class="math inline">\((p+1)\)</span> of these equations simultaneously. This is tricky because <span class="math inline">\(\beta\)</span> appears in several places (implicitly anywhere a <span class="math inline">\(\mu\)</span> appears).</p>
 <p>No closed form solution in general is available (though there is one for linear settings), so we need an iterative method. A commonly used general purpose optimization routine is the Newton-Raphson algorithm.</p>
+<p>General idea of Newton-Raphson and Fisher Scoring</p>
+<p>General idea of Newton-Raphson</p>
+<ol type="1">
+<li>Approximate log-likelihood via 2nd order Taylor series</li>
+<li>Take derivative of approximate log likelihood, set equal to zero, and solve</li>
+<li>Leads to updates of the form</li>
+</ol>
+<p><span class="math display">\[\beta^{(r+1)} = \beta^{(r)} - \left[ \mathcal{I}_{\beta \beta}^{(r)}\right]^{-1} U^{(r)}_{\beta}\]</span></p>
+<p>Fisher scoring is an adaptation of the Newton-Raphson algorithm that uses the expected information, <span class="math inline">\(\mathcal I_{\beta \beta}\)</span>, rather than observed information <span class="math inline">\(\mathcal I_{\beta \beta}\)</span> for the update.</p>
+<p>There’s a close relationship between Fisher scoring and IRLS. Often this is exploited for computation in software packages, many of which use IRLS by default (including R’s <code>glm()</code>).</p>
+<p>The idea:</p>
+<p>Define</p>
+<p><span class="math display">\[Z_i = \overbrace{g(\mu_i) + (Y_i - \mu_i)g'(\mu_i)}^{\text{First order Taylor approx of }g(Y_i)}\]</span></p>
+<p>to be an “adjusted response variable” to show that</p>
+<p><span class="math display">\[\text{Var}(Z_i) = (W_i)^{-1}, \text{ where }W_i = \left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{1}{V(\mu_i)a_i(\phi)}\]</span></p>
+<p>Then note that</p>
+<p><span class="math display">\[\mathbb E[Z_i] = x_i'\beta\]</span></p>
+<p>so we can consider a linear model for <span class="math inline">\(Z\)</span> to estimate <span class="math inline">\(\beta\)</span>, i.e., using the GLS estimator <span class="math inline">\(\hat \beta_{GLS} = (X'WX)^{-1} X'WZ\)</span>.</p>
+<p>Two immediate challenges to estimating <span class="math inline">\(\hat \beta_{GLS}\)</span> in practice are</p>
+<ol type="1">
+<li>We don’t observe <span class="math inline">\(Z\)</span></li>
+<li><span class="math inline">\(W\)</span> depends on <span class="math inline">\(\beta\)</span></li>
+</ol>
+<p>However, we can use IRLS to do estimation.</p>
+<p>Suppose the current estimate of <span class="math inline">\(\beta\)</span> is <span class="math inline">\(\hat \beta^{(r)}\)</span>. Compute</p>
+<p><span class="math display">\[\eta_i^{(r)} = x_i'\hat \beta^{(r)}\]</span> <span class="math display">\[\mu_i^{(r)} = g^{-1} (\eta_i^{(r)})\]</span> <span class="math display">\[W_i^{(r)} = \left( \frac{\partial \mu_i}{\partial \eta_i} \biggr \mid_{\eta_i^{(r)}} \right)^2 \frac{1}{V(\mu_i^{(r)})}\]</span> <span class="math display">\[z_i^{(r)} = \eta_i^{(r)} + (y_i - \mu_i^{(r)}) \frac{\partial \eta_i}{\partial \mu_i} \mid_{\mu_i^{(r)}}\]</span></p>
+<p><span class="math inline">\(W_i\)</span> is called the ‘working weight’</p>
+<p>Check the McCullagh and Nelder (1989) book which shows that using IRLS for estimation here is equivalent to Fisher scoring. For more detail, see Agresti 4.6.3 or <a href="https://grodri.github.io/glms/notes/" class="uri">https://grodri.github.io/glms/notes/</a></p>
+<p>The updated version of <span class="math inline">\(\hat \beta\)</span> is obtained as the WLS estimate to the regression of <span class="math inline">\(Z\)</span> on <span class="math inline">\(X\)</span>:</p>
+<p><span class="math display">\[\hat \beta^{(r+1)} = (X' W^{(r)} X)^{-1} (X' W^{(r)} Z^{(r)})\]</span></p>
+<p><span class="math inline">\(X\)</span> is the <span class="math inline">\(n \times (p+1)\)</span> design matrix from the initial specification of the model. <span class="math inline">\(W^{(r)}\)</span> is the diagonal <span class="math inline">\(n \times n\)</span> matrix with entries <span class="math inline">\(\{ W_1^{(r)}, ..., W_n^{(r)}}\)</span>. <span class="math inline">\(Z^{(r)}\)</span> is the <span class="math inline">\(n\)</span>-vector <span class="math inline">\((z_1^{(r)}, ..., z_n^{(r)})\)</span>.</p>
+<p>Iterate until the <span class="math inline">\(\hat \beta\)</span> values converges.</p>
+</section>
+<section id="fitting-glms-in-r" class="level1">
+<h1>Fitting GLMs in R</h1>
+<p>A generic call to <code>glm()</code> is given by</p>
+<p><code>fit0 &lt;- glm(formula, family, data, ...)</code></p>
+<p><code>formula</code> specifies the structure of the linear predictor <span class="math inline">\(\eta_i = x_i' \beta\)</span>.</p>
+<p><code>family</code> jointly specifies the probability distribution <span class="math inline">\(f_Y()\)</span>, link function <span class="math inline">\(g()\)</span> and variance function <span class="math inline">\(V()\)</span>.</p>
+<p>E.g.,</p>
+<p><code>glm(Y ~ X_1 + X2, family = binomial(), data = df)</code></p>
+<p>Most common family objects are <code>binomial()</code> or <code>poisson()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>myFamily <span class="ot">&lt;-</span> <span class="fu">binomial</span>()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(myFamily)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "family"     "link"       "linkfun"    "linkinv"    "variance"  
+ [6] "dev.resids" "aic"        "mu.eta"     "initialize" "validmu"   
+[11] "valideta"   "simulate"   "dispersion"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>myFamily<span class="sc">$</span>link</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "logit"</code></pre>
+</div>
+</div>
+<p>The <code>residuals</code> inside a <code>glm()</code> are called working residuals and used internally for iteratively reweighted least squares.</p>
+</section>
+<section id="residuals" class="level1">
+<h1>Residuals</h1>
+<p>In linear models, we used residual diagnostics to examine the adequacy of model fit and investigate potential data issues such as outliers. Adequacy of model fit included functional form for terms in the linear predictor and the homoscedasticity assumption.</p>
+<p>In GLMs, residual diagnostics are much more complex and visual inspection of residual plots is typically less informative.</p>
+<p>In general, residuals are meant to represent variation in the outcome that is not explained by the model.</p>
+<p>Variation after the systematic component is accounted for, and therefore residuals are therefore model-specific.</p>
+<div class="bluetip">
+<p>In linear models, residuals were considered as empirical estimates of the true error, e.g., <span class="math inline">\(\hat \varepsilon \coloneqq Y_i - \hat Y_i\)</span>.</p>
+<p>Raw residuals are not generally useful in the GLM setting.</p>
+<p>For example, with a binary predictor and a binary outcome, there’s only four possible values the raw residuals could take on.</p>
+<p>Another issue is heteroscedasticity — because many of the families fit with GLMs there is a mean-variance relationship.</p>
+</div>
+<p><em>Pearson residuals</em> account for the heteroscedasticity via standardization.</p>
+<p><span class="math display">\[r_i^p = \frac{y_i - \hat \mu_i}{\sqrt{\text{Var}(Y_i)}}\]</span></p>
+<p>We’ll see that Pearson residuals can be useful for diagnosing departures from our model’s variance assumption.</p>
+<p>The <em>deviance residual</em> (sometimes called the “preferred residual”) is defined as</p>
+<p><span class="math display">\[r_i^d = \text{sign}(y_i - \hat \mu_i)\sqrt{d_i}\]</span></p>
+<p>where, letting <span class="math inline">\(\ell(\hat \mu_i, \phi; y_i)\)</span> be the log-likelihood contribution of unit <span class="math inline">\(i\)</span> evaluated as <span class="math inline">\(\hat \mu_i\)</span> and <span class="math inline">\(\phi\)</span>, then <span class="math display">\[d_i = 2 \phi(\ell(y_i, \phi; y_i) - \ell(\hat \mu_i, \phi; y_i))\]</span></p>
+<p>We can think about this as the distance between <span class="math inline">\(\hat \mu_i\)</span> and <span class="math inline">\(y_i\)</span> on the log-likelihood scale.</p>
+<p>Pierce and Shafer (JASA, 1986) examined various residuals for GLMs. <a href="https://www.jstor.org/stable/2289071" class="uri">https://www.jstor.org/stable/2289071</a></p>
+<p>One can get both deviance and Pearson residuals from <code>glm()</code> in R:</p>
+<pre><code>fit &lt;- glm(Y ~ X, family = binomial)
+
+residuals(fit)
+
+residuals(fit, type='pearson')</code></pre>
+</section>
+<section id="intro-to-western-collaborative-group-study" class="level1">
+<h1>Intro to Western Collaborative Group Study</h1>
+<p>A prospective study of coronary heart disease (CHD) with <span class="math inline">\(n = 3,154\)</span> male participants aged 39-54 at risk for CHD, employed at 10 companies in California with a baseline survey and measurements taken at intake (1960-61) along with annual surveys until December 1969 to assess incident CHD.</p>
+<p>Our primary goal is to investigate the relationship between ‘behavior pattern’ and risk of CHD.</p>
+<p>Participants were categorized into one of two behavior pattern groups.</p>
+<p>Type A: characterized by enhanced aggressiveness, ambitiousness, competitive drive, and chronic sense of urgency.</p>
+<p>Type B: characterized by more relaxed and non-competitive.</p>
+<p>For now, we will ignore any loss to follow-up and consider the binary outcome of</p>
+<p><span class="math display">\[Y = \left\{ \begin{array}
+1 \quad &amp; \text{occurrence of CHD during follow-up} \\
+0 &amp; \text{otherwise}
+\end{array} \right. \]</span></p>
+<p>8.1% of participants developed CHD during follow-up, while 50.4 of participants were classified as Type A at baseline.</p>
+<p><span class="math display">\[\hat P(\text{CHD} = 1 \mid \text{Type} = A) = 0.112\]</span> <span class="math display">\[\hat P(\text{CHD} = 1 \mid \text{Type} = B) = 0.050\]</span></p>
+<p>I.e., 11.2% of Type A men and 5% of Type B men developed CHD during follow-up.</p>
+<p>Often we will use the generic term ‘risk,’ e.g., “risk of CHD” rather than probability of CHD during follow-up.</p>
+<section id="types-of-contrasts" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-contrasts">Types of Contrasts</h2>
+<p>We need to pick a contrast —</p>
+<p>Risk difference:</p>
+<p><span class="math display">\[RD = P(Y = 1 \mid x = 1) - P(Y = 1 \mid x = 0)\]</span> <span class="math display">\[\widehat{RD} = \hat P(Y = 1 \mid x = 1) - \hat P(Y=1 \mid x = 0) = .112 - .050 = .062\]</span></p>
+<p>The difference in the estimated risk of CHD during follow-up between type A and type B men is 0.062 (or 6.2%). This characterizes the way in which the additional risk of CHD of being a type A person manifests through an <em>absolute</em> increase.</p>
+<p>We’ve already seen the OR as a relative-scale contrast. A more interpretable option is the relative risk:</p>
+<p><span class="math display">\[RR = \frac{P(Y = 1 \mid x = 1)}{P(Y = 1 \mid x = 0)}\]</span></p>
+<p><span class="math display">\[\widehat{RR} = \frac{\hat P(Y = 1 \mid x = 1)}{\hat P(Y = 1 \mid x = 0)} = \frac{0.112}{0.050} = 2.24 \]</span></p>
+<section id="log-likelihood-for-glms-with-binary-outcomes" class="level3">
+<h3 class="anchored" data-anchor-id="log-likelihood-for-glms-with-binary-outcomes">Log-likelihood for GLMs with binary outcomes</h3>
+<p><span class="math display">\[\ell(\beta; y) = \sum_{i=1}^n y_i \theta_i - b(\theta_i)\]</span></p>
+<p><span class="math display">\[ = \sum_{i=1}^n y_i \theta_i - \log(1 + \exp\{\theta_i\})\]</span></p>
+<p>Where <span class="math inline">\(\theta_i\)</span> is a function of <span class="math inline">\(\beta\)</span> via</p>
+<p><span class="math display">\[\mu_i = b'(\theta_i) = \frac{\exp \theta_i}{1 + \exp \theta_i}\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\mu_i = g^{-1}(x_i'\beta)\]</span></p>
+</section>
+</section>
+<section id="score-and-information-for-glms-with-binary-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="score-and-information-for-glms-with-binary-outcomes">Score and information for GLMs with Binary outcomes</h2>
+<p>The score function for <span class="math inline">\(\beta_j\)</span> is</p>
+<p><span class="math display">\[\frac{\partial \ell }{\partial \beta_j} = \sum_{i=1}^n \frac{\partial \mu_i}{\partial \eta_i} \frac{x_{ij}}{\mu_i (1-\mu_i)} (y_i - \mu_i)\]</span></p>
+<p>where the expression for <span class="math inline">\(\partial \mu_i / \partial \eta_i\)</span> depends on the choice of <span class="math inline">\(g()\)</span>.</p>
+<p>Since <span class="math inline">\(\phi\)</span> is fixed and known, the expected information matrix is just <span class="math display">\[\mathcal I_{\beta \beta} = X' W X\]</span></p>
+<p>where <span class="math inline">\(X\)</span> is the design matrix for the model and <span class="math inline">\(W\)</span> is a diagonal matrix with <span class="math inline">\(i^{\text{th}}\)</span> diagonal element</p>
+<p><span class="math display">\[W_i = \left( \frac{\partial \mu_i}{\partial \eta_i} \right)^2 \frac{1}{\mu_i (1-\mu_i)},\]</span></p>
+<p>which we’ve said previously looks like an inverse variance of <span class="math inline">\(Y\)</span>.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -443,6 +657,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../week12/week12.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-title">Week 12</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

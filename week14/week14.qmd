@@ -1,0 +1,128 @@
+---
+title: Week 14
+---
+
+::: content-hidden
+$$
+\newcommand{\E}[0]{\mathbb E}
+
+\newcommand\independent{\perp\!\!\!\perp}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\Var}[0]{\text{Var}}
+\newcommand{\Cov}[0]{\text{Cov}}
+\newcommand{\Pr}[0]{\mathrm{Pr}}
+\newcommand{\e}[0]{\epsilon}
+\newcommand{\t}[1]{\text{#1}}
+\newcommand{\bmat}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newcommand{\logit}[0]{\text{logit}}
+\newcommand{\expit}[0]{\text{expit}}
+$$
+
+window.MathJax = {
+  loader: {load: ['[tex]/cancel']},
+  tex: {packages: {'[+]': ['cancel']}}
+};
+:::
+
+# Preface
+
+We're continuing on to matched case-control studies and conditional logistic regression.
+
+Review Moral: Only logistic regression can be applied "same as always" in case
+control studies to estimate odds ratios as long as one doesn't care about the 
+intercept (which is biased).
+
+Today we'll talk about difficulties with matched case control study. 
+
+## North Carolina Birth Example Data
+
+Suppose interest lies in the relationship between gestational age at birth and 
+infant mortality, i.e., death within the first year of life. 
+
+The `infants` dataset has information on 225,152 births for all white and 
+African-American births in North Carolina in 2003-04. 
+
+Infant mortality is a rare event: 1,752 events in the available data constituting
+a rate of 8 per 1,000 births.
+
+In the absence of these complete data, we would need to conduct a study. 
+
+## Emulating a case-control study
+
+Suppose we have sufficient resources to collect information on $n=400$ births. 
+
+Simple random sampling would yield few cases, probably around the average of 3
+deaths. 
+
+A case-control design would be much more efficient: 
+
+  * Randomly sample $n_1 = 200$ cases from the 1,752 infant deaths
+  * Randomly sample $n_0 = 200$ controls from the 223,400 non-deaths
+  * Retrospectively 'observe' their covariate values, $X$, and 
+  * Include information on a number of potential confounders such as: 
+   - Mothers' age, smoking during pregnancy, weight gained, baby's race and sex
+  
+```{r}
+load(here::here("data/NorthCarolina_data.dat"))
+
+## create an indicator of case/control status
+infants$Y <- as.numeric(infants$dTime < 365)
+
+table(infants$Y)
+
+## randomly sample 200 cases and 200 controls
+cases <- sample(c(1:nrow(infants))[infants$Y == 1], 200)
+conts <- sample(c(1:nrow(infants))[infants$Y == 0], 200)
+dataCC <- infants[c(conts, cases),]
+
+## confirming that we have 200 cases/controls in dataCC
+table(dataCC$Y)
+
+## check covariate distribution
+tapply(dataCC$sex, dataCC$Y, FUN = mean)
+tapply(dataCC$race, dataCC$Y, FUN = mean)
+tapply(dataCC$smoker, dataCC$Y, FUN = mean)
+```
+
+## Covariate imbalance in case-control studies 
+
+There appears to be substantial imbalance in the distributions of several 
+key covariates between the cases and controls. 
+
+Many of these covariates are also likely to be strongly associated with gestational 
+age at birth, suggesting that: 
+
+  * Strong confounding may be present 
+  * We may need to adjust for a large number of covariates 
+  * There may be areas of covariate space (i.e., combinations of covariate values)
+  for which there's little or no variability in the exposure and/or outcome
+
+It would be desirable to have greater balance between cases and controls. One 
+way of achieving this is through matching. 
+
+:::{.hottip}
+Usually in a GLM, we think of the $Y$ as being random;  however, in this 
+setting, the $X$ variables are themselves random. 
+
+Do recall that we worked out a retrospective likelihood in logistic regression
+showing that it gives the same estimates as the prospective likelihood that
+we're used to. 
+
+This means we can proceed treating $Y$ as random conditional on $X$ and get
+the same results as if we'd treated $X$ as random. 
+:::
+
+# Matching
+
+The case-control design assumes the population can be stratified on the basis 
+of $Y$. 
+
+Suppose we also have access to information on certain covariates for everyone: 
+e.g., we know the sex and race of the baby, but we don't (readily) have information
+on the mother or the pregnancy.  We'll denote this set of covariates by $Z$. 
+
+We could impose balance on $Z$ by drawing controls such that the distribution of $Z$
+is the same as in cases. E.g., each time you draw a case, only draw from the 
+controls with the same (or very similar) values of $Z$. 
+
