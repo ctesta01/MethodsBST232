@@ -25,3 +25,6 @@
 12. Pierce DA, Schafer DW. Residuals in Generalized Linear Models. Journal of the American Statistical Association. 1986;81(396):977–86. 
 
 13. Kutner MH, Neter J. Applied Linear Regression Models. McGraw-Hill/Irwin; 2004. 728 p. 
+
+14. Prentice RL, Pyke R. Logistic Disease Incidence Models and Case-Control Studies. Biometrika. 1979;66(3):403–11. 
+
