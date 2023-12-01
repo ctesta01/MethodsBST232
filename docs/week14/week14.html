@@ -256,7 +256,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#foray-into-sufficient-statistics" id="toc-foray-into-sufficient-statistics" class="nav-link" data-scroll-target="#foray-into-sufficient-statistics">Foray into Sufficient Statistics</a></li>
   <li><a href="#conditional-logistic-regression" id="toc-conditional-logistic-regression" class="nav-link" data-scroll-target="#conditional-logistic-regression">Conditional Logistic Regression</a></li>
-  <li><a href="#practical-considerations" id="toc-practical-considerations" class="nav-link" data-scroll-target="#practical-considerations">Practical Considerations</a></li>
+  <li><a href="#practical-considerations" id="toc-practical-considerations" class="nav-link" data-scroll-target="#practical-considerations">Practical Considerations</a>
+  <ul class="collapse">
+  <li><a href="#example-diabetes-and-acute-mi" id="toc-example-diabetes-and-acute-mi" class="nav-link" data-scroll-target="#example-diabetes-and-acute-mi">Example: Diabetes and acute MI</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#count-data" id="toc-count-data" class="nav-link" data-scroll-target="#count-data">Count Data</a>
+  <ul class="collapse">
+  <li><a href="#binomial-count-data" id="toc-binomial-count-data" class="nav-link" data-scroll-target="#binomial-count-data">Binomial count data</a></li>
+  <li><a href="#poisson-count-data" id="toc-poisson-count-data" class="nav-link" data-scroll-target="#poisson-count-data">Poisson Count Data</a></li>
+  </ul></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab</a>
+  <ul class="collapse">
+  <li><a href="#closed-form-logistic-binary-outcome-binary-treatment" id="toc-closed-form-logistic-binary-outcome-binary-treatment" class="nav-link" data-scroll-target="#closed-form-logistic-binary-outcome-binary-treatment">Closed Form Logistic (Binary Outcome, Binary Treatment)</a></li>
+  <li><a href="#conditional-logistic-regression-1" id="toc-conditional-logistic-regression-1" class="nav-link" data-scroll-target="#conditional-logistic-regression-1">Conditional Logistic Regression</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -332,18 +345,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## check covariate distribution</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(dataCC<span class="sc">$</span>sex, dataCC<span class="sc">$</span>Y, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   0    1 
-0.53 0.55 </code></pre>
+<pre><code>    0     1 
+0.545 0.550 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(dataCC<span class="sc">$</span>race, dataCC<span class="sc">$</span>Y, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    0     1 
-0.220 0.445 </code></pre>
+0.210 0.425 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(dataCC<span class="sc">$</span>smoker, dataCC<span class="sc">$</span>Y, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    0     1 
-0.145 0.280 </code></pre>
+<pre><code>   0    1 
+0.11 0.26 </code></pre>
 </div>
 </div>
 </section>
@@ -543,6 +556,527 @@ P(Y_k = y_k \mid T_k = t_k) &amp; = \frac{I(t_k = \sum_i y_{ki}) \times \exp \{ 
 <p>Consider the interpretation of <span class="math inline">\(\beta_1\)</span> in the underlying logistic regression:</p>
 <p><span class="math display">\[\text{logit}P(Y_{ki} = 1 \mid X_{ki}) = \alpha_k + \beta_1 X_{ki}\]</span></p>
 <p>By holding the matched set constant, sex is implicitly held constant.</p>
+<p>When we match on a continuous covariate, we have to be careful about residual confounding. Suppose we matched on mothers’ age in 5-year age bands (≤20, 21-25, 40-45, …). Within any given set there will likely remain some variation in the mothers exact age leading to residual confounding.</p>
+<p>The remedy is to include mothers’ age as a covariate in the model. However, one should be careful about interpreting the coefficient since one has already controlled for most of the effect of age by controlling for the age-bands.</p>
+<!-- 
+Something I'm curious about is fuzzy matching;
+Like could you use something like a radial basis function / Gaussian kernel 
+to ascertain matches
+-->
+<section id="example-diabetes-and-acute-mi" class="level3">
+<h3 class="anchored" data-anchor-id="example-diabetes-and-acute-mi">Example: Diabetes and acute MI</h3>
+<p>Consider a matched case-control study among Navajo Indians.</p>
+<p>144 cases experienced myocardial infarction (MI) who were matched to 144 controls who were free of heart disease. (This constitutes 1:1 matching based on age and sex.)</p>
+<p>They recorded whether or not each individual had diabetes:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Diabetic among Cases</th>
+<th>Diabetic among Controls</th>
+<th>N</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>0</td>
+<td>82</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>1</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>1</td>
+<td>0</td>
+<td>37</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>set <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">144</span>, <span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">144</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mi <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dv">144</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>diab <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dv">82</span>), <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dv">16</span>), <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dv">37</span>), <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dv">9</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>navajo <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(set, mi, diab)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(navajo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  set mi diab
+1   1  1    0
+2   1  0    0
+3   2  1    0
+4   2  0    0
+5   3  1    0
+6   3  0    0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>fit0 <span class="ot">&lt;-</span> <span class="fu">clogit</span>(mi <span class="sc">~</span> diab <span class="sc">+</span> <span class="fu">strata</span>(set), <span class="at">data =</span> navajo)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(rep(1, 288L), mi) ~ diab + strata(set), 
+    data = navajo, method = "exact")
+
+  n= 288, number of events= 144 
+
+       coef exp(coef) se(coef)     z Pr(&gt;|z|)   
+diab 0.8383    2.3125   0.2992 2.802  0.00508 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     exp(coef) exp(-coef) lower .95 upper .95
+diab     2.313     0.4324     1.286     4.157
+
+Concordance= 0.573  (se = 0.035 )
+Likelihood ratio test= 8.55  on 1 df,   p=0.003
+Wald test            = 7.85  on 1 df,   p=0.005
+Score (logrank) test = 8.32  on 1 df,   p=0.004</code></pre>
+</div>
+</div>
+<p>What do we get if we ignore the matching? Fitting a logistic regression model, we get an odds ratio estimate and 95% CI of 2.23 (1.28, 3.89).</p>
+<p>Ignoring the matching will, in general, bias the estimated odds ratio towards the null. This is most evident when matching on important predictors of the outcome.</p>
+<div class="bluetip">
+<p>It’s important to remember when interpreting the results that one has to emphasize they’re conditional on the matched covariates.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="count-data" class="level1">
+<h1>Count Data</h1>
+<p>“This course considers the use of regression as a tool for data analysis with outcomes that are univariate and independent.”</p>
+<p>So far, we’ve primarily considered two types of outcomes:</p>
+<p>Continuous outcomes, <span class="math inline">\(Y \in \mathbb R\)</span> where</p>
+<p><span class="math display">\[Y_i \sim \mathcal N(\mu_i, \sigma^2)\]</span> <span class="math display">\[\mu_i = x_i' \beta\]</span></p>
+<p>And binary outcomes,</p>
+<p><span class="math display">\[Y_i \sim \text{Bernoulli}(\mu_i)\]</span> <span class="math display">\[\text{logit}(\mu_i) = x_i'\beta\]</span></p>
+<p>In many applications, the response variable is in the form of a count:</p>
+<p><span class="math inline">\(Y = 0, 1, 2, ...\)</span></p>
+<p>Examples could include:</p>
+<ul>
+<li>The number of major complications following surgery</li>
+<li>The number of incident cases of cancer in each Boston neighborhood in 2010</li>
+<li>The number of prescribed treatment doses (e.g., pills) taken</li>
+</ul>
+<p>When we count events, we can consider them as arising in one of two ways:</p>
+<ul>
+<li>From a fixed number of trials
+<ul>
+<li>i.e., Binomial data</li>
+</ul></li>
+<li>Over some time-frame and/or spatial area
+<ul>
+<li>i.e., Poisson data</li>
+</ul></li>
+</ul>
+<section id="binomial-count-data" class="level2">
+<h2 class="anchored" data-anchor-id="binomial-count-data">Binomial count data</h2>
+<p>Recall that a binomial random variable is the number of successes from <span class="math inline">\(N\)</span> independent (Bernoulli) trials with a common probability of success.</p>
+<p>In applications with binomial count outcomes, data are often of the form:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th># Trials</th>
+<th># Successes</th>
+<th>Covariates</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(N_1\)</span></td>
+<td><span class="math inline">\(Y_1\)</span></td>
+<td><span class="math inline">\(x_1\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(N_2\)</span></td>
+<td><span class="math inline">\(Y_2\)</span></td>
+<td><span class="math inline">\(x_2\)</span></td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(N_n\)</span></td>
+<td><span class="math inline">\(Y_n\)</span>$</td>
+<td><span class="math inline">\(x_n\)</span></td>
+</tr>
+</tbody>
+</table>
+<!-- why do I practically never hear about Beta regression -->
+<p>An example might be a study investigating factors associated with medication adherence where each individual’s outcome is the count of medication doses taken (out of a fixed number of doses prescribed).</p>
+<p>If we assume that each individual’s <span class="math inline">\(N_i\)</span> trials are independent and have probability of success <span class="math inline">\(\pi_i\)</span>, then</p>
+<p><span class="math display">\[Y_i \sim \text{Binomial}(N_i, \pi_i)\]</span></p>
+<p><span class="math inline">\(\mathbb E[Y_i] = \mu_i = N_i \pi_i\)</span> and <span class="math inline">\(\text{Var}[Y_i] = N_i \pi_i(1-\pi_i)\)</span>.</p>
+<p>Since <span class="math inline">\(N_i\)</span> is fixed, we can structure a model for <span class="math inline">\(\pi_i\)</span> (which implies a model for <span class="math inline">\(\mu_i\)</span>).</p>
+<p><span class="math display">\[g(\pi_i) = x_i' \beta \quad \Longrightarrow \quad \mu_i = \underbrace{g^{-1}(x_i \beta)}_{=\pi_i} \times N_i\]</span></p>
+<p>We can choose <span class="math inline">\(g(\cdot)\)</span> from among the usual candidates.</p>
+<ul>
+<li>Logit is the most common</li>
+<li>And coefficient estimates have analagous interpretations to the binary outcome setting.</li>
+</ul>
+<p>In many settings, rather than <span class="math inline">\(N_i\)</span> trials on the <span class="math inline">\(i\)</span>th study unit, the count data we observe are collapsed binary data.</p>
+<p>Consider this Ohio lung cancer death data:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Age</th>
+<th>Sex</th>
+<th>Race</th>
+<th>N</th>
+<th>Death</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>55-64</td>
+<td>M</td>
+<td>White</td>
+<td>429617</td>
+<td>1025</td>
+</tr>
+<tr class="even">
+<td>55-64</td>
+<td>M</td>
+<td>Non-White</td>
+<td>48382</td>
+<td>172</td>
+</tr>
+<tr class="odd">
+<td>55-64</td>
+<td>F</td>
+<td>White</td>
+<td>476170</td>
+<td>507</td>
+</tr>
+<tr class="even">
+<td>55-64</td>
+<td>F</td>
+<td>Non-White</td>
+<td>54662</td>
+<td>81</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>These data are disguised as binomial counts, but they are technically collapsed binary outcomes.</p>
+<p>This dataset consists of a total of <span class="math inline">\(n=12\)</span> rows, but represents outcomes for <span class="math inline">\(N = 2,220,177\)</span> individuals.</p>
+<p>Let <span class="math inline">\(Y_{ij} = 0/1\)</span> be a binary indicator of death due to lung cancer for the <span class="math inline">\(j\)</span>th individual in the <span class="math inline">\(i\)</span>th age/sex/race-stratum.</p>
+<p><span class="math inline">\(i = 1,...,12\)</span>, <span class="math inline">\(j = 1,...,N_i\)</span>, and let <span class="math inline">\(\pi_{ij} = P(Y_{ij} = 1)\)</span> and suppose</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{logit}(\pi_{ij}) = \beta_0 + &amp;
+\beta_{A1} \mathbb{1}(\text{Age}_{ij} = "65-74")
++ \beta_{A2} \mathbb{2}(\text{Age}_{ij} = "75-84") + \\
+\beta_S \mathbb {1}(\text{Sex}_{ij} = "F") +
+\beta_R \mathbb 1 (\text{Race} = \text{"Non-White"})
+\end{aligned}\]</span></p>
+<p>But under this model, <span class="math inline">\(\pi_{ij} = \pi_i\)</span> for all individuals in age/sex/race stratum <span class="math inline">\(i\)</span>. So for individuals in the 65-74 age range who are women and non-white:</p>
+<p><span class="math display">\[\pi_{ij} = \pi_i = \text{expit}\{ \beta_0 + \beta_{A1} + \beta_S + \beta_R \}\]</span></p>
+<p>Assuming independence across individuals, the likelihood is:</p>
+<p><span class="math display">\[\begin{aligned}
+\mathcal L(\beta) = &amp; \prod_{i=1}^{12} \prod_{j=1}^{N_i} \pi_i^{y_{ij}} (1-\pi_i)^{1-y_{ij}} \\
+&amp; = \prod_{i=1}^{12} \pi_{i}^{\sum_j y_{ij}} (1-\pi_i)^{\sum_j (1-y_{ij})} \\
+&amp; = \prod_{i=1}^{12} \pi_{i}^{Y_i}(1-\pi_i)^{N_i - Y_i}
+\end{aligned}\]</span></p>
+<p>Note that this only differs from a binomial likelihood for the collapsed outcmoes in that there’s no <span class="math inline">\({N_i \choose Y_i}\)</span>. But the <span class="math inline">\({N_i \choose Y_i}\)</span> term doesn’t involve <span class="math inline">\(\beta\)</span> anyway.</p>
+<p>Thus we can treat the 12 collapsed observations as if they were binomial counts and model them as described in the collapsed table.</p>
+<p>In <code>R</code> we can fit GLMs to binomial count data with a slight modification to the syntax used to fit GLMs to binary data. The only thing that looks different is that we change the left-hand-side:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="fu">cbind</span>(Death, N<span class="sc">-</span>Death) <span class="sc">~</span> <span class="fu">factor</span>(Age) <span class="sc">+</span> Sex <span class="sc">+</span> Race,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> Ohio,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As with logistic regression analyses of binary data, exponentiate to report contrasts on the odds ratio scale:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>jtools<span class="sc">::</span><span class="fu">export_summs</span>(fit0, <span class="at">exp=</span>T, <span class="at">error_pos =</span> <span class="st">'right'</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">error_format =</span> <span class="st">"[{conf.low}, {conf.high}]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="poisson-count-data" class="level2">
+<h2 class="anchored" data-anchor-id="poisson-count-data">Poisson Count Data</h2>
+<p>In many settings, we’re interested in a count of events but there’s no notion of a fixed number of trials. E.g., the number of major complications during a surgery.</p>
+<p>A counting process <span class="math inline">\(Y(t)\)</span>, counts the number of events in some population by time <span class="math inline">\(t\)</span> (starting from a designated time 0).</p>
+<p>As we move forward in time, <span class="math inline">\(Y(t)\)</span> counts the number of events or ‘jumps’.</p>
+<p><span class="math display">\[Y(0) = 0 \; \longrightarrow \; Y(t_1) = 1 \; \longrightarrow \; Y(t_2) = 2 ...\]</span></p>
+<p>A counting process is a <span class="vocab">time-homogeneous Poisson process</span> under certain assumptions.</p>
+<p>Crucially, the rate at which events occur per unit time, <span class="math inline">\(\lambda\)</span>, should be constant (not time-dependent). Then, for fixed <span class="math inline">\(t\)</span>, <span class="math inline">\(Y(t) \sim \text{Poisson}(\lambda t)\)</span>.</p>
+<p>For Poisson count data, the data are (typically) of the form:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Follow-up time/person-time</th>
+<th>Number of events</th>
+<th>Covariates</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(t_1\)</span></td>
+<td><span class="math inline">\(Y_1\)</span></td>
+<td><span class="math inline">\(x_1\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(t_2\)</span></td>
+<td><span class="math inline">\(Y_2\)</span></td>
+<td><span class="math inline">\(x_2\)</span></td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>Assuming each <span class="math inline">\(Y_i\)</span> arises from a time-homogeneous Poisson process with rate <span class="math inline">\(\lambda_i\)</span>,</p>
+<p><span class="math display">\[Y_i \sim \text{Poisson}(\lambda_i t_i).\]</span></p>
+<p><span class="math display">\[\mathbb E[Y_i] = \text{Var}[Y_i] = \lambda_i t_i\]</span></p>
+<p><span class="math inline">\(t_i\)</span> is often “person-time” to allow for the fact that each unit in the data could represent populations of different sizes.</p>
+<p>In Poisson regression, we assume that</p>
+<p><span class="math display">\[Y_i \sim \text{Poisson}(\mu_i)\]</span> <span class="math display">\[\mu_i = \lambda_i t_i\]</span></p>
+<p>Similar to <span class="math inline">\(N_i\)</span> in the binomial count setting, <span class="math inline">\(t_i\)</span> is assumed to be fixed and known, so we build the systematic component of the model around the rate parameter <span class="math inline">\(\lambda_i\)</span>.</p>
+<p>Since <span class="math inline">\(\lambda_i\)</span> is strictly positive, Poisson regression uses the log link:</p>
+<p><span class="math display">\[\log(\lambda_i) = \log \left( \frac{\mu_i}{t_i} \right) = x_i' \beta\]</span></p>
+<p>This can be equivalently written as <span class="math display">\[\log(\mu_i) = x_i' \beta + \log(t_i)\]</span></p>
+</section>
+</section>
+<section id="lab" class="level1">
+<h1>Lab</h1>
+<p>What is a saturated model? A model where the number of observations is equal to the number of parameters. The result is often a perfectly fit model.</p>
+<p>This can be useful for a binomial model on a contingency table.</p>
+<section id="closed-form-logistic-binary-outcome-binary-treatment" class="level2">
+<h2 class="anchored" data-anchor-id="closed-form-logistic-binary-outcome-binary-treatment">Closed Form Logistic (Binary Outcome, Binary Treatment)</h2>
+<p><span class="math display">\[\text{logit}(\mu_i) = \beta_0 + \beta_1 x_i\]</span></p>
+<p>In general we cannot obtain closed-form expressions for <span class="math inline">\(\hat \beta_0\)</span> and <span class="math inline">\(\hat \beta_1\)</span> or for higher dimension <span class="math inline">\(\beta\)</span> by solving the logistic regression score equations analytically. However, let’s consider a scenario in which we can obtain closed-form solutions. In particular, suppose our covariate <span class="math inline">\(x_i\)</span> is binary and we want to fit a model to our data:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Y = 1</th>
+<th>0</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>X = 1</td>
+<td><span class="math inline">\(O_{11}\)</span></td>
+<td><span class="math inline">\(O_{12}\)</span></td>
+<td><span class="math inline">\(O_{1\cdot}\)</span></td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td><span class="math inline">\(O_{21}\)</span></td>
+<td><span class="math inline">\(O_{22}\)</span></td>
+<td><span class="math inline">\(O_{2\cdot}\)</span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><span class="math inline">\(O_{\cdot 1}\)</span></td>
+<td><span class="math inline">\(O_{2 \cdot}\)</span></td>
+<td><span class="math inline">\(O_{\cdot \cdot}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Let <span class="math inline">\(\mu_0 = P(Y_i = 1 | X_i = 0)\)</span> and <span class="math inline">\(\mu_1 = P(Y_i = 1 | X_i = 1)\)</span>.</p>
+<p>Write an expression for the log-likelihood in terms of <span class="math inline">\(\mu_0\)</span>, <span class="math inline">\(\mu_1\)</span> and the observed cell counts.</p>
+<p><span class="math display">\[L(\mu_0, \mu_1 \mid y ) = \prod_{i=1}^n \mu_i^{y_i}(1-\mu_i)^{1-y_i}\]</span></p>
+<p><span class="math display">\[ = \prod_{i=1}^{O_{2\cdot}} \mu_0^{y_i}(1-\mu_0)^{1-y_i} \cdot \prod_{j=1}^{O_{1\cdot}} \mu_1^{y_i} (1-\mu_1)^{1-y_i}\]</span></p>
+<p><span class="math display">\[ = \mu_0^{\sum_{i=1}^{O_{2 \cdot }} y_i} (1 - \mu_0)^{\sum_{i=1}^{O_{2\cdot}} (1-y_i)}
+\cdot
+\mu_1^{\sum_{i=1}^{O_{1 \cdot }} y_i} (1 - \mu_1)^{\sum_{i=1}^{O_{1\cdot}} (1-y_i)}\]</span></p>
+<p><span class="math display">\[ = \mu_0^{O_{21}} (1-\mu_0)^{O_{22}} \mu_1^{O_{11}} (1-\mu_1)^{O_{12}}\]</span></p>
+<p>(Note that the indexing is a little bit messed up; really we should have been writing <span class="math inline">\(\sum_{i : X_i = 0}^n y_i = O_{21}\)</span> and such.)</p>
+<p><span class="math display">\[\ell (\mu_0, \mu_1 \mid y ) =
+  O_{21} \log (\mu_0) + O_{22} \log (1-\mu_0) +
+  O_{11} \log (\mu_1) + O_{12} \log (1-\mu_1) \]</span></p>
+<p>Based on this new log-likelihood, let’s obtain the score equations <span class="math inline">\(U(\mu_0)\)</span> and <span class="math inline">\(U(\mu_1)\)</span> and solve to obtain closed-form expressions for <span class="math inline">\(\hat \mu_0\)</span> and <span class="math inline">\(\hat \mu_1\)</span>.</p>
+<p>So the score equations are</p>
+<p><span class="math display">\[
+\begin{aligned}
+U(\mu_0) &amp; = \frac{d}{d \mu_0} \ell (\mu_0, \mu_1 \mid y) \\
+&amp; = \frac{d}{d\mu_0} \left(
+   O_{21} \log (\mu_0) + O_{22} \log (1-\mu_0) +
+  O_{11} \log (\mu_1) + O_{12} \log (1-\mu_1)
+\right) \\
+&amp; = \frac{O_{21}}{\mu_0} - \frac{O_{22}}{1-\mu_0}
+\end{aligned}
+\]</span></p>
+<p>and <span class="math display">\[
+\begin{aligned}
+U(\mu_1) &amp; = \frac{d}{d \mu_0} \ell (\mu_0, \mu_1 \mid y) \\
+&amp; = \frac{d}{d\mu_0} \left(
+   O_{21} \log (\mu_0) + O_{22} \log (1-\mu_0) +
+  O_{11} \log (\mu_1) + O_{12} \log (1-\mu_1)
+\right) \\
+&amp; = \frac{O_{11}}{\mu_1} - \frac{O_{12}}{1-\mu_1}
+\end{aligned}
+\]</span></p>
+<p>To solve to obtain closed form expressions of <span class="math inline">\(\hat \mu_0\)</span> and <span class="math inline">\(\hat \mu_1\)</span>, we take these derivatives and set them equal to zero.</p>
+<p>So <span class="math display">\[0 = \frac{O_{11}}{\hat\mu_1} - \frac{O_{12}}{1-\hat\mu_1} \Longrightarrow
+\frac{O_{12}}{1-\hat\mu_1}  = \frac{O_{11}}{\hat\mu_1}
+\]</span></p>
+<p><span class="math display">\[ \Longleftrightarrow (1-\hat\mu_1)O_{11} = \hat\mu_1 O_{12} = O_{11} - \hat\mu_1 O_{11}\]</span></p>
+<p><span class="math display">\[ \hat \mu_1 (O_{12} + O_{11}) = O_{11} \Longleftrightarrow \mu_1 = \frac{O_{11}}{O_{1\cdot}}\]</span></p>
+<p>And similar for <span class="math inline">\(\hat \mu_0 = \frac{O_{21}}{O_{2\cdot}}\)</span>.</p>
+<p>What we’re really after are the <span class="math inline">\(\hat \beta\)</span> values.</p>
+<p><span class="math display">\[\text{logit}(\mu_0) = \beta_0 \quad \text{or} \quad \text{logit}(\mu_1) = \beta_0 + \beta_1\]</span></p>
+<p>So <span class="math display">\[
+\begin{aligned}
+\hat \beta_0 = \text{logit}(\hat \mu_0) &amp; = \log\left(\frac{O_{21} / O_{2\cdot}}{1 - O_{21}/O_{2\cdot} } \right) \\
+&amp; = \log \left( \frac{O_{21} / \cancel{O_{2\cdot}}}{O_{22}/\cancel{O_{2\cdot}}}\right) \\
+&amp; = \log \left( \frac{O_{21}}{O_{22}} \right) \\
+&amp; = \text{ the log odds.}
+\end{aligned}
+\]</span></p>
+<p>Similarly,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat \beta_1 = \text{logit}(\hat \mu_1) - \text{logit}(\hat \mu_0) = \log\left( \frac{O_{11}}{O_{12}} \right) -
+\log \left( \frac{O_{21}}{O_{22}}\right) \\
+&amp; = \log \left( \frac{O_{11}O_{22}}{O_{21}O_{12}}\right)
+\end{aligned}
+\]</span></p>
+<div class="hottip">
+<p>How do we know that these are MLEs? If we plug in MLEs for the <span class="math inline">\(\hat \mu\)</span> values into the formula for the <span class="math inline">\(\hat \beta\)</span> values, how do we know we get MLEs?</p>
+<p>MLEs have nice asymptotic properties that if you plug in an MLE into a function, you get an MLE for the function output.</p>
+</div>
+<p>We showed that the Fisher information matrix <span class="math inline">\(\mathcal I(\beta)\)</span> takes the following form for a general logistic regression:</p>
+<p><span class="math display">\[
+\mathcal I(\beta) = \begin{pmatrix} \sum_{i=1}^n \mu_i ( 1- \mu_i) &amp; \sum_{i=1}^n x_i \mu_i ( 1- \mu_i) \\
+\sum_{i=1}^n x_i \mu_i ( 1- \mu_i) &amp; \sum_{i=1}^n x_i^2 \mu_i ( 1- \mu_i) \end{pmatrix}
+\]</span></p>
+<p>Derive an asymptotic variance estimator for <span class="math inline">\(\hat \beta_1\)</span> by:</p>
+<ul>
+<li>Simplifying <span class="math inline">\(\mathcal I(\beta)\)</span> from the above in terms of <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\mu_1\)</span> and the observed cell counts.</li>
+<li>Calculating <span class="math inline">\(\mathcal I(\beta)^{-1} \vert_{\mu = \hat \mu}\)</span>.</li>
+</ul>
+<p>Hint: <span class="math display">\[\begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix}^{-1} = \frac{1}{ad - bc} \begin{pmatrix}
+   d &amp; -b \\ -c &amp; a \end{pmatrix}
+   \]</span></p>
+<div class="cooltip">
+<p><span class="math display">\[\mathcal I(\beta) = \begin{bmatrix}
+\sum_{i:X_i = 0}^{n} \mu_i(1-\mu_i) +  \sum_{i:X_i = 1}^{n} \mu_i(1-\mu_i) &amp; ... \\
+... &amp; ...
+\end{bmatrix}\]</span></p>
+<p><span class="math display">\[\mathcal I(\beta) = \begin{bmatrix}
+O_{2\cdot} \mu_0 (1-\mu_0) + O_{1\cdot} \mu_1(1-\mu_1) &amp; O_{1\cdot} \mu_1(1-\mu_1) \\
+O_{1\cdot} \mu_1(1-\mu_1) &amp; O_{1\cdot} \mu_1(1-\mu_1)
+\end{bmatrix}\]</span></p>
+<p>So we get that</p>
+<p><span class="math display">\[\mathcal I^{-1}(\beta) = \frac{1}{(O_{2\cdot} \mu_0 (1-\mu_0) + O_{1\cdot} \mu_1(1-\mu_1))(O_{1\cdot} \mu_1(1-\mu_1)) - (O_{1\cdot} \mu_1(1-\mu_1))^2} \begin{bmatrix}
+O_{1\cdot} \mu_1(1-\mu_1) &amp; -O_{1\cdot} \mu_1(1-\mu_1) \\
+- O_{1\cdot} \mu_1(1-\mu_1) &amp; O_{2\cdot} \mu_0 (1-\mu_0) + O_{1\cdot} \mu_1(1-\mu_1)
+\end{bmatrix}\]</span></p>
+<p>Note the simplification we can make in <span class="math inline">\(a\)</span>.</p>
+<p><span class="math display">\[\begin{aligned}
+\text{Var}(\hat \beta_1) &amp; = \mathcal I^{-1}(\beta)_{22} \vert_{\mu = \hat \mu} \\
+&amp; = \frac{a}{ad-bc} = \frac{O_{2\cdot} \mu_0 (1-\mu_0) + O_{1 \cdot } \mu_1 (1-\mu_1)}{
+  O_{2\cdot} \mu_0 (1-\mu_0) \times O_{1 \cdot } \mu_1 (1-\mu_1)
+} \\
+&amp; = \frac{1}{O_{1\cdot} \mu_{1}(1-\mu_1)} + \frac{1}{O_{2\cdot} \mu_0 (1-\mu_0)} \\
+&amp; = \frac{1}{O_{1\cdot} \frac{O_{11}O_{12}}{O_{1\cdot} O_{1\cdot}}} + \frac{1}{O_{2\cdot} \frac{O_{21}O_{22}}{O_{2\cdot} O_{2\cdot}}}  \\
+&amp; = \frac{1}{O_{12}} + \frac{1}{O_{11}} + \frac{1}{O_{22}} + \frac{1}{O_{21}}
+\end{aligned}
+\]</span></p>
+<p>This matches what we derived using the delta method</p>
+</div>
+</section>
+<section id="conditional-logistic-regression-1" class="level2">
+<h2 class="anchored" data-anchor-id="conditional-logistic-regression-1">Conditional Logistic Regression</h2>
+<p>Suppose by experimental design, or by sampling from the data we have, we’ve matched cases and controls by their characteristics.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Strata</th>
+<th><span class="math inline">\(Y\)</span></th>
+<th>Matched <span class="math inline">\(Z\)</span></th>
+<th><span class="math inline">\(X\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>Female, 29</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0</td>
+<td>Female, 29</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>1</td>
+<td>0</td>
+<td>Female, 29</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>1</td>
+<td>Male, 32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0</td>
+<td>Male, 32</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The likelihood is instead retrospective now:</p>
+<p><span class="math display">\[\mathcal L_R = \prod_{k=1}^{K} \prod_{i=1}^{N_k} P(Y_{ki} = y_{ki} \mid X_{ki}, \text{Strata} = k)\]</span></p>
+<p>So one could just treat the strata as another variable, and write that</p>
+<p><span class="math display">\[\text{logit}(Y) = \beta_0 + \beta_1 X + \beta_2 \text{Strata}\]</span></p>
+<p>The problem with this is that the more strata we have, the more parameters we have, we can’t do inference because we’re not increasing the number of samples relative to the number of parameters that we have.</p>
+<p>Instead we’ll use conditional logistic regression to analyze matched case-control studies.</p>
+<p>A challenging question is in what situation conditioning doesn’t really change anything.</p>
+<p>The full proof requires the principle of sufficiency, which will be seen in later classes.</p>
+<p>For <span class="math inline">\(K\)</span> matched sets, where <span class="math inline">\(T_k\)</span> is the number of cases in set <span class="math inline">\(k\)</span> and <span class="math inline">\(N_k\)</span> is the number of observations in set <span class="math inline">\(k\)</span>. Let <span class="math inline">\(X_{ki}\)</span> be th eexposure for observation <span class="math inline">\(i\)</span> in set <span class="math inline">\(k\)</span> and <span class="math inline">\(y_{ki}\)</span> the outcome for observation <span class="math inline">\(i\)</span> in set <span class="math inline">\(k\)</span>. Then the conditional likelihood is given as</p>
+<p><span class="math display">\[\mathcal L_C(\beta_1) = \prod_{k=1}^K \frac{I(T_k = t_k) \exp \left( \beta_1 \sum_{i=1}^{N_k} y_{ki} X_{ki} \right)}{\sum_{u_k : T_k = t_k} \exp \left( \beta_1 \sum_{i=1}^{N_k} u_{ki} X_{ki} \right)}\]</span></p>
+<p>We will show that for a 1:1 matched case-control study with a binary exposure and outcome, the conditional odds ratio is <span class="math inline">\(\frac{n_{10}}{n_{01}}\)</span>$ where <span class="math inline">\(n_{10}\)</span> is the number of discordant pairs where the case is exposed and the control is not, and <span class="math inline">\(n_{01}\)</span> is the number of discordant pairs where the case is unexposed and the control is exposed. <span class="math display">\[u_{k} = (u_{k1}, u_{k2}) = \{ (0,1), (1, 0) \}.\]</span></p>
+<p><span class="math inline">\(u\)</span> encodes the sampling schema, so <span class="math inline">\((0,1)\)</span> represents sampling the control first, then the case, and <span class="math inline">\((1,0)\)</span> vice versa.</p>
+<p>Derive the conditional log-likelihood of <span class="math inline">\(\beta_1\)</span>.</p>
+<p><span class="math display">\[\begin{aligned}
+\mathcal L_C(\beta_1) &amp; = \prod_{k=1}^K \frac{\exp \left( \beta_1 (1 \cdot X_{k1} + 0 \cdot X_{k1} \right)}{\exp \left( \beta_1 (0 \cdot X_{k1} + 1 \cdot X_{k2}) \right) + \exp \left( \beta_1(1 \cdot X_{k1} + 0 \cdot X_{k2})\right)} \\
+&amp; = \prod_{k=1}^K \frac{\exp(\beta_1 X_{k1})}{\exp(\beta_1 X_{k1}) + \exp (\beta_1 X_{k2})} \\
+\ell_C(\beta_1) &amp; = \sum_{k=1}^K \log \left( \frac{\exp(\beta_1 X_{k1})}{\exp(\beta_1 X_{k1}) + \exp (\beta_1 X_{k2})} \right) \\
+&amp; = \sum_{k=1}^K \beta_1 X_{k1} - \log(\exp(\beta_1 X_{k1}) + \exp(\beta_1 X_{k2})) \\
+&amp; = \sum_{k : X_{k1} = X_{k2}} \underbrace{...}_{\small =-\log(2)} + \sum_{k : X_{k1} = 1, X_{k2} = 0} \underbrace{...}_{\small =\beta_1 - \log(1 + \exp(\beta_1))} + \sum_{k : X_{k1} = 0, X_{k2} = 1} \underbrace{...}_{\small -\log(1 + \exp(\beta_1))} \\
+&amp; = (n_{00} + n_{11})(-\log 2) + n_{10}(\beta_1 - \log(1 + \exp(\beta_1))) + n_{01}(-\log(1+\exp(\beta_1))) \\
+&amp; = (n_{00} + n_{11})(-\log 2) + n_{10} \beta_1 - (n_{10} + n_{01})(\log(1 + \exp(\beta_1)))
+\end{aligned}
+\]</span></p>
+<p>Show that <span class="math inline">\(\exp(\hat \beta_1) = \frac{n_{10}}{n_{01}}.\)</span>$</p>
+<p>Now we just solve the score equation.</p>
+<p><span class="math display">\[\frac{d}{d \beta_1} \ell_C(\beta_1) = n_{10} - (n_{10} + n_{01}) \frac{\exp(\beta_1)}{1 + \exp(\beta_1)} \stackrel{\text{set}}{=} 0\]</span></p>
+<!-- $$\frac{\exp(\beta_1)}{1 + \exp(\beta_1)} = \frac{n_{10}}{n_{01} + n_{10}}$$ -->
+<p><span class="math display">\[n_{10} + n_{10} \exp(\beta_1) = n_{10} \exp(\beta_1) + n_{01} \exp(\beta_1)\]</span> <span class="math display">\[\Rightarrow \exp (\hat \beta_1) = \frac{n_{10}}{n_{01}}\]</span></p>
+<p>Find the observed and estimated information <span class="math inline">\(\mathcal I (\beta_1)\)</span> and <span class="math inline">\(\hat{\mathcal I} (\hat \beta_1)\)</span>:</p>
+<p><span class="math display">\[\mathcal I(\beta_1) = -\frac{\partial^2}{\partial \beta_1^2} \ell_C(\beta_1) = (n_{10} + n_{01}) \frac{\exp(\beta_1)}{(1+\exp(\beta_1))^2}\]</span></p>
+<p><span class="math display">\[\hat{ \mathcal I} (\hat \beta_1) = (n_{10} + n_{01}) \frac{n_{10}/n_{01}}{(1+n_{10}/n_{01})^2} = \frac{n_{10}n_{01}}{n_{10} + n_{01}}\]</span></p>
 
 
 </section>

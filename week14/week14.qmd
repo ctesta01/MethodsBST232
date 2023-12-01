@@ -362,3 +362,513 @@ $$\logit P(Y_{ki} = 1 \mid X_{ki}) = \alpha_k + \beta_1 X_{ki}$$
 
 By holding the matched set constant, sex is implicitly held constant. 
 
+When we match on a continuous covariate, we have to be careful about residual 
+confounding. Suppose we matched on mothers' age in 5-year age bands (≤20, 21-25, 40-45, ...).
+Within any given set there will likely remain some variation in the mothers exact age leading
+to residual confounding. 
+
+The remedy is to include mothers' age as a covariate in the model. However,
+one should be careful about interpreting the coefficient since one has already controlled
+for most of the effect of age by controlling for the age-bands. 
+
+<!-- 
+Something I'm curious about is fuzzy matching;
+Like could you use something like a radial basis function / Gaussian kernel 
+to ascertain matches
+--> 
+
+### Example: Diabetes and acute MI 
+
+Consider a matched case-control study among Navajo Indians.
+
+144 cases experienced myocardial infarction (MI) who were matched to 144 controls who 
+were free of heart disease. (This constitutes 1:1 matching based on age and sex.)
+
+They recorded whether or not each individual had diabetes:
+
+| Diabetic among Cases | Diabetic among Controls | N   |
+| -------------------- | ----------------------- | --- |
+| 0                    | 0                       | 82  |
+| 0                    | 1                       | 16  |
+| 1                    | 0                       | 37  |
+| 1                    | 1                       | 9   |
+
+```{r}
+set <- rep(1:144, rep(2, 144))
+
+mi <- rep(c(1,0), 144)
+
+diab <- c(rep(c(0,0), 82), rep(c(0,1), 16), rep(c(1,0), 37), rep(c(1,1), 9))
+
+navajo <- data.frame(set, mi, diab)
+
+head(navajo)
+```
+
+```{r}
+library(survival)
+
+fit0 <- clogit(mi ~ diab + strata(set), data = navajo)
+
+summary(fit0)
+```
+
+What do we get if we ignore the matching? 
+Fitting a logistic regression model, we get
+an odds ratio estimate and 95% CI of 2.23 (1.28, 3.89).
+
+Ignoring the matching will, in general, bias the estimated odds ratio towards
+the null. This is most evident when matching on important predictors of the outcome. 
+
+:::{.bluetip}
+It's important to remember when interpreting the results that one has to 
+emphasize they're conditional on the matched covariates.
+:::
+
+# Count Data 
+
+"This course considers the use of regression as a tool for data analysis
+with outcomes that are univariate and independent."
+
+So far, we've primarily considered two types of outcomes: 
+
+Continuous outcomes, $Y \in \mathbb R$ where 
+
+$$Y_i \sim \mathcal N(\mu_i, \sigma^2)$$
+$$\mu_i = x_i' \beta$$
+
+And binary outcomes,
+
+$$Y_i \sim \text{Bernoulli}(\mu_i)$$
+$$\logit(\mu_i) = x_i'\beta$$
+
+In many applications, the response variable is in the form of a count:
+
+$Y = 0, 1, 2, ...$
+
+Examples could include: 
+
+  * The number of major complications following surgery 
+  * The number of incident cases of cancer in each Boston neighborhood in 2010 
+  * The number of prescribed treatment doses (e.g., pills) taken
+
+When we count events, we can consider them as arising in one of two ways: 
+
+  * From a fixed number of trials 
+    * i.e., Binomial data 
+  * Over some time-frame and/or spatial area 
+    * i.e., Poisson data 
+
+## Binomial count data 
+
+Recall that a binomial random variable is the number of successes from $N$
+independent (Bernoulli) trials with a common probability of success. 
+
+In applications with binomial count outcomes, data are often of the form: 
+
+| \# Trials | \# Successes | Covariates |
+| --------- | ------------ | ---------- |
+| $N_1$     | $Y_1$        | $x_1$      |
+| $N_2$     | $Y_2$        | $x_2$      |
+| ...       | ...          | ...        |
+| $N_n$     | $Y_n$$       | $x_n$      |
+
+<!-- why do I practically never hear about Beta regression --> 
+
+An example might be a study investigating factors associated
+with medication adherence where each individual's outcome 
+is the count of medication doses taken (out of a fixed number of 
+doses prescribed).
+
+If we assume that each individual's $N_i$ trials are independent and have probability 
+of success $\pi_i$, then 
+
+$$Y_i \sim \text{Binomial}(N_i, \pi_i)$$
+
+$\E[Y_i] = \mu_i = N_i \pi_i$ and $\Var[Y_i] = N_i \pi_i(1-\pi_i)$.
+
+Since $N_i$ is fixed, we can structure a model for $\pi_i$ (which
+implies a model for $\mu_i$). 
+
+$$g(\pi_i) = x_i' \beta \quad \Longrightarrow \quad \mu_i = \underbrace{g^{-1}(x_i \beta)}_{=\pi_i} \times N_i$$
+
+We can choose $g(\cdot)$ from among the usual candidates. 
+
+  * Logit is the most common
+  * And coefficient estimates have analagous interpretations to the binary outcome 
+  setting. 
+
+In many settings, rather than $N_i$ trials on the $i$th study unit, the count data 
+we observe are collapsed binary data. 
+
+Consider this Ohio lung cancer death data:
+
+| Age   | Sex | Race      | N      | Death |
+| ----- | --- | --------- | ------ | ----- |
+| 55-64 | M   | White     | 429617 | 1025  |
+| 55-64 | M   | Non-White | 48382  | 172   |
+| 55-64 | F   | White     | 476170 | 507   |
+| 55-64 | F   | Non-White | 54662  | 81    |
+| ...   | ... | ...       | ...    | ...   |
+
+These data are disguised as binomial counts, but they are technically 
+collapsed binary outcomes. 
+
+This dataset consists of a total of $n=12$ rows, but represents outcomes for 
+$N = 2,220,177$ individuals. 
+
+
+Let $Y_{ij} = 0/1$ be a binary indicator of death due to lung cancer for the $j$th 
+individual in the $i$th age/sex/race-stratum. 
+
+$i = 1,...,12$, $j = 1,...,N_i$, and let $\pi_{ij} = P(Y_{ij} = 1)$ and suppose 
+
+$$
+\begin{aligned}
+\logit(\pi_{ij}) = \beta_0 + & 
+\beta_{A1} \mathbb{1}(\text{Age}_{ij} = "65-74") 
++ \beta_{A2} \mathbb{2}(\text{Age}_{ij} = "75-84") + \\ 
+\beta_S \mathbb {1}(\text{Sex}_{ij} = "F") + 
+\beta_R \mathbb 1 (\text{Race} = \text{"Non-White"})
+\end{aligned}$$
+
+But under this model, $\pi_{ij} = \pi_i$ for all individuals in age/sex/race 
+stratum $i$. So for individuals in the 65-74 age range who are women and 
+non-white:
+
+$$\pi_{ij} = \pi_i = \expit \{ \beta_0 + \beta_{A1} + \beta_S + \beta_R \}$$
+
+Assuming independence across individuals, the likelihood is:
+
+$$\begin{aligned}
+\mathcal L(\beta) = & \prod_{i=1}^{12} \prod_{j=1}^{N_i} \pi_i^{y_{ij}} (1-\pi_i)^{1-y_{ij}} \\ 
+& = \prod_{i=1}^{12} \pi_{i}^{\sum_j y_{ij}} (1-\pi_i)^{\sum_j (1-y_{ij})} \\ 
+& = \prod_{i=1}^{12} \pi_{i}^{Y_i}(1-\pi_i)^{N_i - Y_i}
+\end{aligned}$$ 
+
+Note that this only differs from a binomial likelihood for the collapsed outcmoes in that there's no ${N_i \choose Y_i}$. But the ${N_i \choose Y_i}$ term doesn't involve $\beta$
+anyway. 
+
+Thus we can treat the 12 collapsed observations as if they were binomial
+counts and model them as described in the collapsed table.
+
+In `R` we can fit GLMs to binomial count data with a slight modification 
+to the syntax used to fit GLMs to binary data. The only thing that 
+looks different is that we change the left-hand-side:
+
+```{r}
+#| eval: false
+glm(cbind(Death, N-Death) ~ factor(Age) + Sex + Race,
+  data = Ohio,
+  family = binomial())
+```
+
+As with logistic regression analyses of binary data, exponentiate 
+to report contrasts on the odds ratio scale: 
+
+```{r}
+#| eval: false
+jtools::export_summs(fit0, exp=T, error_pos = 'right',
+  error_format = "[{conf.low}, {conf.high}]")
+```
+
+## Poisson Count Data 
+
+In many settings, we're interested in a count of events but there's no 
+notion of a fixed number of trials. E.g., the number of major
+complications during a surgery. 
+
+A counting process $Y(t)$, counts the number of events in some population by 
+time $t$ (starting from a designated time 0). 
+
+As we move forward in time, $Y(t)$ counts the number of events or 'jumps'. 
+
+$$Y(0) = 0 \; \longrightarrow \; Y(t_1) = 1 \; \longrightarrow \; Y(t_2) = 2 ...$$
+
+A counting process is a <span class='vocab'>time-homogeneous Poisson process</span> under certain assumptions.
+
+Crucially, the rate at which events occur per unit time, $\lambda$, should be 
+constant (not time-dependent). Then, for fixed $t$, $Y(t) \sim \text{Poisson}(\lambda t)$. 
+
+For Poisson count data, the data are (typically) of the form: 
+
+| Follow-up time/person-time | Number of events | Covariates |
+| -------------------------- | ---------------- | ---------- |
+| $t_1$                      | $Y_1$            | $x_1$      |
+| $t_2$                      | $Y_2$            | $x_2$      |
+| ...                        | ...              | ...        |
+
+Assuming each $Y_i$ arises from a time-homogeneous Poisson process with rate $\lambda_i$, 
+
+$$Y_i \sim \text{Poisson}(\lambda_i t_i).$$
+
+$$\E[Y_i] = \Var[Y_i] = \lambda_i t_i$$
+
+$t_i$ is often "person-time" to allow for the fact that each unit in the data could represent
+populations of different sizes. 
+
+In Poisson regression, we assume that 
+
+$$Y_i \sim \text{Poisson}(\mu_i)$$
+$$\mu_i = \lambda_i t_i$$ 
+
+Similar to $N_i$ in the binomial count setting, $t_i$ is assumed to be fixed
+and known, so we build the systematic component of the model around the rate
+parameter $\lambda_i$. 
+
+Since $\lambda_i$ is strictly positive, Poisson regression uses the log link: 
+
+$$\log(\lambda_i) = \log \left( \frac{\mu_i}{t_i} \right) = x_i' \beta$$
+
+This can be equivalently written as 
+$$\log(\mu_i) = x_i' \beta + \log(t_i)$$
+
+# Lab 
+
+What is a saturated model?  A model where the number of observations is 
+equal to the number of parameters.  The result is often a perfectly fit model. 
+
+This can be useful for a binomial model on a contingency table. 
+
+## Closed Form Logistic (Binary Outcome, Binary Treatment)
+
+$$\logit(\mu_i) = \beta_0 + \beta_1 x_i$$
+
+In general we cannot obtain closed-form expressions for $\hat \beta_0$ and 
+$\hat \beta_1$ or for higher dimension $\beta$ by solving the logistic regression
+score equations analytically. However, let's consider a scenario in 
+which we can obtain closed-form solutions. In particular, suppose our 
+covariate $x_i$ is binary and we want to fit a model to our data: 
+
+|       | Y = 1         | 0             |                   |
+| ----- | ------------- | ------------- | ----------------- |
+| X = 1 | $O_{11}$      | $O_{12}$      | $O_{1\cdot}$      |
+| 0     | $O_{21}$      | $O_{22}$      | $O_{2\cdot}$      |
+|       | $O_{\cdot 1}$ | $O_{2 \cdot}$ | $O_{\cdot \cdot}$ |
+
+Let $\mu_0 = P(Y_i = 1 | X_i = 0)$ and $\mu_1 = P(Y_i = 1 | X_i = 1)$. 
+
+Write an expression for the log-likelihood in terms of $\mu_0$, $\mu_1$ and 
+the observed cell counts.
+
+$$L(\mu_0, \mu_1 \mid y ) = \prod_{i=1}^n \mu_i^{y_i}(1-\mu_i)^{1-y_i}$$
+
+$$ = \prod_{i=1}^{O_{2\cdot}} \mu_0^{y_i}(1-\mu_0)^{1-y_i} \cdot \prod_{j=1}^{O_{1\cdot}} \mu_1^{y_i} (1-\mu_1)^{1-y_i}$$
+
+$$ = \mu_0^{\sum_{i=1}^{O_{2 \cdot }} y_i} (1 - \mu_0)^{\sum_{i=1}^{O_{2\cdot}} (1-y_i)} 
+\cdot 
+\mu_1^{\sum_{i=1}^{O_{1 \cdot }} y_i} (1 - \mu_1)^{\sum_{i=1}^{O_{1\cdot}} (1-y_i)}$$
+
+$$ = \mu_0^{O_{21}} (1-\mu_0)^{O_{22}} \mu_1^{O_{11}} (1-\mu_1)^{O_{12}}$$
+
+(Note that the indexing is a little bit messed up; really we should have been writing 
+$\sum_{i : X_i = 0}^n y_i = O_{21}$ and such.)
+
+$$\ell (\mu_0, \mu_1 \mid y ) = 
+  O_{21} \log (\mu_0) + O_{22} \log (1-\mu_0) + 
+  O_{11} \log (\mu_1) + O_{12} \log (1-\mu_1) $$
+
+Based on this new log-likelihood, let's obtain the score equations $U(\mu_0)$ and 
+$U(\mu_1)$ and solve to obtain closed-form expressions for $\hat \mu_0$ and $\hat \mu_1$. 
+
+So the score equations are 
+
+$$
+\begin{aligned}
+U(\mu_0) & = \frac{d}{d \mu_0} \ell (\mu_0, \mu_1 \mid y) \\
+& = \frac{d}{d\mu_0} \left( 
+   O_{21} \log (\mu_0) + O_{22} \log (1-\mu_0) + 
+  O_{11} \log (\mu_1) + O_{12} \log (1-\mu_1)
+\right) \\
+& = \frac{O_{21}}{\mu_0} - \frac{O_{22}}{1-\mu_0}
+\end{aligned}
+$$
+
+and 
+$$
+\begin{aligned}
+U(\mu_1) & = \frac{d}{d \mu_0} \ell (\mu_0, \mu_1 \mid y) \\
+& = \frac{d}{d\mu_0} \left( 
+   O_{21} \log (\mu_0) + O_{22} \log (1-\mu_0) + 
+  O_{11} \log (\mu_1) + O_{12} \log (1-\mu_1)
+\right) \\
+& = \frac{O_{11}}{\mu_1} - \frac{O_{12}}{1-\mu_1}
+\end{aligned}
+$$
+
+To solve to obtain closed form expressions of $\hat \mu_0$ and $\hat \mu_1$, we
+take these derivatives and set them equal to zero. 
+
+So 
+$$0 = \frac{O_{11}}{\hat\mu_1} - \frac{O_{12}}{1-\hat\mu_1} \Longrightarrow 
+\frac{O_{12}}{1-\hat\mu_1}  = \frac{O_{11}}{\hat\mu_1} 
+$$
+
+$$ \Longleftrightarrow (1-\hat\mu_1)O_{11} = \hat\mu_1 O_{12} = O_{11} - \hat\mu_1 O_{11}$$
+
+$$ \hat \mu_1 (O_{12} + O_{11}) = O_{11} \Longleftrightarrow \mu_1 = \frac{O_{11}}{O_{1\cdot}}$$
+
+And similar for $\hat \mu_0 = \frac{O_{21}}{O_{2\cdot}}$.
+
+What we're really after are the $\hat \beta$ values. 
+
+$$\logit(\mu_0) = \beta_0 \quad \text{or} \quad \logit(\mu_1) = \beta_0 + \beta_1$$
+
+So 
+$$
+\begin{aligned}
+\hat \beta_0 = \logit(\hat \mu_0) & = \log\left(\frac{O_{21} / O_{2\cdot}}{1 - O_{21}/O_{2\cdot} } \right) \\ 
+& = \log \left( \frac{O_{21} / \cancel{O_{2\cdot}}}{O_{22}/\cancel{O_{2\cdot}}}\right) \\
+& = \log \left( \frac{O_{21}}{O_{22}} \right) \\
+& = \text{ the log odds.}
+\end{aligned}
+$$
+
+Similarly, 
+
+$$
+\begin{aligned}
+\hat \beta_1 = \logit(\hat \mu_1) - \logit(\hat \mu_0) = \log\left( \frac{O_{11}}{O_{12}} \right) - 
+\log \left( \frac{O_{21}}{O_{22}}\right) \\ 
+& = \log \left( \frac{O_{11}O_{22}}{O_{21}O_{12}}\right)
+\end{aligned}
+$$
+
+:::{.hottip}
+How do we know that these are MLEs? If we plug in MLEs for the $\hat \mu$ values 
+into the formula for the $\hat \beta$ values, how do we know we get MLEs? 
+
+MLEs have nice asymptotic properties that if you plug in an MLE into a function, you 
+get an MLE for the function output. 
+:::
+
+We showed that the Fisher information matrix $\mathcal I(\beta)$ takes the following 
+form for a general logistic regression: 
+
+$$
+\mathcal I(\beta) = \begin{pmatrix} \sum_{i=1}^n \mu_i ( 1- \mu_i) & \sum_{i=1}^n x_i \mu_i ( 1- \mu_i) \\ 
+\sum_{i=1}^n x_i \mu_i ( 1- \mu_i) & \sum_{i=1}^n x_i^2 \mu_i ( 1- \mu_i) \end{pmatrix}
+$$
+
+
+Derive an asymptotic variance estimator for $\hat \beta_1$ by: 
+
+   * Simplifying $\mathcal I(\beta)$ from the above in terms of $\mu_0$ and $\mu_1$ and the observed cell counts. 
+   * Calculating $\mathcal I(\beta)^{-1} \vert_{\mu = \hat \mu}$. 
+
+   Hint: 
+   $$\begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1} = \frac{1}{ad - bc} \begin{pmatrix}
+   d & -b \\ -c & a \end{pmatrix}
+   $$
+
+:::{.cooltip}
+$$\mathcal I(\beta) = \begin{bmatrix}
+\sum_{i:X_i = 0}^{n} \mu_i(1-\mu_i) +  \sum_{i:X_i = 1}^{n} \mu_i(1-\mu_i) & ... \\
+... & ... 
+\end{bmatrix}$$
+
+$$\mathcal I(\beta) = \begin{bmatrix}
+O_{2\cdot} \mu_0 (1-\mu_0) + O_{1\cdot} \mu_1(1-\mu_1) & O_{1\cdot} \mu_1(1-\mu_1) \\
+O_{1\cdot} \mu_1(1-\mu_1) & O_{1\cdot} \mu_1(1-\mu_1)
+\end{bmatrix}$$
+
+So we get that
+
+$$\mathcal I^{-1}(\beta) = \frac{1}{(O_{2\cdot} \mu_0 (1-\mu_0) + O_{1\cdot} \mu_1(1-\mu_1))(O_{1\cdot} \mu_1(1-\mu_1)) - (O_{1\cdot} \mu_1(1-\mu_1))^2} \begin{bmatrix}
+O_{1\cdot} \mu_1(1-\mu_1) & -O_{1\cdot} \mu_1(1-\mu_1) \\ 
+- O_{1\cdot} \mu_1(1-\mu_1) & O_{2\cdot} \mu_0 (1-\mu_0) + O_{1\cdot} \mu_1(1-\mu_1)
+\end{bmatrix}$$ 
+
+Note the simplification we can make in $a$. 
+
+$$\begin{aligned}
+\Var(\hat \beta_1) & = \mathcal I^{-1}(\beta)_{22} \vert_{\mu = \hat \mu} \\ 
+& = \frac{a}{ad-bc} = \frac{O_{2\cdot} \mu_0 (1-\mu_0) + O_{1 \cdot } \mu_1 (1-\mu_1)}{
+  O_{2\cdot} \mu_0 (1-\mu_0) \times O_{1 \cdot } \mu_1 (1-\mu_1)
+} \\ 
+& = \frac{1}{O_{1\cdot} \mu_{1}(1-\mu_1)} + \frac{1}{O_{2\cdot} \mu_0 (1-\mu_0)} \\ 
+& = \frac{1}{O_{1\cdot} \frac{O_{11}O_{12}}{O_{1\cdot} O_{1\cdot}}} + \frac{1}{O_{2\cdot} \frac{O_{21}O_{22}}{O_{2\cdot} O_{2\cdot}}}  \\ 
+& = \frac{1}{O_{12}} + \frac{1}{O_{11}} + \frac{1}{O_{22}} + \frac{1}{O_{21}}
+\end{aligned}
+$$
+
+This matches what we derived using the delta method
+:::
+
+## Conditional Logistic Regression 
+
+Suppose by experimental design, or by sampling from the data we have, we've 
+matched cases and controls by their characteristics. 
+
+| Strata | $Y$ | Matched $Z$ | $X$ |
+| ------ | --- | ----------- | --- |
+| 1      | 1   | Female, 29  |     |
+| 1      | 0   | Female, 29  |     |
+| 1      | 0   | Female, 29  |     |
+| 2      | 1   | Male, 32    |     |
+| 2      | 0   | Male, 32    |     |
+
+The likelihood is instead retrospective now: 
+
+$$\mathcal L_R = \prod_{k=1}^{K} \prod_{i=1}^{N_k} P(Y_{ki} = y_{ki} \mid X_{ki}, \text{Strata} = k)$$
+
+So one could just treat the strata as another variable, and write that 
+
+$$\logit(Y) = \beta_0 + \beta_1 X + \beta_2 \text{Strata}$$
+
+The problem with this is that the more strata we have, the more parameters we have,
+we can't do inference because we're not increasing the number of samples relative to 
+the number of parameters that we have. 
+
+Instead we'll use conditional logistic regression to analyze matched case-control 
+studies. 
+
+A challenging question is in what situation conditioning doesn't really change anything. 
+
+The full proof requires the principle of sufficiency, which will be seen in later classes. 
+
+For $K$ matched sets, where $T_k$ is the number of cases in set $k$ and $N_k$ is the 
+number of observations in set $k$. Let $X_{ki}$ be th eexposure for observation $i$ 
+in set $k$ and $y_{ki}$ the outcome for observation $i$ in set $k$. Then the conditional
+likelihood is given as 
+
+$$\mathcal L_C(\beta_1) = \prod_{k=1}^K \frac{I(T_k = t_k) \exp \left( \beta_1 \sum_{i=1}^{N_k} y_{ki} X_{ki} \right)}{\sum_{u_k : T_k = t_k} \exp \left( \beta_1 \sum_{i=1}^{N_k} u_{ki} X_{ki} \right)}$$
+
+We will show that for a 1:1 matched case-control study with a binary exposure and 
+outcome, the conditional odds ratio is $\frac{n_{10}}{n_{01}}$$ where $n_{10}$ is 
+the number of discordant pairs where the case is exposed and the control is not, and $n_{01}$
+is the number of discordant pairs where the case is unexposed and the control is exposed. 
+$$u_{k} = (u_{k1}, u_{k2}) = \{ (0,1), (1, 0) \}.$$
+
+$u$ encodes the sampling schema, so $(0,1)$ represents sampling the control first, then
+the case, and $(1,0)$ vice versa. 
+
+Derive the conditional log-likelihood of $\beta_1$. 
+
+$$\begin{aligned}
+\mathcal L_C(\beta_1) & = \prod_{k=1}^K \frac{\exp \left( \beta_1 (1 \cdot X_{k1} + 0 \cdot X_{k1} \right)}{\exp \left( \beta_1 (0 \cdot X_{k1} + 1 \cdot X_{k2}) \right) + \exp \left( \beta_1(1 \cdot X_{k1} + 0 \cdot X_{k2})\right)} \\
+& = \prod_{k=1}^K \frac{\exp(\beta_1 X_{k1})}{\exp(\beta_1 X_{k1}) + \exp (\beta_1 X_{k2})} \\ 
+\ell_C(\beta_1) & = \sum_{k=1}^K \log \left( \frac{\exp(\beta_1 X_{k1})}{\exp(\beta_1 X_{k1}) + \exp (\beta_1 X_{k2})} \right) \\ 
+& = \sum_{k=1}^K \beta_1 X_{k1} - \log(\exp(\beta_1 X_{k1}) + \exp(\beta_1 X_{k2})) \\ 
+& = \sum_{k : X_{k1} = X_{k2}} \underbrace{...}_{\small =-\log(2)} + \sum_{k : X_{k1} = 1, X_{k2} = 0} \underbrace{...}_{\small =\beta_1 - \log(1 + \exp(\beta_1))} + \sum_{k : X_{k1} = 0, X_{k2} = 1} \underbrace{...}_{\small -\log(1 + \exp(\beta_1))} \\ 
+& = (n_{00} + n_{11})(-\log 2) + n_{10}(\beta_1 - \log(1 + \exp(\beta_1))) + n_{01}(-\log(1+\exp(\beta_1))) \\ 
+& = (n_{00} + n_{11})(-\log 2) + n_{10} \beta_1 - (n_{10} + n_{01})(\log(1 + \exp(\beta_1)))
+\end{aligned}
+$$
+
+Show that $\exp(\hat \beta_1) = \frac{n_{10}}{n_{01}}.$$
+
+Now we just solve the score equation. 
+
+$$\frac{d}{d \beta_1} \ell_C(\beta_1) = n_{10} - (n_{10} + n_{01}) \frac{\exp(\beta_1)}{1 + \exp(\beta_1)} \stackrel{\text{set}}{=} 0$$
+
+<!-- $$\frac{\exp(\beta_1)}{1 + \exp(\beta_1)} = \frac{n_{10}}{n_{01} + n_{10}}$$ --> 
+
+$$n_{10} + n_{10} \exp(\beta_1) = n_{10} \exp(\beta_1) + n_{01} \exp(\beta_1)$$
+$$\Rightarrow \exp (\hat \beta_1) = \frac{n_{10}}{n_{01}}$$
+
+Find the observed and estimated information $\mathcal I (\beta_1)$ and $\hat{\mathcal I} (\hat \beta_1)$:
+
+$$\mathcal I(\beta_1) = -\frac{\partial^2}{\partial \beta_1^2} \ell_C(\beta_1) = (n_{10} + n_{01}) \frac{\exp(\beta_1)}{(1+\exp(\beta_1))^2}$$
+
+$$\hat{ \mathcal I} (\hat \beta_1) = (n_{10} + n_{01}) \frac{n_{10}/n_{01}}{(1+n_{10}/n_{01})^2} = \frac{n_{10}n_{01}}{n_{10} + n_{01}}$$
