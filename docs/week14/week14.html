@@ -93,7 +93,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../references.html" rel="next">
+<link href="../week15/week15.html" rel="next">
 <link href="../week13/week13.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -234,6 +234,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../week15/week15.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Week 15</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">References</a>
   </div>
 </li>
@@ -345,18 +350,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## check covariate distribution</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(dataCC<span class="sc">$</span>sex, dataCC<span class="sc">$</span>Y, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    0     1 
-0.545 0.550 </code></pre>
+<pre><code>   0    1 
+0.53 0.59 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(dataCC<span class="sc">$</span>race, dataCC<span class="sc">$</span>Y, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    0     1 
-0.210 0.425 </code></pre>
+<pre><code>   0    1 
+0.25 0.46 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(dataCC<span class="sc">$</span>smoker, dataCC<span class="sc">$</span>Y, <span class="at">FUN =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   0    1 
-0.11 0.26 </code></pre>
+<pre><code>    0     1 
+0.110 0.205 </code></pre>
 </div>
 </div>
 </section>
@@ -1076,7 +1081,7 @@ O_{1\cdot} \mu_1(1-\mu_1) &amp; -O_{1\cdot} \mu_1(1-\mu_1) \\
 <p><span class="math display">\[n_{10} + n_{10} \exp(\beta_1) = n_{10} \exp(\beta_1) + n_{01} \exp(\beta_1)\]</span> <span class="math display">\[\Rightarrow \exp (\hat \beta_1) = \frac{n_{10}}{n_{01}}\]</span></p>
 <p>Find the observed and estimated information <span class="math inline">\(\mathcal I (\beta_1)\)</span> and <span class="math inline">\(\hat{\mathcal I} (\hat \beta_1)\)</span>:</p>
 <p><span class="math display">\[\mathcal I(\beta_1) = -\frac{\partial^2}{\partial \beta_1^2} \ell_C(\beta_1) = (n_{10} + n_{01}) \frac{\exp(\beta_1)}{(1+\exp(\beta_1))^2}\]</span></p>
-<p><span class="math display">\[\hat{ \mathcal I} (\hat \beta_1) = (n_{10} + n_{01}) \frac{n_{10}/n_{01}}{(1+n_{10}/n_{01})^2} = \frac{n_{10}n_{01}}{n_{10} + n_{01}}\]</span></p>
+<p><span class="math display">\[\hat{ \mathcal I} (\hat \beta_1) = (n_{10} + n_{01}) \frac{n_{10}/n_{01}}{(1+n_{10}/n_{01})^2} = \frac{n_{10}n_{01}}{n_{10} + n_{01}} \]</span></p>
 
 
 </section>
@@ -1223,8 +1228,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../week15/week15.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-title">Week 15</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

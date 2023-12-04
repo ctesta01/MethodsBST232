@@ -871,4 +871,4 @@ Find the observed and estimated information $\mathcal I (\beta_1)$ and $\hat{\ma
 
 $$\mathcal I(\beta_1) = -\frac{\partial^2}{\partial \beta_1^2} \ell_C(\beta_1) = (n_{10} + n_{01}) \frac{\exp(\beta_1)}{(1+\exp(\beta_1))^2}$$
 
-$$\hat{ \mathcal I} (\hat \beta_1) = (n_{10} + n_{01}) \frac{n_{10}/n_{01}}{(1+n_{10}/n_{01})^2} = \frac{n_{10}n_{01}}{n_{10} + n_{01}}$$
+$$\hat{ \mathcal I} (\hat \beta_1) = (n_{10} + n_{01}) \frac{n_{10}/n_{01}}{(1+n_{10}/n_{01})^2} = \frac{n_{10}n_{01}}{n_{10} + n_{01}} $$
